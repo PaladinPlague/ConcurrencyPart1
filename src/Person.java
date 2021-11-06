@@ -1,6 +1,6 @@
-public abstract class BankUser {
+public abstract class Person {
 
-    public BankUser() {
+    public Person() {
 
     }
 
