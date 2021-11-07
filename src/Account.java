@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 //This is an abstract class used to represent all accounts in bank
 public abstract class Account {
@@ -17,6 +17,16 @@ public abstract class Account {
     details we could add may include sort code, email address and card details,
     then add more corresponding methods similar to those performed on the account
     number. */
+
+    //Constructor of class, which takes in account's number and opening balance
+    public Account(String accountNo, Double openingBalance) {
+        //Declare account number from string parameter
+        this.accountNumber = accountNo;
+        //Declare opening balance of account from double parameter
+        this.balance = openingBalance;
+        //Declare Transactions initially as empty list
+        this.transactions = new ArrayList<>();
+    }
 
     //Return the account number of the account
     public String getAccountNumber() {
@@ -38,9 +48,10 @@ public abstract class Account {
 
     //Update the current balance of the class and store the transaction for this
     //Due to editing information, declare the class as being synchronized
-    public synchronized void updateBalance(Double amount, String source) {
-        this.balance += amount;
-        transactions.add(new Transaction(amount, source));
+    //Use protected so that balance cannot be changed directly from other accounts, rather via methods
+    protected synchronized void updateBalance(Transaction transact) {
+        this.balance += transact.getAmount();
+        transactions.add(transact);
     }
 
     //Update the customer number of the account
