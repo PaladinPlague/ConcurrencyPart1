@@ -13,6 +13,7 @@ public class CreditAccount extends Account  {
     private int pin;
     private double APR;
     private final int paymentDueDate;
+    LocalDate paymentDate;
     private Person cardHolder;
 
     public CreditAccount(String accountNo, Double openingBalance, double openingCredit, int pin, double APR ) {
@@ -35,14 +36,17 @@ public class CreditAccount extends Account  {
         creditLimit = newCredit;
     }
 
-    //set up new pin for pin update service
-    public synchronized void setPin(int newPin){
-        pin =  newPin;
-    }
-
     //set up new APR, rarely used in real life
     public synchronized void setAPR(double newAPR){
         APR = newAPR;
+    }
+
+    public synchronized void setPaymentDate(LocalDate paymentDate){
+
+        /*
+        setPaymentDate( new LocalDate ())
+         */
+        this.paymentDate = paymentDate;
     }
 
     //get credit return the credit
@@ -83,14 +87,12 @@ public class CreditAccount extends Account  {
      */
     public synchronized void monthlyPayment(){
 
-        LocalDate paymentDate = LocalDate.now();
-
         if(paymentDate.getDayOfMonth() <= paymentDueDate){
-            System.out.println("You should pay: " + this.getBalance());
+            System.out.println("You should pay: " + Math.abs(this.getBalance()));
         }else{
              double payableAmount = this.getBalance()+(this.getBalance()*monthlyInterest()) ;
              this.setBalance(payableAmount);
-            System.out.println("you should pay: " + payableAmount);
+            System.out.println("Your monthly Interest is "+monthlyInterest()+" you should pay: " + Math.abs(this.getBalance()));
         }
     }
 
@@ -106,9 +108,9 @@ public class CreditAccount extends Account  {
 
         if(Objects.equals(sender.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use other credit card to pay this credit card bill!");
-        }else if(sender.getBalance()< amount){
+        }else if(Math.abs(sender.getBalance()) < amount){
             throw new ArithmeticException("Sorry, insufficient fund.");
-        }else if(amount > this.getBalance()){
+        }else if(amount > Math.abs(this.getBalance())){
             throw new ArithmeticException("you can't pay more than you have spent!");
         }else{
 
@@ -169,11 +171,11 @@ public class CreditAccount extends Account  {
 
         if(Objects.equals(supplyAccount.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use other credit card to pay this credit card bill!");
-        }else if(supplyAccount.getBalance()< amount){
+        }else if(Math.abs(supplyAccount.getBalance())< amount){
             throw new ArithmeticException("Sorry, insufficient fund.");
-        }else if(amount > this.getBalance()){
+        }else if(amount > Math.abs(this.getBalance())){
             throw new ArithmeticException("you can't pay more than you have spent!");
-        }else if(123 != 123 ){
+        }else if(Objects.equals(getType(), "")){
             throw new Exception("you may wish to use deposit if you paying for someone else");
         }else{
 
@@ -188,6 +190,17 @@ public class CreditAccount extends Account  {
             }
             this.addToTransaction(transaction);
         }
+    }
+
+    //set up new pin for pin update service
+    public synchronized void updatePin(int currentPin, int newPin) throws Exception {
+
+        if(getPin() == currentPin && currentPin != newPin){
+            this.pin = newPin;
+        }else{
+            throw new Exception("Sorry error occurs, failed to update your PIN.");
+        }
+
     }
 
     @Override
