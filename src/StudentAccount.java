@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class StudentAccount extends Account{
     /* Based on Saving's Account | Updated by Mark
@@ -22,7 +21,6 @@ public class StudentAccount extends Account{
 
      */
     private Boolean invalid = true;
-    private int fixedValue = 1;
     private double interestRate = 0.2;
     LocalDate everyYear;
     double balance;
@@ -86,7 +84,12 @@ public class StudentAccount extends Account{
         if(checkBalance()){
             addInterest();
             //transactions.add(new Transaction(amount, source));
+            // If the Card is locked and the Transaction is taking money out, it will stop the user
+            if(locked && amount.getAmount() < 0){
+                System.out.println("This Account is locked, please try again later");
+            }else{
             this.balance += amount.getAmount();
+            }
         }else{
             System.out.println("This account is not valid as we require an £1 minimum deposit");
             balance = 0;
@@ -99,15 +102,7 @@ public class StudentAccount extends Account{
 
      */
 
-    //If the user Requests to lock the card it will update it's status to true, and vise versa
-    private void unlockLock()
-    {
-        if(locked){
-            locked = false;
-        }else{
-            locked = true;
-        }
-    }
+
     private void addInterest() {
 
         if (checkBalance()) {
@@ -129,3 +124,4 @@ public class StudentAccount extends Account{
             }
         }
     }
+}
