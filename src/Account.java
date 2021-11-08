@@ -56,14 +56,14 @@ public abstract class Account {
 
     //Deposit a set amount from another account into this account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void deposit(Double amount, Account sender) {
+    public synchronized void deposit(Double amount, Account sender) throws Exception {
         this.balance += amount;
         transactions.add(new Transaction(amount, sender, this));
     }
 
     //Withdraw a set amount from this account into another account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void withdraw(Double amount, Account receiver) {
+    public synchronized void withdraw(Double amount, Account receiver, int pin) throws Exception {
         this.balance -= amount;
         transactions.add(new Transaction(amount, this, receiver));
     }
@@ -73,4 +73,8 @@ public abstract class Account {
     public synchronized void setBalance(Double newBalance) {
         this.balance = newBalance;
     }
+
+
+    public synchronized void addToTransaction(Transaction newTransaction){}
+
 }
