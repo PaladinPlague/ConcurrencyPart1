@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,26 +33,36 @@ public class SavingAccount extends Account {
     private int fixedValue = 1;
     private double interestRate = 0.2;
     LocalDate everyYear;
-    double balance;
-    String accountNumber;
+    private double currentBalance;
+    //double balance;
+    //String accountNumber;
     private ArrayList<Transaction> transactions;
 
-    //This constructor takes the deposit and AccNumber, and the account will only be valid if deposit has minimum £1
+    //This constructor uses super on account number and initial deposit parameters, and the account will only be valid if deposit has minimum £1
     public SavingAccount(String AccNumber, double deposit) {
 
-        updateAccountNo(AccNumber);
+        super(AccNumber,deposit);
 
-        if (checkBalance()) {
-            balance = deposit;
+
+        if(checkBalance(deposit)){
+            currentBalance = deposit;
+            setBalance(currentBalance);
+            System.out.println("Account is valid!");
         }
         else{
-            balance = 0;
+            System.out.println("Account is invalid!");
+            currentBalance = 0;
+            setBalance(0.0);
         }
-
         everyYear = LocalDate.now();
+        this.transactions = new ArrayList<>();;
+        System.out.println(transactions.size());
+
     }
+
+
     //Helper function that checks whether this account is valid
-    private boolean checkBalance() {
+    private boolean checkBalance(double balance) {
 
         if(balance < 1){
             invalid = true;
@@ -75,39 +86,70 @@ public class SavingAccount extends Account {
 
         if(invalid) {
             System.out.println("This account is not valid as we require an £1 minimum deposit");
-            return balance;
+            return currentBalance;
 
         }
         else{
-            addInterest();
-            return this.balance;
+            addInterest(currentBalance);
+            return currentBalance;
         }
     }
+
+
     //Returns the transactions only if the account is valid
     @Override
     public ArrayList<Transaction> getTransactions() {
         if(!invalid) {
-            return this.transactions;
+            return transactions;
         }
         else{
             return null;
         }
     }
 
-    // Before updating the balance, it checks whether interest can be added. After the transaction occurs it checks whether the account is still valid
+    // Adds the balance ith the account and then adds the interest if eligible.
     @Override
-    public synchronized void updateBalance(Double amount, String source) {
-        this.balance += amount;
-        if(checkBalance()){
-            addInterest();
-            //transactions.add(new Transaction(amount, source));
-            this.balance += amount;
+    public synchronized void deposit(Double amount, Account sender) throws Exception {
+        addInterest(getBalance());
+        currentBalance += amount;
+        if(checkBalance(currentBalance)){
+            System.out.println("Total balance: " + currentBalance);
+            transactions.add(new Transaction(amount, sender, this));
         }
         else{
             System.out.println("This account is not valid as we require an £1 minimum deposit");
-            balance = 0;
+            currentBalance = 0.0;
+            setBalance(0.0);
         }
     }
+    // Withdraws the balance with the amount if possible, then adds the interest if eligible.
+    @Override
+    public synchronized void withdraw(Double amount, Account receiver, int pin) throws Exception {
+
+        if(checkBalance(currentBalance)){
+
+            addInterest(currentBalance);
+            double withdraw = currentBalance -= amount;
+            withdraw = Math.round(withdraw * 100.0) / 100.0;
+            if(withdraw < 0){
+                System.out.println("Unable to withdraw this amount of money!");
+            }
+            else{
+                if(!checkBalance(currentBalance)){
+                    System.out.println("Account is now invalid, minimum £1 required in this account!");
+                    currentBalance = 0.0;
+                    setBalance(0.0);
+                }
+                else {
+                    currentBalance = withdraw;
+                    setBalance(currentBalance);
+                }
+                transactions.add(new Transaction(amount, this, receiver));
+            }
+        }
+
+    }
+
     /*
     This functions adds the interest to the balance, it only adds it when checkBalance() or updateBalance() is called,
     The interest is not automatically added every year, it checks how many difference of years they have been since the account had been created or
@@ -115,26 +157,31 @@ public class SavingAccount extends Account {
 
      */
 
-    private void addInterest() {
+    private void addInterest(double beforeBalance) {
 
-        if (checkBalance()) {
+        if (checkBalance(beforeBalance)) {
 
             LocalDate currentDate = LocalDate.now();
 
             int createdYear = everyYear.getYear();
             int currentYear = currentDate.getYear();
-            int difference = currentYear - createdYear;
+            int difference = createdYear - currentYear;
             double addInterest = 0.0;
 
             for (int i = 0; i < difference; i++) {
                 addInterest = addInterest + interestRate;
             }
 
-            if (currentYear > createdYear) {
+            if (addInterest != 0) {
                 everyYear = LocalDate.now();
-                balance = (balance * interestRate) + balance;
+                currentBalance = (beforeBalance * addInterest/100) + beforeBalance;
+                setBalance(currentBalance);
             }
         }
+    }
+
+    public void changeDate(LocalDate change){
+        everyYear = change;
     }
 }
 

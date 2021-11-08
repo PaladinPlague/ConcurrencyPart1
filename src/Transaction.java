@@ -1,14 +1,16 @@
-//Stores a single transaction made for a bank account
 public class Transaction {
 
-    //The amount put in or taken out of the account, e.g. -2.99 for payment
+    //The amount put in or taken out of the account, e.g. 2.99 for payment
     private double amount;
     //The source of where the payment came from, e.g. which store a purchase was made
-    private String source;
+    private Account source;
+    //The account which received the payment
+    private Account receiver;
 
-    public Transaction(double amount, String source) {
+    public Transaction(double amount, Account source, Account receiver) {
         this.amount = amount;
         this.source = source;
+        this.receiver = receiver;
     }
 
     //Return the amount of the payment
@@ -17,7 +19,10 @@ public class Transaction {
     }
 
     //Return the transaction source
-    public String getSource() {
+    public Account getSource() {
         return this.source;
     }
+
+    //Return the receiver of the transaction
+    public Account getReceiver() { return this.receiver; }
 }

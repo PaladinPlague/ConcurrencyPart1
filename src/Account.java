@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 //This is an abstract class used to represent all accounts in bank
 public abstract class Account {
@@ -18,8 +18,20 @@ public abstract class Account {
     then add more corresponding methods similar to those performed on the account
     number. */
 
+    //Constructor of class, which takes in account's number and opening balance
+    public Account(String accountNo, Double openingBalance) {
+        //Declare account number from string parameter
+        this.accountNumber = accountNo;
+        //Declare opening balance of account from double parameter
+        this.balance = openingBalance;
+        //Declare Transactions initially as empty list
+        this.transactions = new ArrayList<>();
+    }
+
     //Return the account number of the account
     public String getAccountNumber() {
+
+
         return this.accountNumber;
     }
 
@@ -38,15 +50,32 @@ public abstract class Account {
 
     //Update the current balance of the class and store the transaction for this
     //Due to editing information, declare the class as being synchronized
-    public synchronized void updateBalance(Double amount, String source) {
+    //Use protected so that balance cannot be changed directly from other accounts, rather via methods
+
+
+    //Deposit a set amount from another account into this account and save it to list of transactions
+    //Due to editing information, declare the class as being synchronized
+    public synchronized void deposit(Double amount, Account sender) throws Exception {
         this.balance += amount;
-        transactions.add(new Transaction(amount, source));
+        transactions.add(new Transaction(amount, sender, this));
     }
 
-    //Update the customer number of the account
+    //Withdraw a set amount from this account into another account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void updateAccountNo(String newNo) {
-        this.accountNumber = newNo;
+    public synchronized void withdraw(Double amount, Account receiver, int pin) throws Exception {
+        this.balance -= amount;
+        transactions.add(new Transaction(amount, this, receiver));
+    }
+
+    //Change the current balance to a new value
+    //Due to editing information, declare the class as being synchronized
+    public synchronized void setBalance(Double newBalance) {
+        this.balance = newBalance;
+    }
+
+
+    public synchronized void addToTransaction(Transaction newTransaction){
+
     }
 
 }
