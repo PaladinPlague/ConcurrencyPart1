@@ -54,10 +54,23 @@ public abstract class Account {
         transactions.add(transact);
     }
 
-    //Update the customer number of the account
+    //Deposit a set amount from another account into this account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void updateAccountNo(String newNo) {
-        this.accountNumber = newNo;
+    public synchronized void deposit(Double amount, Account sender) {
+        this.balance += amount;
+        transactions.add(new Transaction(amount, sender, this));
     }
 
+    //Withdraw a set amount from this account into another account and save it to list of transactions
+    //Due to editing information, declare the class as being synchronized
+    public synchronized void withdraw(Double amount, Account receiver) {
+        this.balance -= amount;
+        transactions.add(new Transaction(amount, this, receiver));
+    }
+
+    //Change the current balance to a new value
+    //Due to editing information, declare the class as being synchronized
+    public synchronized void setBalance(Double newBalance) {
+        this.balance = newBalance;
+    }
 }
