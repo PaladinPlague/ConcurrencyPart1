@@ -87,8 +87,7 @@ public class CreditAccount extends Account  {
 
         if(paymentDate.getDayOfMonth() <= paymentDueDate){
             System.out.println("You should pay: " + this.getBalance());
-        }else if(paymentDate.getDayOfMonth() > paymentDueDate){
-
+        }else{
              double payableAmount = this.getBalance()+(this.getBalance()*monthlyInterest()) ;
              this.setBalance(payableAmount);
             System.out.println("you should pay: " + payableAmount);
