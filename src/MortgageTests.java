@@ -7,11 +7,11 @@ public class MortgageTests {
     void testCreatedAccount() {
         //Ensures all values are as they should be
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
-        assertEquals(acc.getAccountNumber(), "123456");
-        assertEquals(acc.getBalance(), 100000.00);
-        assertEquals(acc.getAnnInterest(), 0.01);
-        assertEquals(acc.getMonthInterest(), 0.01 / 12);
-        assertEquals(acc.getType(), "Mortgage Account");
+        assertEquals("123456", acc.getAccountNumber());
+        assertEquals(100000.00, acc.getBalance());
+        assertEquals(0.01, acc.getAnnInterest());
+        assertEquals(0.01 / 12, acc.getMonthInterest());
+        assertEquals("Mortgage Account", acc.getType());
         //System.out.println("Test 1 details: ");
         //acc.printDetails();
     }
@@ -20,11 +20,11 @@ public class MortgageTests {
     void testInterestChange() {
         //The interest values should be changing accordingly
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
-        assertEquals(acc.getAnnInterest(), 0.01);
-        assertEquals(acc.getMonthInterest(), 0.01 / 12);
+        assertEquals(0.01, acc.getAnnInterest());
+        assertEquals(0.01 / 12, acc.getMonthInterest());
         acc.updateInterest(2.5);
-        assertEquals(acc.getAnnInterest(), 0.025);
-        assertEquals(acc.getMonthInterest(), 0.025 / 12);
+        assertEquals(0.025, acc.getAnnInterest());
+        assertEquals(0.025 / 12, acc.getMonthInterest());
         //System.out.println("Test 2 details: ");
         //acc.printDetails();
     }
@@ -45,7 +45,7 @@ public class MortgageTests {
         //Should print a warning about late payments and NOT accept it
         Thread.sleep(5000);
         acc.deposit(acc, 876.04);
-        assertEquals(acc.getBalance(), 100000);
+        assertEquals(100000, acc.getBalance());
         //System.out.println("Test 4 details: ");
         //acc.printDetails();
     }
