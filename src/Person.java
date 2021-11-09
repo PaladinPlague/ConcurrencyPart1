@@ -12,25 +12,61 @@ public abstract class Person {
     }
 
     //Carry out depositing method depending on what process is used, search this person's account by index
-    public abstract void deposit(int thisAccIndex, Account otherAcc);
+    public synchronized void deposit(int thisAccIndex, Account otherAcc) {
+        //Get the user's account at this index
+        Account thisAcc = getAccount(thisAccIndex);
+        //If the index is not out of range, complete the fully defined code for deposit
+        if (thisAcc != null) {
+            deposit(thisAcc, otherAcc);
+        }
+    };
 
     //Carry out depositing method depending on what process is used, search this person's account by object
     public abstract void deposit(Account thisAcc, Account otherAcc);
 
     //Carry out the withdraw method depending on process by person, search this person's account by index
-    public abstract void withdraw(int thisAccIndex, Account otherAcc);
+    public synchronized void withdraw(int thisAccIndex, Account otherAcc) {
+        //Get the user's account at this index
+        Account thisAcc = getAccount(thisAccIndex);
+        //If the index is not out of range, complete the fully defined code for deposit
+        if (thisAcc != null) {
+            withdraw(thisAcc, otherAcc);
+        }
+    };
 
     //Carry out the withdraw method depending on process by person, search this person's account by object
     public abstract void withdraw(Account thisAcc, Account otherAcc);
 
     //Carryout the transfer methods for this person, search both accounts by index
-    public abstract void transfer(int acc1Index, int acc2Index);
+    public synchronized void transfer(int acc1Index, int acc2Index) {
+        //Get the user's accounts at the specified indexes
+        Account acc1 = getAccount(acc1Index);
+        Account acc2 = getAccount(acc2Index);
+        //If the two indexes are not out of range, and they are not the same, complete the fully defined code for transfer
+        if (acc1 != null && acc2 != null && acc1Index != acc2Index) {
+            transfer(acc1, acc2);
+        }
+    };
 
     //Carryout the transfer methods for this person, search 1st account by index and 2nd account by object
-    public abstract void transfer(int acc1Index, Account acc2);
+    public synchronized void transfer(int acc1Index, Account acc2) {
+        //Get the user's account at the index for the 1st account
+        Account acc1 = getAccount(acc1Index);
+        //If the index is not out of range, complete the fully defined code for transfer
+        if (acc1 != null) {
+            transfer(acc1, acc2);
+        }
+    }
 
     //Carryout the transfer methods for this person, search 1st account by object and 2nd account by index
-    public abstract void transfer(Account acc1, int acc2Index);
+    public synchronized void transfer(Account acc1, int acc2Index) {
+        //Get the user's account at the index for the 2nd account
+        Account acc2 = getAccount(acc2Index);
+        //If the index is not out of range, complete the fully defined code for transfer
+        if (acc2 != null) {
+            transfer(acc1, acc2);
+        }
+    }
 
     //Carryout the transfer methods for this person, search both accounts by object
     public abstract void transfer(Account acc1, Account acc2);
