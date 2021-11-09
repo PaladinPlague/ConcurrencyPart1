@@ -6,25 +6,25 @@ import java.util.Date;
 public class SavingAccount extends Account {
 
     /*
-    CREATED BY SULEMAN AKHTER
-    An saving account is an account that allows you top deposit money and let that money grow in value, this growth is called interest
-    Our saving account will have a minimum £1 deposit, otherwise you are unable to open an account
-    Our saving account will be instant access, meaning you can add and take out money any time
-    Our saving account will have an fixed interest rate of 0.2% every year
-    This entire account is deemed Invalid if the balance is < than minimum deposit
-    This class overrides everything in the abstract class as this notation of an account been invalid, must be dealt  in every method
+    SAVING ACCOUNT
+    Created by Suleman Akhter
 
-    */
+    - An saving account is an account that allows you top deposit money and let that money grow in value, this growth is called interest
+    - Our saving account will have a minimum £1 deposit, otherwise you are unable to open an account
+    - Our saving account will be instant access, meaning you can add and take out money any time
+    - Our saving account will have an fixed interest rate of 0.2% every year (The first day every year)
+    - This entire account is deemed Invalid if the balance is < than minimum deposit
+    - This class overrides mostly everything in the abstract class as this notation of an account been invalid and interest, must be dealt in most of the methods
+    - Our account does not require an Pin (Pin used for physical cash), because when you withdraw from an saving account, it must go to another account
 
-    /*
     FIELDS:
 
     invalid:  checks whether this account is valid or not
     fixedValue: Minimum deposit required
     interestRate: The interest Rate that is added to savings yearly
     everyYear: This changes date everytime the account interest addition occurs
-    Balance: The current money
-    AccountNumber: The users Account ID
+    currentBalance: The current money
+    transactions: Arraylist of transaction type
     Transaction: All of the current Transactions
 
      */
@@ -34,8 +34,6 @@ public class SavingAccount extends Account {
     private double interestRate = 0.2;
     LocalDate everyYear;
     private double currentBalance;
-    //double balance;
-    //String accountNumber;
     private ArrayList<Transaction> transactions;
 
     //This constructor uses super on account number and initial deposit parameters, and the account will only be valid if deposit has minimum £1
@@ -107,11 +105,12 @@ public class SavingAccount extends Account {
         }
     }
 
-    // Adds the balance ith the account and then adds the interest if eligible.
+    // Adds the balance with the account and then adds the interest if eligible.
     @Override
     public synchronized void deposit(Double amount, Account sender) throws Exception {
         addInterest(getBalance());
         currentBalance += amount;
+        currentBalance = Math.round(currentBalance * 100.0) / 100.0;
         if(checkBalance(currentBalance)){
             System.out.println("Total balance: " + currentBalance);
             transactions.add(new Transaction(amount, sender, this));
@@ -179,7 +178,7 @@ public class SavingAccount extends Account {
             }
         }
     }
-
+    // This is uses for Junit purposes, allows me to see if interest function works
     public void changeDate(LocalDate change){
         everyYear = change;
     }
