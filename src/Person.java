@@ -11,14 +11,29 @@ public abstract class Person {
         accounts = new ArrayList<>();
     }
 
-    //Carry out depositing method depending on what process is used
-    public abstract void deposit();
+    //Carry out depositing method depending on what process is used, search this person's account by index
+    public abstract void deposit(int thisAccIndex, Account otherAcc);
 
-    //Carry out the withdraw method depending on process by person
-    public abstract void withdraw();
+    //Carry out depositing method depending on what process is used, search this person's account by object
+    public abstract void deposit(Account thisAcc, Account otherAcc);
 
-    //Carryout the transfer methods for this person
-    public abstract void transfer();
+    //Carry out the withdraw method depending on process by person, search this person's account by index
+    public abstract void withdraw(int thisAccIndex, Account otherAcc);
+
+    //Carry out the withdraw method depending on process by person, search this person's account by object
+    public abstract void withdraw(Account thisAcc, Account otherAcc);
+
+    //Carryout the transfer methods for this person, search both accounts by index
+    public abstract void transfer(int acc1Index, int acc2Index);
+
+    //Carryout the transfer methods for this person, search 1st account by index and 2nd account by object
+    public abstract void transfer(int acc1Index, Account acc2);
+
+    //Carryout the transfer methods for this person, search 1st account by object and 2nd account by index
+    public abstract void transfer(Account acc1, int acc2Index);
+
+    //Carryout the transfer methods for this person, search both accounts by object
+    public abstract void transfer(Account acc1, Account acc2);
 
     //Get the details of an account based on index
     public Account getAccount(int index) {
@@ -28,6 +43,21 @@ public abstract class Person {
         }
         //Otherwise, return the account at this index
         return accounts.get(index);
+    }
+
+    //Get the details of an account based on object reference
+    //This seems pointless, but it's used as a helper method to ensure for other methods that object parameters are in this person's list
+    //(ArrayLists in Java don't have a get function corresponding to object types)
+    public Account getAccount(Account acc) {
+        //Move through list of accounts until we find the parameter account
+        for (int i = 0; i < accounts.size(); i++) {
+            //If the account in the list is equal to the parameter account, return it
+            if (accounts.get(i).equals(acc)) {
+                return accounts.get(i);
+            }
+        }
+        //If we could not find the object, return null
+        return null;
     }
 
     //Get the total balance available for a person through all their accounts
@@ -44,54 +74,54 @@ public abstract class Person {
 
     //Print the details of an account using index
     public boolean printAccountDetails(int index) {
-        //If index is out of list range, show error message
-        if (index < 0 || index >= accounts.size()) {
+        //Validate account's existence through helper method
+        Account acc = getAccount(index);
+        //If account does not exist, show error method and return false
+        if (acc == null) {
             System.out.println("ERROR: index " + index + " is out of range of account length.");
             return false;
         }
-        //Otherwise, print this account's details
-        accounts.get(index).printDetails();
+        //Otherwise, print account's details and return true
+        acc.printDetails();
         return true;
     }
 
     //Print the details of an account using the account itself
     public boolean printAccountDetails(Account acc) {
-        //Move through list of accounts until we find the parameter account
-        //(ArrayLists in Java don't have a get function corresponding to object types)
-        for (int i = 0; i < accounts.size(); i++) {
-            //If the account in the list is equal to the parameter account, print its details
-            if (accounts.get(i).equals(acc)) {
-                accounts.get(i).printDetails();
-                return true;
-            }
+        //Validate account's existence through helper method
+        acc = getAccount(acc);
+        //If account does not exist, show error method and return false
+        if (acc == null) {
+            System.out.println("ERROR: Account does not exist in list of accounts for this person.");
+            return false;
         }
-        //If we could not find the object, show error message
-        System.out.println("ERROR: account does not appear in this person's list of accounts.");
-        return false;
+        //Otherwise, print account's details and return true
+        acc.printDetails();
+        return true;
     }
 
     //Print the details of an account using index as a string (for GUI purposes)
     public String getAccountDetails(int index) {
+        //Validate account's existence through helper method
+        Account acc = getAccount(index);
         //If index is out of list range, show error message
-        if (index < 0 || index >= accounts.size()) {
+        if (acc == null) {
             return "ERROR: index " + index + " is out of range of account length.";
         }
         //Otherwise, print this account's details
-        return accounts.get(index).getDetails();
+        return acc.getDetails();
     }
 
-    //Print the details of an account using the account itself
+    //Print the details of an account using the account itself as a string (for GUI purposes)
     public String getAccountDetails(Account acc) {
-        //Move through list of accounts until we find the parameter account
-        //(ArrayLists in Java don't have a get function corresponding to object types)
-        for (int i = 0; i < accounts.size(); i++) {
-            //If the account in the list is equal to the parameter account, get its details
-            if (accounts.get(i).equals(acc)) {
-                return accounts.get(i).getDetails();
-            }
+        //Validate account's existence through helper method
+        acc = getAccount(acc);
+        //If account does not exist, show error method
+        if (acc == null) {
+            return "ERROR: account does not appear in this person's list of accounts.";
         }
-        //If we could not find the object, show error message
-        return "ERROR: account does not appear in this person's list of accounts.";
+        //Otherwise, get account details
+        return acc.getDetails();
     }
 
     //Create an account to add to the person's list
@@ -108,8 +138,10 @@ public abstract class Person {
 
     //Remove an account based on index
     public synchronized boolean deleteAccount(int index) {
+        //Validate account's existence through helper method
+        Account acc = getAccount(index);
         //If index is out of list range, do not remove an account and return false
-        if (index < 0 || index >= accounts.size()) {
+        if (acc == null) {
             return false;
         }
         //Otherwise, remove the account at this index and return true
@@ -130,27 +162,27 @@ public abstract class Person {
 
     //Set the balance of an account in the list using an index
     public synchronized boolean updateAccountBalance(int index, Double amount) {
+        //Validate account's existence through helper method
+        Account acc = getAccount(index);
         //If index is out of list range, do not update account balance and return false
-        if (index < 0 || index >= accounts.size()) {
+        if (acc == null) {
             return false;
         }
         //Otherwise, set this account's balance to our amount
-        accounts.get(index).setBalance(amount);
+        acc.setBalance(amount);
         return true;
     }
 
     //Set the balance of an account in the list using the account itself as a parameter
     public synchronized boolean updateAccountBalance(Account acc, Double amount) {
-        //Move through list of accounts until we find the parameter account
-        //(ArrayLists in Java don't have a get function corresponding to object types)
-        for (int i = 0; i < accounts.size(); i++) {
-            //If the account in the list is equal to the parameter account, update its balance and return true
-            if (accounts.get(i).equals(acc)) {
-                accounts.get(i).setBalance(amount);
-                return true;
-            }
+        //Validate account's existence through helper method
+        acc = getAccount(acc);
+        //If account does not exist, return false
+        if (acc == null) {
+            return false;
         }
-        //If we could not find the object, return false
-        return false;
+        //Otherwise, update its balance and return true
+        acc.setBalance(amount);
+        return true;
     }
 }
