@@ -56,6 +56,7 @@ public abstract class Account {
     //If an account needs to share more details, override
     public void printDetails() {
         System.out.println("Account number: " + this.getAccountNumber());
+        //Format balance so it has 2 decimal places
         System.out.println("Balance: " + String.format("%.2f", this.getBalance()));
         System.out.println("Account Type: " + this.getType());
     }
@@ -65,6 +66,7 @@ public abstract class Account {
     public String getDetails() {
         String result = "";
         result += "Account number: " + this.getAccountNumber() + "\n";
+        //Format balance so it has 2 decimal places
         result += "Balance: " + String.format("%.2f", this.getBalance()) + "\n";
         result += "Account Type: " + this.getType() + "\n";
         return result;
@@ -80,6 +82,6 @@ public abstract class Account {
 
     //Add a new transaction to the account's current transactions
     public synchronized void addToTransaction(Transaction transact) {
-        //Michael can update code from here
+        transactions.add(transact);
     }
 }

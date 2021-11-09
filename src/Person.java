@@ -1,5 +1,6 @@
 import java.util.*;
 
+//An abstract class for the people working with accounts
 public abstract class Person {
 
     //Holds a list of accounts managed by person
@@ -39,6 +40,58 @@ public abstract class Person {
         }
         //Return the total balance
         return result;
+    }
+
+    //Print the details of an account using index
+    public boolean printAccountDetails(int index) {
+        //If index is out of list range, show error message
+        if (index < 0 || index >= accounts.size()) {
+            System.out.println("ERROR: index " + index + " is out of range of account length.");
+            return false;
+        }
+        //Otherwise, print this account's details
+        accounts.get(index).printDetails();
+        return true;
+    }
+
+    //Print the details of an account using the account itself
+    public boolean printAccountDetails(Account acc) {
+        //Move through list of accounts until we find the parameter account
+        //(ArrayLists in Java don't have a get function corresponding to object types)
+        for (int i = 0; i < accounts.size(); i++) {
+            //If the account in the list is equal to the parameter account, print its details
+            if (accounts.get(i).equals(acc)) {
+                accounts.get(i).printDetails();
+                return true;
+            }
+        }
+        //If we could not find the object, show error message
+        System.out.println("ERROR: account does not appear in this person's list of accounts.");
+        return false;
+    }
+
+    //Print the details of an account using index as a string (for GUI purposes)
+    public String getAccountDetails(int index) {
+        //If index is out of list range, show error message
+        if (index < 0 || index >= accounts.size()) {
+            return "ERROR: index " + index + " is out of range of account length.";
+        }
+        //Otherwise, print this account's details
+        return accounts.get(index).getDetails();
+    }
+
+    //Print the details of an account using the account itself
+    public String getAccountDetails(Account acc) {
+        //Move through list of accounts until we find the parameter account
+        //(ArrayLists in Java don't have a get function corresponding to object types)
+        for (int i = 0; i < accounts.size(); i++) {
+            //If the account in the list is equal to the parameter account, get its details
+            if (accounts.get(i).equals(acc)) {
+                return accounts.get(i).getDetails();
+            }
+        }
+        //If we could not find the object, show error message
+        return "ERROR: account does not appear in this person's list of accounts.";
     }
 
     //Create an account to add to the person's list
