@@ -4,26 +4,40 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MortgageTests {
 
     @Test
-    void checkCreatedAccount() {
+    void testCreatedAccount() {
         //Ensures all values are as should be
-        MortgageAcc acc = new MortgageAcc("123456", 2000.00, 0.03);
+        MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         assertEquals(acc.getAccountNumber(), "123456");
-        assertEquals(acc.getBalance(), 2000.00);
-        assertEquals(acc.getInterest(), 0.03);
+        assertEquals(acc.getBalance(), 100000.00);
+        assertEquals(acc.getAnnInterest(), 0.01);
+        assertEquals(acc.getMonthInterest(), 0.01 / 12);
         assertEquals(acc.getType(), "Mortgage Account");
+        System.out.println("Test 1 details: ");
+        acc.printDetails();
     }
 
     @Test
-    void getUpdateAccountNo() {
-        //Check if updating the account number works
-        MortgageAcc acc = new MortgageAcc("123456", 2000.00, 0.03);
-        assertEquals(acc.getAccountNumber(), "123456");
-
-        acc.updateAccountNo("234567");
-        assertEquals(acc.getAccountNumber(), "234567");
-
+    void testInterestChange() {
+        MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
+        assertEquals(acc.getAnnInterest(), 0.01);
+        assertEquals(acc.getMonthInterest(), 0.01 / 12);
+        acc.updateInterest(2.5);
+        assertEquals(acc.getAnnInterest(), 0.025);
+        assertEquals(acc.getMonthInterest(), 0.025 / 12);
+        System.out.println("Test 2 details: ");
+        acc.printDetails();
     }
 
+    @Test
+    void singlePaymentTest() throws InterruptedException {
+        MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
+        acc.deposit(acc, 876.04);
+        Thread.sleep(3000);
+        acc.deposit(acc, 0.0);
+        System.out.println("Test 3 details: ");
+        acc.printDetails();
+    }
+/*
     @Test
     public void paymentsTest() {
         MortgageAcc acc = new MortgageAcc("01234567", 1000.00,0.03);
@@ -40,5 +54,6 @@ public class MortgageTests {
         assert(acc.getBalance() == 838.12);
         assert(acc.getTransactions().size() == 6);
     }
+     */
 
 }
