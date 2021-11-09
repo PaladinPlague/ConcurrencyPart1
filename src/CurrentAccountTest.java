@@ -7,68 +7,83 @@ class CurrentAccountTest {
     void getCreatedAccount() {
 
         //Use this to test that we can create a Current Account and that all details from it are correct
-        CurrentAccount acc = new CurrentAccount("98765432", 25.00, 4444);
+        CurrentAccount acc = new CurrentAccount("98765432", 25.00, 1234);
 
         assertEquals(acc.getAccountNumber(), "98765432");
         assertEquals(acc.getBalance(), 25.00);
         assertEquals(acc.getType(), "Current Account");
+        assertEquals(acc.getPIN(), 1234);
 
     }
 
     @Test
-    void getUpdateAccountNo() {
-
-        //Use this to test that we can change an account's number
-        CurrentAccount acc = new CurrentAccount("10000000", 0.00, 1111);
-        assertEquals(acc.getAccountNumber(), "10000000");
-
-        acc.updateAccountNo("10000002");
-        assertEquals(acc.getAccountNumber(), "10000002");
-
-    }
-
-    @Test
-    void getTransactionTests() {
+    void getDepositAndWithdraw() {
 
         //Use this to test that we are able to validate and add transactions into our bank
         CurrentAccount acc = new CurrentAccount("12345678", 50.00, 1234);
+        CurrentAccount acc2 = new CurrentAccount("23456789", 50.00, 1234);
 
-        //Note - names of transaction sources (e.g. "McDonald's") used to demonstrate real-life scenarios
-        assertTrue(acc.confirmPayment(new Transaction(-12.50, "McDonald's"), 1234));
-        assertEquals(acc.getBalance(), 37.50);
+        acc.deposit(acc2, 7.50);
+        acc2.withdraw(acc, 7.50);
+        assertEquals(acc.getBalance(), 57.50);
+        assertEquals(acc2.getBalance(), 42.50);
 
-        assertFalse(acc.confirmPayment(new Transaction(35.00, "Friend's gift"), 1111));
-        assertEquals(acc.getBalance(), 37.50);
-
-        assertTrue(acc.confirmPayment(new Transaction(25.30, "Teacher Loan"), 1234));
-        assertEquals(acc.getBalance(), 62.80);
+        acc.withdraw(acc2, 32.30);
+        acc2.deposit(acc, 32.30);
+        assertEquals(acc.getBalance(), 25.20);
+        assertEquals(acc2.getBalance(), 74.80);
 
         assertEquals(acc.getTransactions().size(), 2);
+        assertEquals(acc2.getTransactions().size(), 2);
 
-        assertEquals(acc.getTransactions().get(0).getSource(), "McDonald's");
-        assertEquals(acc.getTransactions().get(0).getAmount(), -12.50);
+        assertEquals(acc.getTransactions().get(0).getAmount(), 7.50);
+        assertEquals(acc.getTransactions().get(0).getSource(), acc2);
+        assertEquals(acc.getTransactions().get(0).getReceiver(), acc);
 
-        assertEquals(acc.getTransactions().get(1).getSource(), "Teacher Loan");
-        assertEquals(acc.getTransactions().get(1).getAmount(), 25.30);
+        assertEquals(acc2.getTransactions().get(0).getAmount(), 7.50);
+        assertEquals(acc2.getTransactions().get(0).getSource(), acc2);
+        assertEquals(acc2.getTransactions().get(0).getReceiver(), acc);
+
+        assertEquals(acc.getTransactions().get(1).getAmount(), 32.30);
+        assertEquals(acc.getTransactions().get(1).getSource(), acc);
+        assertEquals(acc.getTransactions().get(1).getReceiver(), acc2);
+
+        assertEquals(acc2.getTransactions().get(1).getAmount(), 32.30);
+        assertEquals(acc2.getTransactions().get(1).getSource(), acc);
+        assertEquals(acc2.getTransactions().get(1).getReceiver(), acc2);
+    }
+
+    @Test
+    void getConfirmPayment() {
+
+        //Test if we are able to use the "confirm payment" method well
+        CurrentAccount acc = new CurrentAccount("12345678", 50.00, 1234);
+        CurrentAccount acc2 = new CurrentAccount("23456789", 50.00, 1234);
+
+        assertTrue(acc.confirmPayment(acc2, 10.00, 1234));
+        assertEquals(acc.getBalance(), 40.00);
+
+        assertFalse(acc.confirmPayment(acc2, 5.00, 1111));
+        assertEquals(acc.getBalance(), 40.00);
+
     }
 
     @Test
     void getUpdatePin() {
-        CurrentAccount acc = new CurrentAccount("01234567", 0.00, 1234);
 
-        assertTrue(acc.confirmPayment(new Transaction(1.00, "Transaction test 1"), 1234));
+        //Test if we are able to successfully update the PIN with correct input
+        CurrentAccount acc = new CurrentAccount("12345678", 50.00, 1234);
+
+        assertEquals(acc.getPIN(), 1234);
 
         assertTrue(acc.updatePIN(1234, 4321));
-        assertFalse(acc.confirmPayment(new Transaction(1.00, "Transaction test 2"), 1234));
-        assertTrue(acc.confirmPayment(new Transaction(1.00, "Transaction test 3"), 4321));
+        assertEquals(acc.getPIN(), 4321);
 
         assertFalse(acc.updatePIN(1234, 1111));
-        assertFalse(acc.confirmPayment(new Transaction(1.00, "Transaction test 4"), 1111));
-        assertTrue(acc.confirmPayment(new Transaction(1.00, "Transaction test 5"), 4321));
+        assertEquals(acc.getPIN(), 4321);
 
         assertFalse(acc.updatePIN(4321, 4321));
-        assertTrue(acc.confirmPayment(new Transaction(1.00, "Transaction test 6"), 4321));
-
+        assertEquals(acc.getPIN(), 4321);
 
     }
 }
