@@ -23,8 +23,10 @@ public class MortgageAcc extends Account {
     private int years;
     //Constantly changed variable to store the amount STILL TO BE PAID this month
     private double currMonthPay;
-    //Variable for storing the time an account was opened since 'monthly' payments aren't testable
+    //Time an account was opened since 'monthly' payments aren't testable
     private LocalTime opened;
+    //Separate balance used to avoid any miscalculations with interest
+    private double monthStartBal;
 
     //Constructor specific to a mortgage account - these accounts are opened
     //With an already high balance and an additional interest rate. This balance
@@ -41,6 +43,8 @@ public class MortgageAcc extends Account {
         this.currMonthPay = this.monthlyPayment;
         //Exact time this account was opened
         this.opened = LocalTime.now();
+        //The monthStartBal should be set to the original balance
+        this.monthStartBal = bal;
     }
 
     //Returns the annual interest rate
@@ -73,51 +77,83 @@ public class MortgageAcc extends Account {
 
     @Override
     public void deposit(Account sender, Double amount) {
-        //If the balance is 0 then the mortgage has been paid off
-        if (getBalance() == 0) {
-            System.out.println("This mortgage has been paid off and requires no additional payments - the account will now be closed");
-            return;
-        }
 
-        //Since working in months isn't good for testing, it's easier to working in seconds with a month being
-        //Represented by something like 30/60s
-        LocalTime curr = LocalTime.now();
-        int diff = (int) opened.until(curr, ChronoUnit.SECONDS);
-        //Once the duration difference is found, we need to store the seconds as an int
-        if (diff >= 2 /*this being for a test*/) {
-            //If there's still some left to pay, it should warn them the payment isn't received
-            if (this.currMonthPay > 0) {
-                System.out.println("Warning! Full payment has not been received for this month");
+        if (amount > 0) {
+
+            //If the balance is 0 then the mortgage has been paid off
+            if (getBalance() <= 0) {
+                System.out.println("This mortgage has been paid off and requires no additional payments - the account will now be closed");
+                System.out.println("In addition, any funds that were overpaid will also be refunded accordingly.");
+                return;
             }
-            //If the monthly amount has been paid it must now split the payment between the interest and balance
-            else if (this.currMonthPay == 0) {
-                System.out.println("Full payment received this month");
-                this.depositHelper();
+
+            //If being paid in, then this should affect the amount left to pay this month
+            this.currMonthPay = this.currMonthPay - amount;
+            this.currMonthPay = Math.round(this.currMonthPay * 100);
+            this.currMonthPay = this.currMonthPay / 100;
+
+            //Since working in months isn't good for testing, it's easier to working in seconds with a month being
+            //Represented by something like 30/60s
+            LocalTime curr = LocalTime.now();
+            //Once the duration difference is found, we need to store the seconds as an int
+            int diff = (int) opened.until(curr, ChronoUnit.SECONDS);
+            //If the payment is late it will move onto the next month
+            if (diff > 2 /*this being for a test*/) {
+                System.out.println("This is a LATE payment and will not affect the previous month's payments.");
+                System.out.println("Please ensure you are keeping up with mortgage payments");
+                //Recalculates the monthlyPayment to check for are any changes
+                monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
+                currMonthPay = monthlyPayment;
+                //Resets the time
+                this.opened = LocalTime.now();
+            } else if (diff == 2 /*this being for a test*/) {
+                //If there's still some left to pay, it should warn them the payment isn't received
+                if (this.currMonthPay > 0) {
+                    System.out.println("Warning! Full payment has not been received for this month - this will extend the life of your mortgage");
+                }
+                //If the monthly amount has been paid it must now split the payment between the interest and balance
+                else if (this.currMonthPay == 0) {
+                    System.out.println("Full payment received this month");
+                    this.depositHelper();
+                }
+                //If more than the monthly payment has been deposited, this will affect the balance directly
+                else {
+                    System.out.println("You've paid extra this month - the excess will go straight to your balance");
+                    double extra = Math.abs(currMonthPay);
+                    //Calls the helper
+                    this.depositHelper();
+                    //Once the helper is called, the additional money has to directly lower the balance
+                    double bal = getBalance();
+                    double balanceDiff = bal - extra;
+                    setBalance(balanceDiff);
+                }
+                //Recalculates the monthlyPayment to check for are any changes
+                monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
+                currMonthPay = monthlyPayment;
+                //Resets the time
+                this.opened = LocalTime.now();
+                System.out.println("The following will now refer to the new month's payments");
             }
-            //If more than the monthly payment has been deposited, this will affect the balance directly
+            //If the 'month' is not up, then it just takes the amount off the balance
             else {
-                System.out.println("You've paid extra this month - the excess will go straight to your balance");
-                double extra = Math.abs(currMonthPay);
-                //Calls the helper
-                this.depositHelper();
-                //Once the helper is called, the additional money has to directly lower the balance
                 double bal = getBalance();
-                double balanceDiff = bal - extra;
+                //Take the interest away from the payment and then that number should be taken from the balance
+                double paymentLessInterest = amount - (amount * getMonthInterest());
+                //Inefficient but still working on this
+                paymentLessInterest = Math.round(paymentLessInterest * 100);
+                paymentLessInterest = paymentLessInterest / 100;
+                double balanceDiff = bal - paymentLessInterest;
                 setBalance(balanceDiff);
             }
-            //Recalculates the monthlyPayment to check for are any changes
-            monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
-            currMonthPay = monthlyPayment;
-            //Resets the time
-            this.opened = LocalTime.now();
+
+            //If there's still some left to pay, it should say as much
+            if (this.currMonthPay > 0) {
+                System.out.println("Payment left for this month: £" + this.currMonthPay);
+                System.out.println();
+            }
         }
-
-        //If being paid in, then this should affect the amount left to pay this month
-        this.currMonthPay = this.currMonthPay - amount;
-
-        //If there's still some left to pay, it should say as much
-        if (this.currMonthPay > 0) {
-            System.out.println("Payment left for this month: £" + this.currMonthPay);
+        else {
+            System.out.println("You need to pay more than £0");
         }
     }
 
