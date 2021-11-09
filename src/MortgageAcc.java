@@ -136,7 +136,8 @@ public class MortgageAcc extends Account {
         double monthlyInt = getMonthInterest();
         //Super messy formula for calculating monthly payments
         //P [ i(1 + i)^n ] / [ (1 + i)^n – 1]
-        //I had to split the formula into part to get it to seem somewhat readable
+        //Had to split the formula into part to get it to seem somewhat readable
+        //Had to split the formula into part to get it to seem somewhat readable
         double part1 = (monthlyInt * Math.pow((1 + monthlyInt),(this.years * 12)));
         double part2 = Math.pow((1 + monthlyInt),(this.years * 12)) - 1;
         double payment = getBalance() * (part1 / part2);

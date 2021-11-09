@@ -5,7 +5,7 @@ public class MortgageTests {
 
     @Test
     void testCreatedAccount() {
-        //Ensures all values are as should be
+        //Ensures all values are as they should be
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         assertEquals(acc.getAccountNumber(), "123456");
         assertEquals(acc.getBalance(), 100000.00);
