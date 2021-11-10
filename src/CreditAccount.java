@@ -10,18 +10,16 @@ public class CreditAccount extends Account  {
 
     private double creditLimit;
     private double availableCredit;
-    private int pin;
     private double APR;
     private final int paymentDueDate;
     LocalDate paymentDate;
     private Person cardHolder;
 
-    public CreditAccount(String accountNo, Double openingBalance, double openingCredit, int pin, double APR ) {
+    public CreditAccount(String accountNo, Double openingBalance, double openingCredit, double APR ) {
         super(accountNo, openingBalance);
 
         this.creditLimit = openingCredit;
         this.availableCredit = openingCredit;
-        this.pin = pin;
         this.APR = APR;
         paymentDueDate = 15;
     }
@@ -68,11 +66,6 @@ public class CreditAccount extends Account  {
         return APR;
     }
 
-    //get Pin return pin, might be used to check the pin.
-    public synchronized int getPin(){
-        return pin;
-    }
-
     public synchronized double monthlyInterest (){
         return APR/12;
     }
@@ -115,9 +108,7 @@ public class CreditAccount extends Account  {
         }else{
 
             Transaction transaction = new Transaction(amount, sender, this);
-            double newBalance = this.getBalance();
-            newBalance +=amount;
-            this.setBalance(newBalance);
+            setBalance(getBalance()+amount);
             if((availableCredit+=amount)>getCreditLimit()){
                 availableCredit = creditLimit;
             }else{
@@ -136,12 +127,9 @@ public class CreditAccount extends Account  {
     update availableCredit field, as more money spent it should get lower.
      */
     @Override
-    public synchronized void withdraw(Double amount, Account receiver, int pin) throws Exception {
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
-        if(pin != getPin()){
-            throw new Exception("Denied Access: Incorrect Pin");
-            //check if the receiving account is not a credit account, you can't use credit account pay another credit account
-        }else if(Objects.equals(receiver.getType(), "Credit Card Account")){
+        if(Objects.equals(receiver.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use this credit card to pay another credit card!");
             //check if we still have enough credit to pay for this transaction.
         }else if(availableCredit < amount){
@@ -149,11 +137,9 @@ public class CreditAccount extends Account  {
         }else{
             //make a new transaction goes from this credit account to any other account
             Transaction transaction = new Transaction(amount,this,receiver);
-            double balance =  this.getBalance();
-            balance -= amount;
             availableCredit -= amount;
-            this.setBalance(balance);
-            this.addToTransaction(transaction);
+            setBalance(getBalance()-amount);
+            addToTransaction(transaction);
         }
 
     }
@@ -180,31 +166,28 @@ public class CreditAccount extends Account  {
         }else{
 
             Transaction transaction = new Transaction(amount, supplyAccount, this);
-            double newBalance = this.getBalance();
-            newBalance +=amount;
-            this.setBalance(newBalance);
+            setBalance(getBalance()+amount);
             if((availableCredit+=amount)>getCreditLimit()){
                 availableCredit = creditLimit;
             }else{
                 availableCredit += amount;
             }
-            this.addToTransaction(transaction);
+            addToTransaction(transaction);
         }
     }
 
-    //set up new pin for pin update service
-    public synchronized void updatePin(int currentPin, int newPin) throws Exception {
 
-        if(getPin() == currentPin && currentPin != newPin){
-            this.pin = newPin;
-        }else{
-            throw new Exception("Sorry error occurs, failed to update your PIN.");
-        }
-
+    @Override
+    public void printDetails(){
+        System.out.println("CC Account Number: " +this.getAccountNumber());
+        System.out.println("Total Credit Limit: " +getCreditLimit());
+        System.out.println("Available Credit of This Month: " + getAvailableCreditCredit());
+        System.out.println("New Balance: "+this.getBalance());
+        System.out.println("List of Transactions: " + this.getTransactions());
     }
 
     @Override
-    public String toString(){
+    public String getDetails(){
         return "CC Account Number: " +this.getAccountNumber()+", credit: " +getCreditLimit()+", " +
                 "available Credit: " + getAvailableCreditCredit()+", balance: "+this.getBalance()+ ", " +
                 "Transactions："+this.getTransactions()+".";

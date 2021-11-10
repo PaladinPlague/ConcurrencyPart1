@@ -3,72 +3,57 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CurrentAccountTest {
 
+    CurrentAccount account = new CurrentAccount("56357771", 500.00);
+    CurrentAccount secondAcc = new CurrentAccount("30569309", 700.00);
+
     @Test
-    void getCreatedAccount() {
+    void generateNewCurrentAccount(){
+        assertNotNull(account);
+        assertEquals("56357771",account.getAccountNumber());
+        assertEquals("Current Account",account.getType());
+        assertEquals(500.00,account.getBalance());
+    }
 
-        //Use this to test that we can create a Current Account and that all details from it are correct
-        CurrentAccount acc = new CurrentAccount("98765432", 25.00, 4444);
+    @Test
+    void makeDeposit(){
+        account.deposit(50.00, secondAcc);
 
-        assertEquals(acc.getAccountNumber(), "98765432");
-        assertEquals(acc.getBalance(), 25.00);
-        assertEquals(acc.getType(), "Current Account");
+        assertEquals(550,account.getBalance());
+    }
+
+    @Test
+    void failedToMakeWithdraw(){
+
+        Exception ex  = assertThrows(Exception.class, ()->account.withdraw(600.00,secondAcc));
+        String expectedErMsg = "Sorry, insufficient fund.";
+        String erMsg = ex.getMessage();
+        assertEquals(expectedErMsg, erMsg);
 
     }
 
     @Test
-    void getUpdateAccountNo() {
+    void makeWithdraw()  {
 
-        //Use this to test that we can change an account's number
-        CurrentAccount acc = new CurrentAccount("10000000", 0.00, 1111);
-        assertEquals(acc.getAccountNumber(), "10000000");
+        try {
+            account.withdraw(300.00, secondAcc);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        //acc.updateAccountNo("10000002");
-        //assertEquals(acc.getAccountNumber(), "10000002");
-
+        assertEquals(200.00, account.getBalance());
     }
 
     @Test
-    void getTransactionTests() {
+    void printStatement(){
+        try {
+            account.withdraw(100.00, secondAcc);
+            account.withdraw(200.00, secondAcc);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        //Use this to test that we are able to validate and add transactions into our bank
-        CurrentAccount acc = new CurrentAccount("12345678", 50.00, 1234);
-
-        //Note - names of transaction sources (e.g. "McDonald's") used to demonstrate real-life scenarios
-        assertTrue(acc.confirmPayment(new Transaction(-12.50, acc, new CurrentAccount("MacDonald", 0.00,4321)), 1234));
-        assertEquals(acc.getBalance(), 37.50);
-
-        assertFalse(acc.confirmPayment(new Transaction(35.00, acc, new CurrentAccount("Friend's gift", 0.00,4321)), 1111));
-        assertEquals(acc.getBalance(), 37.50);
-
-        assertTrue(acc.confirmPayment(new Transaction(25.30, acc, new CurrentAccount("Teacher Loan" ,0.00,4321)), 1234));
-        assertEquals(acc.getBalance(), 62.80);
-
-        assertEquals(acc.getTransactions().size(), 2);
-
-        assertEquals(acc.getTransactions().get(0).getSource(), "McDonald's");
-        assertEquals(acc.getTransactions().get(0).getAmount(), -12.50);
-
-        assertEquals(acc.getTransactions().get(1).getSource(), "Teacher Loan");
-        assertEquals(acc.getTransactions().get(1).getAmount(), 25.30);
+        assertEquals("Current Account Number: 56357771, balance: 200.0Transactions：[From: 56357771 To: 30569309 Amount: 100.0, From: 56357771 To: 30569309 Amount: 200.0].",account.getDetails());
     }
 
-    @Test
-    void getUpdatePin() {
-        CurrentAccount acc = new CurrentAccount("01234567", 0.00, 1234);
 
-        assertTrue(acc.confirmPayment(new Transaction(1.00, acc, new CurrentAccount("Tran test 1", 0.00, 1010)), 1234));
-
-        assertTrue(acc.updatePIN(1234, 4321));
-        assertFalse(acc.confirmPayment(new Transaction(1.00, acc, new CurrentAccount("Tran test 2", 0.00, 1010)), 1234));
-        assertTrue(acc.confirmPayment(new Transaction(1.00, acc, new CurrentAccount("Tran test 3", 0.00, 1010)), 4321));
-
-        assertFalse(acc.updatePIN(1234, 1111));
-        assertFalse(acc.confirmPayment(new Transaction(1.00, acc, new CurrentAccount("Tran test 4", 0.00, 1010)), 1111));
-        assertTrue(acc.confirmPayment(new Transaction(1.00, acc, new CurrentAccount("Tran test 5", 0.00, 1010)), 4321));
-
-        assertFalse(acc.updatePIN(4321, 4321));
-        assertTrue(acc.confirmPayment(new Transaction(1.00, acc, new CurrentAccount("Tran test 6", 0.00, 1010)), 4321));
-
-
-    }
 }
