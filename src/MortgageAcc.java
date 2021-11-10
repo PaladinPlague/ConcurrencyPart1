@@ -3,7 +3,8 @@ import java.time.temporal.ChronoUnit;
 
 public class MortgageAcc extends Account {
 
-    /*Notes for a Mortgage Account:
+    /*
+    Notes for a Mortgage Account:
         - The account is opened with a large balance with is to be PAID OFF
         - There is no PIN with this type of account
         - Annual interest is divvied up between the 12 months
@@ -13,20 +14,21 @@ public class MortgageAcc extends Account {
         - the INTEREST of a monthly payment is the monthly % times the BALANCE
         - Best way to deal with monthly payments is probably add the funds throughout the entire month and
             then deal with the total at the end of the month
-    */
+
+        - Add transactions to the deposit method using something like a helper
+     */
 
     //Annual interest rate for adding to the balance - should be entered as a %
     private double intAnnual;
     //Doubly containing the monthly payment amount
     private double monthlyPayment;
     //Years the account should be open for
-    private int years;
+    private final int years;
     //Constantly changed variable to store the amount STILL TO BE PAID this month
     private double currMonthPay;
-    //Time an account was opened since 'monthly' payments aren't testable
-    private LocalTime opened;
-    //Separate balance used to avoid any miscalculations with interest
-    private double monthStartBal;
+    //Time an account was opened since 'monthly' payments aren't testable and to be used as
+    //An anchor for checking times
+    private LocalTime start;
 
     //Constructor specific to a mortgage account - these accounts are opened
     //With an already high balance and an additional interest rate. This balance
@@ -42,9 +44,7 @@ public class MortgageAcc extends Account {
         //Amount to be paid in total should be the number of actual payments multiplied by the monthly payments
         this.currMonthPay = this.monthlyPayment;
         //Exact time this account was opened
-        this.opened = LocalTime.now();
-        //The monthStartBal should be set to the original balance
-        this.monthStartBal = bal;
+        this.start = LocalTime.now();
     }
 
     //Returns the annual interest rate
@@ -54,7 +54,7 @@ public class MortgageAcc extends Account {
 
     //Returns the opening time of the account
     public LocalTime getTime() {
-        return this.opened;
+        return this.start;
     }
 
     //Returns the interest rate for monthly payments
@@ -63,7 +63,7 @@ public class MortgageAcc extends Account {
     }
 
     //Updates the interest rate
-    public void updateInterest(double newInt) {
+    public synchronized void updateInterest(double newInt) {
         this.intAnnual = newInt * 0.01;
         //Since the interest was updated, we also need to update the monthly payment
         this.monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
@@ -75,96 +75,129 @@ public class MortgageAcc extends Account {
         return "Mortgage Account";
     }
 
+    public synchronized void nextMonth() {
+        //Recalculates the monthlyPayment to check for any changes
+        monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
+        currMonthPay = monthlyPayment;
+        //Resets the time for checking monthly payments
+        this.start = LocalTime.now();
+    }
+
+    /*
+    //Stores the additional amount paid by the account holder
+    double extra = Math.abs(currMonthPay);
+    //Calls the helper to split the monthly payment as usual
+        this.depositHelper();
+    //Once the helper is called, the additional money has to directly lower the balance
+    double bal = getBalance();
+    double balanceDiff = bal - extra;
+    setBalance(balanceDiff);*/
+
     @Override
-    public void deposit(Account sender, Double amount) {
+    public synchronized void deposit(Double amount, Account sender) throws Exception {
 
-        if (amount > 0) {
-
-            //If the balance is 0 then the mortgage has been paid off
-            if (getBalance() <= 0) {
-                System.out.println("This mortgage has been paid off and requires no additional payments - the account will now be closed");
-                System.out.println("In addition, any funds that were overpaid will also be refunded accordingly.");
-                return;
-            }
-
-            //If being paid in, then this should affect the amount left to pay this month
-            this.currMonthPay = this.currMonthPay - amount;
-            this.currMonthPay = Math.round(this.currMonthPay * 100);
-            this.currMonthPay = this.currMonthPay / 100;
+        //Only allows a payment of at least £1
+        if (amount > 99) {
 
             //Since working in months isn't good for testing, it's easier to working in seconds with a month being
             //Represented by something like 30/60s
+            //SIMPLY FOR TESTING PURPOSES//
             LocalTime curr = LocalTime.now();
             //Once the duration difference is found, we need to store the seconds as an int
-            int diff = (int) opened.until(curr, ChronoUnit.SECONDS);
-            //If the payment is late it will move onto the next month
-            if (diff > 2 /*this being for a test*/) {
-                System.out.println("This is a LATE payment and will not affect the previous month's payments.");
-                System.out.println("Please ensure you are keeping up with mortgage payments");
-                //Recalculates the monthlyPayment to check for are any changes
-                monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
-                currMonthPay = monthlyPayment;
-                //Resets the time
-                this.opened = LocalTime.now();
-            } else if (diff == 2 /*this being for a test*/) {
-                //If there's still some left to pay, it should warn them the payment isn't received
-                if (this.currMonthPay > 0) {
-                    System.out.println("Warning! Full payment has not been received for this month - this will extend the life of your mortgage");
-                }
-                //If the monthly amount has been paid it must now split the payment between the interest and balance
-                else if (this.currMonthPay == 0) {
-                    System.out.println("Full payment received this month");
-                    this.depositHelper();
-                }
-                //If more than the monthly payment has been deposited, this will affect the balance directly
-                else {
-                    System.out.println("You've paid extra this month - the excess will go straight to your balance");
-                    double extra = Math.abs(currMonthPay);
-                    //Calls the helper
-                    this.depositHelper();
-                    //Once the helper is called, the additional money has to directly lower the balance
+            double diff = (double) start.until(curr, ChronoUnit.SECONDS);
+
+            //Check the diff to see if the current monthly payment period had passed.
+            //If so, print messages accordingly whether it was under/over/fully paid.
+            if (diff > 2.0 /*this being for a test but would represent a 'month' passing*/ && currMonthPay > 0) {
+                System.out.println("The payment for the passing month was NOT fulfilled.");
+                System.out.println("Please ensure you are keeping up with mortgage payments.");
+                nextMonth();
+                diff = 0;
+            }
+            //If the monthly payment has been paid fully, it will change the balance and then move to the next month
+            else if (diff >= 2.0 && currMonthPay == 0) {
+                //Splits the payment into interest and balance
+                //System.out.println("The payment for the passing month was fulfilled.");
+                nextMonth();
+                diff = 0;
+            }
+            //If the monthly payment is overpaid then it sends the excess straight into the balance
+            else if (diff >= 2.0 && currMonthPay < 0) {
+                System.out.println("You paid extra this month - any excess has gone straight to your balance");
+                nextMonth();
+                diff = 0;
+            }
+
+            //After the new month is set up, the amount the user WANTED to deposit should now be used in the
+            //Current month. We can do this by manipulating diff and setting it to 0.
+
+            //Otherwise, if the 'month' has not passed, we deal with the amount and pay it into the account
+            if (diff < 2.0) {
+
+                //If the monthly payment is already paid, the money goes straight to balance
+                if (currMonthPay == 0) {
+                    System.out.println("This month's payment has already been fulfilled - this amount will affect your balance DIRECTLY");
                     double bal = getBalance();
-                    double balanceDiff = bal - extra;
+                    double balanceDiff = bal - amount;
                     setBalance(balanceDiff);
+                    return;
                 }
-                //Recalculates the monthlyPayment to check for are any changes
-                monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
-                currMonthPay = monthlyPayment;
-                //Resets the time
-                this.opened = LocalTime.now();
-                System.out.println("The following will now refer to the new month's payments");
-            }
-            //If the 'month' is not up, then it just takes the amount off the balance
-            else {
-                double bal = getBalance();
-                //Take the interest away from the payment and then that number should be taken from the balance
-                double paymentLessInterest = amount - (amount * getMonthInterest());
-                //Inefficient but still working on this
-                paymentLessInterest = Math.round(paymentLessInterest * 100);
-                paymentLessInterest = paymentLessInterest / 100;
-                double balanceDiff = bal - paymentLessInterest;
-                setBalance(balanceDiff);
-            }
+                //Otherwise, it goes through the process as normal
+                else {
+                    //When paid in, we need to update the current monthly pay balance to determine what to do
+                    //With the amount
 
-            //If there's still some left to pay, it should say as much
-            if (this.currMonthPay > 0) {
-                System.out.println("Payment left for this month: £" + this.currMonthPay);
-                System.out.println();
+                    this.currMonthPay = this.currMonthPay - amount;
+                    this.currMonthPay = Math.round(this.currMonthPay * 100);
+                    this.currMonthPay = this.currMonthPay / 100;
+
+                    //If there is still somme money to be paid, the number is printed
+                    if (this.currMonthPay > 0) {
+                        this.depositHelper(amount);
+                        //Add a new transaction
+                        Transaction trans = new Transaction(amount, sender, this);
+                        addToTransaction(trans);
+                        System.out.println("Payment left for this month: £" + this.currMonthPay);
+                    }
+                    //If the number is exactly paid, this fact is printed
+                    else if (this.currMonthPay == 0) {
+                        System.out.println("The payment for this month has been fulfilled.");
+                        this.depositHelper(amount);
+                        Transaction trans = new Transaction(amount, sender, this);
+                        addToTransaction(trans);
+                    }
+                    //Otherwise, if MORE than the monthly payment is paid, this extra goes straight to the balance
+                    else {
+                        //Store the extra money
+                        double extra = Math.abs(currMonthPay);
+                        //We need to take this extra off of amount since interest isn't applied to it
+                        this.depositHelper(amount - extra);
+                        Transaction trans = new Transaction(amount, sender, this);
+                        addToTransaction(trans);
+                        //This extra is then taken directly off of balance
+                        double bal = getBalance();
+                        double balanceDiff = bal - extra;
+                        setBalance(balanceDiff);
+                    }
+                }
             }
         }
+        //Print an error if less than the minimum is deposited
         else {
-            System.out.println("You need to pay more than £0");
+            System.out.println("You need to pay more than £100 to make an impact on your mortgage");
+        }
+
+        //If the balance is 0 then the mortgage has been paid off
+        if (getBalance() <= 0) {
+            System.out.println("This mortgage has now been paid off and requires no additional payments - the account will now be closed");
+            System.out.println("In addition, any funds that were overpaid will also be refunded accordingly.");
+            return;
         }
     }
 
     @Override
-    public void withdraw(Account receiver, Double amount) {
+    public void withdraw(Double amount, Account receiver) throws Exception {
         //CANNOT WITHDRAW
-    }
-
-    @Override
-    public void transfer() {
-        //CANNOT TRANSFER
     }
 
     //Method used to calculate the monthly payments to be made into the account
@@ -172,7 +205,6 @@ public class MortgageAcc extends Account {
         double monthlyInt = getMonthInterest();
         //Super messy formula for calculating monthly payments
         //P [ i(1 + i)^n ] / [ (1 + i)^n – 1]
-        //Had to split the formula into part to get it to seem somewhat readable
         //Had to split the formula into part to get it to seem somewhat readable
         double part1 = (monthlyInt * Math.pow((1 + monthlyInt),(this.years * 12)));
         double part2 = Math.pow((1 + monthlyInt),(this.years * 12)) - 1;
@@ -183,20 +215,23 @@ public class MortgageAcc extends Account {
     }
 
     //Helper function to split the monthly payment between the interest and the balance
-    public synchronized void depositHelper() {
+    public synchronized void depositHelper(double deposit) {
         //intPaid should store the amount of the payment dedicated to the interest
-        double intPaid = this.getBalance() * getMonthInterest();
-        //This is then taken away from the balance and the balance is then changed accordingly
+        double intPaid = deposit * getMonthInterest();
+        //This interest needs to be rounded for monetary use
+        intPaid = Math.round(intPaid * 100);
+        intPaid = intPaid / 100;
+        //This is then taken away from the deposit and the balance is then changed accordingly
         double bal = getBalance();
-        double balanceDiff = bal - (monthlyPayment - intPaid);
+        double balanceDiff = bal - (deposit - intPaid);
         setBalance(balanceDiff);
     }
 
     //Prints the necessary details of the account i.e. the current balance and the interest rate
-    public synchronized void printDetails() {
+    public void printDetails() {
         System.out.println("Current outstanding balance: £" + this.getBalance());
         System.out.println("Current annual interest rate: " + getAnnInterest() / 0.01 + "%");
-        System.out.println("Current monthly payments: £" + this.monthlyPayment);
+        System.out.println("Recent monthly payment: £" + this.monthlyPayment);
         System.out.println();
     }
 }
