@@ -1,5 +1,6 @@
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 public class MortgageAcc extends Account {
 
@@ -95,6 +96,12 @@ public class MortgageAcc extends Account {
 
     @Override
     public synchronized void deposit(Double amount, Account sender) throws Exception {
+
+        //Mortgage payments should not be accepted from a credit account
+        if (Objects.equals(sender.getType(), "Credit Card Account")) {
+            System.out.println("A mortgage payment CANNOT be paid by a credit account.");
+            return;
+        }
 
         //Only allows a payment of at least £1
         if (amount > 99) {
