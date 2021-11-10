@@ -187,7 +187,7 @@ public class MortgageAcc extends Account {
             System.out.println("You need to pay more than £100 to make an impact on your mortgage");
         }
 
-        //If the balance is 0 then the mortgage has been paid off
+        //If the balance is 0 then the mortgage has been paid
         if (getBalance() <= 0) {
             System.out.println("This mortgage has now been paid off and requires no additional payments - the account will now be closed");
             System.out.println("In addition, any funds that were overpaid will also be refunded accordingly.");

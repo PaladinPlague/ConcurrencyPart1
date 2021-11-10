@@ -198,7 +198,7 @@ public class MortgageTests {
     //Checks to ensure the transactions are stored correctly
     void transactionPrint() throws Exception {
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
-        //Since I have no other working classes I'll be using the same account as receiver and sender
+        //Since there's no other working classes I'll be using the same account as receiver and sender
         acc.deposit(600.0, acc);
         acc.deposit(170.0, acc);
         acc.deposit(106.04, acc);
