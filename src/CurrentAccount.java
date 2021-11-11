@@ -1,7 +1,7 @@
-import java.util.ArrayList;
-
 //Account type that's used for everyday life services
 public class CurrentAccount extends Account{
+
+    private Person cardHolder;
 
     //Initiate current account with all fields filled in
     public CurrentAccount(String accountNo, Double openingBalance) {
@@ -17,9 +17,29 @@ public class CurrentAccount extends Account{
 
     //Withdraw a set amount from this account into another account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void withdraw(Double amount, Account receiver) {
-        setBalance(getBalance() - amount);
-        addToTransaction(new Transaction(amount, this, receiver));
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
+
+        if(this.getBalance()<amount){
+            throw new Exception("Sorry, insufficient fund.");
+        }else{
+            setBalance(getBalance() - amount);
+            addToTransaction(new Transaction(amount, this, receiver));
+        }
+
+    }
+
+
+    @Override
+    public void printDetails(){
+        System.out.println("CC Account Number: " +this.getAccountNumber());
+        System.out.println("New Balance: "+this.getBalance());
+        System.out.println("List of Transactions: " + this.getTransactions());
+    }
+
+    @Override
+    public String getDetails(){
+        return "Current Account Number: " +this.getAccountNumber()+ ", balance: "+this.getBalance()+
+                "Transactions："+this.getTransactions()+".";
     }
 
     //Show that the type of the account is a current account
