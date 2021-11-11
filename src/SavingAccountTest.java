@@ -38,7 +38,7 @@ class SavingAccountTest {
 
     //----------------------------------------------------------
 
-    SavingAccount saving2 = new SavingAccount("SA000", 0.5);
+    SavingAccount saving2 = new SavingAccount("SA002", 0.5);
 
     //Checks whether returnBalance() with invalid values work
     @Test

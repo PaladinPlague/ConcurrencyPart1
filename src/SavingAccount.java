@@ -44,10 +44,10 @@ public class SavingAccount extends Account {
         if(checkBalance(deposit)){
             currentBalance = deposit;
             setBalance(currentBalance);
-            System.out.println("Account is valid!");
+            System.out.println(this.getAccountNumber() + " is valid!");
         }
         else{
-            System.out.println("Account is invalid!");
+            System.out.println(this.getAccountNumber() + " is invalid!");
             currentBalance = 0;
             setBalance(0.0);
         }
@@ -99,7 +99,7 @@ public class SavingAccount extends Account {
             return super.getTransactions();
         }
         else{
-            return null;
+            return new ArrayList<>();
         }
     }
 
