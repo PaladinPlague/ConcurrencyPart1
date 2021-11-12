@@ -14,6 +14,7 @@ public class AccountHolder {
     public AccountHolder(String personName, int age) {
         accounts = new ArrayList<>();
         name = personName;
+        this.age = age;
     }
 
     //Get the details of an account based on index
@@ -43,6 +44,7 @@ public class AccountHolder {
         return true;
     }
 
+
     //Remove an account based on index
     public synchronized boolean deleteAccount(int index) {
         //Validate account's existence through helper method
@@ -56,6 +58,17 @@ public class AccountHolder {
         return true;
     }
 
+    //Remove an account via the account itself as a parameter
+    public synchronized boolean deleteAccount(Account acc) {
+        //If this account does not exist in list, do not remove an account and return false
+        if (!accounts.contains(acc)) {
+            return false;
+        }
+        //Otherwise, remove this account and return true
+        accounts.remove(acc);
+        return true;
+    }
+
     //Returns the name of the person
     public synchronized String getName(){
         return name;
@@ -64,6 +77,13 @@ public class AccountHolder {
     public synchronized int  getAge(){
         return age;
     }
+
+    //Returns the size of the account array
+    public synchronized int  getSize(){
+        return accounts.size();
+    }
+
+
 
 
 }

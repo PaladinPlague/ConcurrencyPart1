@@ -3,7 +3,7 @@ import java.util.ArrayList;
 //Account type that's used for everyday life services
 public class CurrentAccount extends Account{
 
-    private Person cardHolder;
+    //private Person cardHolder;
 
     //Initiate current account with all fields filled in
     public CurrentAccount(String accountNo, Double openingBalance) {

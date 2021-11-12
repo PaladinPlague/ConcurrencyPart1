@@ -11,7 +11,7 @@ public class StudentAccount extends Account{
 
      */
 
-    private Person cardHolder;
+    //private Person cardHolder;
     private double overdraft;
     private boolean overdrafted;
 
