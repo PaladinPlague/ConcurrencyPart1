@@ -1,7 +1,7 @@
 import java.util.*;
 
 //An abstract class for the people working with accounts
-public abstract class AccountHolder {
+public class AccountHolder {
     /*
      accounts -> hold lists of accounts
      name -> the name of the person
