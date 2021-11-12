@@ -29,7 +29,6 @@ public class AccountHolder {
 
 
     //Create an account to add to the person's list
-    //NOTE: I'm not sure if we should consider this as "creating" an account just yet or if we should
     public synchronized boolean addAccount(Account acc) {
         //If this account is already managed by person, do not add it and return false
         if (accounts.contains(acc)) {
