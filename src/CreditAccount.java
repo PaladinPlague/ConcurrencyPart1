@@ -192,10 +192,11 @@ public class CreditAccount extends Account  {
         ArrayList<Transaction> transactions = this.getTransactions();
         String result = "CC Account Number: " +this.getAccountNumber()+", credit: " +getCreditLimit()+", " +
                 "available Credit: " + getAvailableCreditCredit()+", balance: "+this.getBalance()+ ", " +
-                "Transactions：[";
-        for (int i = 0; i < transactions.size(); i++) {
-            result += "From: " + transactions.get(i).getSource().getAccountNumber() + " To: " +
-                    transactions.get(i).getReceiver().getAccountNumber() + " Amount: " + transactions.get(i).getAmount();
+                "Transactions：" + "[";
+            for (int i = 0; i < transactions.size(); i++) {
+                result += "From: " + transactions.get(i).getSource().getAccountNumber();
+                result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
+                result += " Amount: " + transactions.get(i).getAmount();
             if (i < transactions.size() - 1) {
                 result += ", ";
             } else {
@@ -204,7 +205,6 @@ public class CreditAccount extends Account  {
         }
 
         result += ".";
-
 
         return result;
     }
