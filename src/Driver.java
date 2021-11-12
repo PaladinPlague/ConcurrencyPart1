@@ -4,16 +4,6 @@
 public class Driver {
 
     public static void main(String[] args) {
-
-        //Implement Runnable objects here: Objects that would call methods of other objects at delayed occassions
-        //DISCUSS: We need to have the runnable objects ready for this. These would be classess where methods are called at regular intervals.
-        //Current thoughts: Create new classes that take an account and call a function in a basic method "run()"
-        //This may result in lots of classes being called, however
-
-        //Declare Thread objects as threads based on runnable objects
-
-        //Call the start method of each thread object
-
         //Call each of the 6 tests listed
         simultaneousBalanceCheck();
         checkAndChangeBalance();
@@ -25,19 +15,24 @@ public class Driver {
 
     //Two account holders are trying to check the balance simultaneously
     public static void simultaneousBalanceCheck() {
+        //Declare the account holders
         AccountHolder accHolder1 = new AccountHolder("Alice", 20);
         AccountHolder accHolder2 = new AccountHolder("Bob", 22);
 
+        //Declare an account that is held by both account holders
         CurrentAccount acc = new CurrentAccount("11111111", 25.00);
         accHolder1.addAccount(acc);
         accHolder2.addAccount(acc);
 
+        //Set up the Runnable case for both account holders on the only account in their list of accounts
         CheckBalanceRunnable check1 = new CheckBalanceRunnable(accHolder1, 0);
         CheckBalanceRunnable check2 = new CheckBalanceRunnable(accHolder2, 0);
 
+        //Declare threads for the runnable cases
         Thread accH1T = new Thread(check1);
         Thread accH2T = new Thread(check2);
 
+        //Start the process of the threads
         accH1T.start();
         accH2T.start();
     }
