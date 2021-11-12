@@ -14,7 +14,7 @@ public class CreditAccount extends Account  {
     private double APR;
     private final int paymentDueDate;
     LocalDate paymentDate;
-    private Person cardHolder;
+    private AccountHolder cardHolder;
 
     public CreditAccount(String accountNo, Double openingBalance, double openingCredit, double APR ) {
         super(accountNo, openingBalance);
