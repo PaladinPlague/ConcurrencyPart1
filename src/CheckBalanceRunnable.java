@@ -13,10 +13,7 @@ public class CheckBalanceRunnable implements Runnable {
     public void run() {
         try
         {
-            //Get balance from account
-            double balance = accHolder.getAccount(accIndex).getBalance();
-            //Show the balance along with the name of the account holder for this thread
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolder.getName() + " gets balance " + balance);
+            accHolder.getBalance(accIndex);
             Thread.sleep(DELAY);
         }
         catch (InterruptedException exception) {}
