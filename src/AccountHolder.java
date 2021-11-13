@@ -21,39 +21,8 @@ public class AccountHolder {
         lock = new ReentrantLock();
     }
 
-    //Get balance of one of the accounts, used for concurrency system
-    public synchronized void getBalance(int index) {
-        lock.lock();
-        try {
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + name + " checking balance of account " + accounts.get(index).getAccountNumber());
-            //double result =
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accounts.get(index).getAccountNumber() + " is: " + accounts.get(index).getBalance());
-        }
-        finally {
-            lock.unlock();
-        }
-    }
-
-    //Deposit method of account holder, used for concurrency system
-    public synchronized void deposit(int index, double amount, Account otherAcc) throws Exception {
-        lock.lock();
-        try {
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + name + " depositing amount " + amount + " into account " + accounts.get(index).getAccountNumber());
-            try {
-                accounts.get(index).deposit(amount, otherAcc);
-            } catch (Exception e) {
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", Error occurred for depositing into account " + accounts.get(index));
-            }
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accounts.get(index).getAccountNumber() + " is: " + accounts.get(index).getBalance());
-        }
-        finally {
-            lock.unlock();
-        }
-    }
-
     //Get the details of an account based on index
     public Account getAccount(int index) {
-        System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + name + " checks account at index " + index);
         //If index is out of list range, return nothing
         if (index < 0 || index >= accounts.size()) {
             return null;
