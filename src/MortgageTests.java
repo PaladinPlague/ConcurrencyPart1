@@ -1,7 +1,5 @@
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MortgageTests {
@@ -130,7 +128,7 @@ public class MortgageTests {
     }
 
     @Test
-    //Should print three "full payment messages"
+        //Should print three "full payment messages"
     void fullThreeMonths() throws Exception {
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         //Month 1
@@ -175,7 +173,7 @@ public class MortgageTests {
     }
 
     @Test
-    //Using singlePayment, we can look to check for a balance difference
+        //Using singlePayment, we can look to check for a balance difference
     void normalOverpayment () throws Exception {
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         acc.deposit(876.04, acc);
@@ -195,7 +193,7 @@ public class MortgageTests {
     }
 
     @Test
-    //Checks to ensure the transactions are stored correctly
+        //Checks to ensure the transactions are stored correctly
     void transactionPrint() throws Exception {
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         //Since there's no other working classes I'll be using the same account as receiver and sender
