@@ -35,8 +35,6 @@ class CreditAccountTest {
         //assertEquals(659.00, dummy.getBalance());
     }
 
-
-
     @Test
     void makePurchaseToAnotherCreditAccount(){
         Exception ex = assertThrows(Exception.class,()->account.withdraw(159.00, CCAccount));
@@ -45,7 +43,6 @@ class CreditAccountTest {
         assertEquals(expectedExMsg, exMsg);
     }
 
-
     @Test
     void makePurchaseWithoutEnoughMoney(){
         Exception ex = assertThrows(Exception.class,()->account.withdraw(15900.00, dummy));
@@ -53,8 +50,6 @@ class CreditAccountTest {
         String exMsg = ex.getMessage();
         assertEquals(expectedExMsg, exMsg);
     }
-
-
 
     @Test
     void printStatement(){
@@ -75,7 +70,6 @@ class CreditAccountTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
@@ -90,9 +84,7 @@ class CreditAccountTest {
         }
 
         assertEquals(0.00, account.getBalance());
-
     }
-
 
     @Test
     void depositSuccessWithoutOverdueAndPaidPartially(){
@@ -107,9 +99,7 @@ class CreditAccountTest {
         }
 
         assertEquals(-100.00, account.getBalance());
-
     }
-
 
     @Test
     void depositSuccessWithOverdueAndPaidFully(){
@@ -127,7 +117,6 @@ class CreditAccountTest {
         }
 
         assertEquals(0.00, account.getBalance());
-
     }
 
     @Test
@@ -146,10 +135,7 @@ class CreditAccountTest {
         }
 
         assertEquals(-100.00, account.getBalance());
-
     }
-
-
 
     @Test
     void depositFailed(){
@@ -172,9 +158,5 @@ class CreditAccountTest {
         expectedExMsg = "you can't pay more than you have spent!";
         exMsg = ex.getMessage();
         assertEquals(expectedExMsg, exMsg);
-
     }
-
-
-
 }

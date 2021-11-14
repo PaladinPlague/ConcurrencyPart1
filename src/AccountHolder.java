@@ -1,6 +1,4 @@
 import java.util.*;
-//Locks aren't included with above import, so this one has been added
-import java.util.concurrent.locks.*;
 
 //An abstract class for the people working with accounts
 public class AccountHolder {
@@ -11,14 +9,12 @@ public class AccountHolder {
     private ArrayList<Account> accounts;
     private String name;
     private int age;
-    private ReentrantLock lock;
 
     //Declare person as new object with initially empty list of accounts and also gets the person's name
     public AccountHolder(String personName, int age) {
         accounts = new ArrayList<>();
         name = personName;
         this.age = age;
-        lock = new ReentrantLock();
     }
 
     //Get the details of an account based on index
@@ -30,7 +26,6 @@ public class AccountHolder {
         //Otherwise, return the account at this index
         return accounts.get(index);
     }
-
 
     //Create an account to add to the person's list
     public synchronized boolean addAccount(Account acc) {
@@ -46,7 +41,6 @@ public class AccountHolder {
         this.accounts.add(acc);
         return true;
     }
-
 
     //Remove an account based on index
     public synchronized boolean deleteAccount(int index) {
@@ -85,8 +79,4 @@ public class AccountHolder {
     public synchronized int  getSize(){
         return accounts.size();
     }
-
-
-
-
 }

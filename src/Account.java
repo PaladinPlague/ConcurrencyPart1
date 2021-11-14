@@ -58,7 +58,6 @@ public abstract class Account {
         System.out.println("Account number: " + this.getAccountNumber());
         //Format balance so it has 2 decimal places
         System.out.println("Balance: " + String.format("%.2f", this.getBalance()));
-        System.out.println("Account Type: " + this.getType());
     }
 
     //Print the details of this account to a string (for possible GUI implementation)

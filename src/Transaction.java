@@ -30,5 +30,4 @@ public class Transaction {
     public String toString(){
         return "From: " + source.getAccountNumber()+ " To: "+ receiver.getAccountNumber()+" Amount: " + amount ;
     }
-
 }

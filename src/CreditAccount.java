@@ -16,7 +16,7 @@ public class CreditAccount extends Account  {
     LocalDate paymentDate;
     //private Person cardHolder;
 
-    public CreditAccount(String accountNo, Double openingBalance, double openingCredit, double APR ) {
+    public CreditAccount(String accountNo, Double openingBalance, double openingCredit, double APR) {
         super(accountNo, openingBalance);
 
         this.creditLimit = openingCredit;
@@ -145,7 +145,6 @@ public class CreditAccount extends Account  {
 
     }
 
-
     /*
     Pay in money from another Current Account
     the sender must BE SAME PERSON'S CURRENT ACCOUNT.
@@ -177,7 +176,6 @@ public class CreditAccount extends Account  {
         }
     }
 
-
     @Override
     public void printDetails(){
         System.out.println("CC Account Number: " +this.getAccountNumber());
@@ -193,10 +191,10 @@ public class CreditAccount extends Account  {
         String result = "CC Account Number: " +this.getAccountNumber()+", credit: " +getCreditLimit()+", " +
                 "available Credit: " + getAvailableCreditCredit()+", balance: "+this.getBalance()+ ", " +
                 "Transactions：" + "[";
-            for (int i = 0; i < transactions.size(); i++) {
-                result += "From: " + transactions.get(i).getSource().getAccountNumber();
-                result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
-                result += " Amount: " + transactions.get(i).getAmount();
+        for (int i = 0; i < transactions.size(); i++) {
+            result += "From: " + transactions.get(i).getSource().getAccountNumber();
+            result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
+            result += " Amount: " + transactions.get(i).getAmount();
             if (i < transactions.size() - 1) {
                 result += ", ";
             } else {

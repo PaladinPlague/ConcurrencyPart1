@@ -240,6 +240,5 @@ public class MortgageAcc extends Account {
         System.out.println("Current outstanding balance: £" + this.getBalance());
         System.out.println("Current annual interest rate: " + getAnnInterest() / 0.01 + "%");
         System.out.println("Recent monthly payment: £" + this.monthlyPayment);
-        System.out.println();
     }
 }

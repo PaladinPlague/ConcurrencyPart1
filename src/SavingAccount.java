@@ -9,7 +9,7 @@ public class SavingAccount extends Account {
     SAVING ACCOUNT
     Created by Suleman Akhter
 
-    - An saving account is an account that allows you top deposit money and let that money grow in value, this growth is called interest
+    - A saving account is an account that allows you top deposit money and let that money grow in value, this growth is called interest
     - Our saving account will have a minimum £1 deposit, otherwise you are unable to open an account
     - Our saving account will be instant access, meaning you can add and take out money any time
     - Our saving account will have an fixed interest rate of 0.2% every year (The first day every year)
@@ -40,7 +40,6 @@ public class SavingAccount extends Account {
 
         super(AccNumber,deposit);
 
-
         if(checkBalance(deposit)){
             currentBalance = deposit;
             setBalance(currentBalance);
@@ -52,10 +51,7 @@ public class SavingAccount extends Account {
             setBalance(0.0);
         }
         everyYear = LocalDate.now();
-        System.out.println(getTransactions().size());
-
     }
-
 
     //Helper function that checks whether this account is valid
     private boolean checkBalance(double balance) {
@@ -69,7 +65,6 @@ public class SavingAccount extends Account {
             return true;
         }
     }
-
 
     //Returns the type of account: "Saving Account"
     @Override
@@ -90,7 +85,6 @@ public class SavingAccount extends Account {
             return currentBalance;
         }
     }
-
 
     //Returns the transactions only if the account is valid
     @Override
@@ -179,5 +173,15 @@ public class SavingAccount extends Account {
     // This is uses for Junit purposes, allows me to see if interest function works
     public void changeDate(LocalDate change){
         everyYear = change;
+    }
+
+    //ADDED BY SCOTT -- UPDATES INTEREST.
+    //If not applicable, this will also have to be changed in the Bank Employees
+    public synchronized void changeInterest(double interest) {
+        this.interestRate = interest;
+    }
+
+    public double getInterestRate() {
+        return this.interestRate;
     }
 }

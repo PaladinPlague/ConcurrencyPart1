@@ -12,7 +12,7 @@ public class CurrentAccount extends Account{
 
     //Deposit a set amount from another account into this account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void deposit(Double amount, Account sender){
+    public synchronized void deposit(Double amount, Account sender) {
         setBalance(getBalance() + amount);
         addToTransaction(new Transaction(amount, sender, this));
     }
@@ -29,7 +29,6 @@ public class CurrentAccount extends Account{
         }
 
     }
-
 
     @Override
     public void printDetails(){
@@ -54,9 +53,7 @@ public class CurrentAccount extends Account{
                 result += "]";
             }
         }
-
         result += ".";
-
         return result;
     }
 
@@ -64,5 +61,4 @@ public class CurrentAccount extends Account{
     public String getType() {
         return "Current Account";
     }
-
 }

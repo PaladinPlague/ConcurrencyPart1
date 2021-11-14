@@ -9,9 +9,9 @@ ACCOUNT HOLDER TESTING CLASS
 Made by Suleman Akhter
 */
 
-//the test variable is used for testing all of AccountHolder methods, savingTest is just as a parameter for deposit/withdraw
-AccountHolder test = new AccountHolder("Sonic", 18);
-Account savingTest = new SavingAccount("1212345", 50);
+    //the test variable is used for testing all of AccountHolder methods, savingTest is just as a parameter for deposit/withdraw
+    AccountHolder test = new AccountHolder("Sonic", 18);
+    Account savingTest = new SavingAccount("1212345", 50);
 
 
     //Checks the getters methods
@@ -48,5 +48,4 @@ Account savingTest = new SavingAccount("1212345", 50);
         assertEquals(true, test.deleteAccount(current));
 
     }
-
 }

@@ -54,9 +54,7 @@ public class StudentAccount extends Account{
             if(Double.compare(getBalance(), 0.0) < 0) overdrafted = true;
             addToTransaction(new Transaction(amount, this, receiver));
         }
-
     }
-
 
     @Override
     public void printDetails(){
@@ -70,8 +68,8 @@ public class StudentAccount extends Account{
     public String getDetails(){
         ArrayList<Transaction> transactions = this.getTransactions();
         String result = "Student Account Number: " +this.getAccountNumber()+ ", " +
-                        "The Arranged Overdraft amount is "+ this.getOverdraft()+", Overdraft: "+isOverdrafted()+" balance: "+this.getBalance()+
-                        ", Transactions：" + "[";
+                "The Arranged Overdraft amount is "+ this.getOverdraft()+", Overdraft: "+isOverdrafted()+" balance: "+this.getBalance()+
+                ", Transactions：" + "[";
         for (int i = 0; i < transactions.size(); i++) {
             result += "From: " + transactions.get(i).getSource().getAccountNumber();
             result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
@@ -92,6 +90,4 @@ public class StudentAccount extends Account{
     public String getType() {
         return "Student Account";
     }
-
 }
-
