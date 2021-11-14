@@ -16,7 +16,7 @@ public class CreditAccount extends Account  {
     LocalDate paymentDate;
     //private Person cardHolder;
 
-    public CreditAccount(String accountNo, Double openingBalance, double openingCredit, double APR ) {
+    public CreditAccount(String accountNo, Double openingBalance, double openingCredit, double APR) {
         super(accountNo, openingBalance);
 
         this.creditLimit = openingCredit;
@@ -97,9 +97,9 @@ public class CreditAccount extends Account  {
     the payment can be on the due day, before due day or after due day
      */
     @Override
-    public synchronized void deposit(Double amount, Account sender, String action) throws Exception {
+    public synchronized void deposit(Double amount, Account sender) throws Exception {
         monthlyPayment();
-        Transaction transaction = new Transaction(amount, sender, this);
+
         if(Objects.equals(sender.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use other credit card to pay this credit card bill!");
         }else if(Math.abs(sender.getBalance()) < amount){
@@ -108,12 +108,7 @@ public class CreditAccount extends Account  {
             throw new ArithmeticException("you can't pay more than you have spent!");
         }else{
 
-            if(!Objects.equals(action, "response")){
-
-                //process the transaction
-                transaction.processTransaction("deposit to account");
-
-            }
+            Transaction transaction = new Transaction(amount, sender, this);
             setBalance(getBalance()+amount);
             if((availableCredit+=amount)>getCreditLimit()){
                 availableCredit = creditLimit;
@@ -133,26 +128,22 @@ public class CreditAccount extends Account  {
     update availableCredit field, as more money spent it should get lower.
      */
     @Override
-    public synchronized void withdraw(Double amount, Account receiver, String action) throws Exception {
-        //make a new transaction goes from this credit account to any other account
-        Transaction transaction = new Transaction(amount,this,receiver);
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
+
         if(Objects.equals(receiver.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use this credit card to pay another credit card!");
             //check if we still have enough credit to pay for this transaction.
         }else if(availableCredit < amount){
             throw new ArithmeticException("Sorry, insufficient fund.");
         }else{
-            if(!Objects.equals(action, "response")){
-                //process the transaction
-                transaction.processTransaction("Withdraw from account");
-            }
+            //make a new transaction goes from this credit account to any other account
+            Transaction transaction = new Transaction(amount,this,receiver);
             availableCredit -= amount;
             setBalance(getBalance()-amount);
             addToTransaction(transaction);
         }
 
     }
-
 
     /*
     Pay in money from another Current Account
@@ -185,7 +176,6 @@ public class CreditAccount extends Account  {
         }
     }
 
-
     @Override
     public void printDetails(){
         System.out.println("CC Account Number: " +this.getAccountNumber());
@@ -201,10 +191,10 @@ public class CreditAccount extends Account  {
         String result = "CC Account Number: " +this.getAccountNumber()+", credit: " +getCreditLimit()+", " +
                 "available Credit: " + getAvailableCreditCredit()+", balance: "+this.getBalance()+ ", " +
                 "Transactions：" + "[";
-            for (int i = 0; i < transactions.size(); i++) {
-                result += "From: " + transactions.get(i).getSource().getAccountNumber();
-                result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
-                result += " Amount: " + transactions.get(i).getAmount();
+        for (int i = 0; i < transactions.size(); i++) {
+            result += "From: " + transactions.get(i).getSource().getAccountNumber();
+            result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
+            result += " Amount: " + transactions.get(i).getAmount();
             if (i < transactions.size() - 1) {
                 result += ", ";
             } else {

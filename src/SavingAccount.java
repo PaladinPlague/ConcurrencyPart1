@@ -1,6 +1,7 @@
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Date;
 
 public class SavingAccount extends Account {
 
@@ -8,7 +9,7 @@ public class SavingAccount extends Account {
     SAVING ACCOUNT
     Created by Suleman Akhter
 
-    - An saving account is an account that allows you top deposit money and let that money grow in value, this growth is called interest
+    - A saving account is an account that allows you top deposit money and let that money grow in value, this growth is called interest
     - Our saving account will have a minimum £1 deposit, otherwise you are unable to open an account
     - Our saving account will be instant access, meaning you can add and take out money any time
     - Our saving account will have an fixed interest rate of 0.2% every year (The first day every year)
@@ -39,7 +40,6 @@ public class SavingAccount extends Account {
 
         super(AccNumber,deposit);
 
-
         if(checkBalance(deposit)){
             currentBalance = deposit;
             setBalance(currentBalance);
@@ -51,10 +51,7 @@ public class SavingAccount extends Account {
             setBalance(0.0);
         }
         everyYear = LocalDate.now();
-        System.out.println(getTransactions().size());
-
     }
-
 
     //Helper function that checks whether this account is valid
     private boolean checkBalance(double balance) {
@@ -68,7 +65,6 @@ public class SavingAccount extends Account {
             return true;
         }
     }
-
 
     //Returns the type of account: "Saving Account"
     @Override
@@ -90,7 +86,6 @@ public class SavingAccount extends Account {
         }
     }
 
-
     //Returns the transactions only if the account is valid
     @Override
     public ArrayList<Transaction> getTransactions() {
@@ -104,19 +99,13 @@ public class SavingAccount extends Account {
 
     // Adds the balance with the account and then adds the interest if eligible.
     @Override
-    public synchronized void deposit(Double amount, Account sender, String action) throws Exception {
-        Transaction transaction = new Transaction(amount, sender, this);
-        if(!Objects.equals(action, "response")){
-            //process the transaction
-            transaction.processTransaction("deposit to account");
-
-        }
+    public synchronized void deposit(Double amount, Account sender) throws Exception {
         addInterest(getBalance());
         currentBalance += amount;
         currentBalance = Math.round(currentBalance * 100.0) / 100.0;
         if(checkBalance(currentBalance)){
             System.out.println("Total balance: " + currentBalance);
-            addToTransaction(transaction);
+            addToTransaction(new Transaction(amount, sender, this));
         }
         else{
             System.out.println("This account is not valid as we require an £1 minimum deposit");
@@ -126,8 +115,8 @@ public class SavingAccount extends Account {
     }
     // Withdraws the balance with the amount if possible, then adds the interest if eligible.
     //@Override
-    public synchronized void withdraw(Double amount, Account receiver, String action) throws Exception {
-        Transaction transaction = new Transaction(amount, this, receiver);
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
+
         if(checkBalance(currentBalance)){
 
             addInterest(currentBalance);
@@ -143,15 +132,10 @@ public class SavingAccount extends Account {
                     setBalance(0.0);
                 }
                 else {
-                    if(!Objects.equals(action, "response")){
-                        //process the transaction
-                        transaction.processTransaction("Withdraw from account");
-
-                    }
                     currentBalance = withdraw;
                     setBalance(currentBalance);
                 }
-                addToTransaction(transaction);
+                addToTransaction(new Transaction(amount, this, receiver));
             }
         }
 
@@ -189,5 +173,15 @@ public class SavingAccount extends Account {
     // This is uses for Junit purposes, allows me to see if interest function works
     public void changeDate(LocalDate change){
         everyYear = change;
+    }
+
+    //ADDED BY SCOTT -- UPDATES INTEREST.
+    //If not applicable, this will also have to be changed in the Bank Employees
+    public synchronized void changeInterest(double interest) {
+        this.interestRate = interest;
+    }
+
+    public double getInterestRate() {
+        return this.interestRate;
     }
 }

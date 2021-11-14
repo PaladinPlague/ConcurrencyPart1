@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class StudentAccount extends Account{
     /* Based on Saving's Account | Updated by Mark
@@ -37,30 +38,23 @@ public class StudentAccount extends Account{
 
     //Deposit a set amount from another account into this account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void deposit(Double amount, Account sender, String action) {
-        Transaction transaction = new Transaction(amount, sender, this);
-
-        transaction.processTransaction("deposit to account");
+    public synchronized void deposit(Double amount, Account sender) {
         setBalance(getBalance() + amount);
-        addToTransaction(transaction);
+        addToTransaction(new Transaction(amount, sender, this));
     }
 
     //Withdraw a set amount from this account into another account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void withdraw(Double amount, Account receiver, String action) throws Exception {
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
         if((this.getBalance()+overdraft)<amount){
             throw new Exception("Sorry, insufficient fund.");
         }else{
-            Transaction transaction = new Transaction(amount, this, receiver);
-            transaction.processTransaction("Withdraw from account");
             setBalance(getBalance() - amount);
             if(Double.compare(getBalance(), 0.0) < 0) overdrafted = true;
-            addToTransaction(transaction);
+            addToTransaction(new Transaction(amount, this, receiver));
         }
-
     }
-
 
     @Override
     public void printDetails(){
@@ -74,8 +68,8 @@ public class StudentAccount extends Account{
     public String getDetails(){
         ArrayList<Transaction> transactions = this.getTransactions();
         String result = "Student Account Number: " +this.getAccountNumber()+ ", " +
-                        "The Arranged Overdraft amount is "+ this.getOverdraft()+", Overdraft: "+isOverdrafted()+" balance: "+this.getBalance()+
-                        ", Transactions：" + "[";
+                "The Arranged Overdraft amount is "+ this.getOverdraft()+", Overdraft: "+isOverdrafted()+" balance: "+this.getBalance()+
+                ", Transactions：" + "[";
         for (int i = 0; i < transactions.size(); i++) {
             result += "From: " + transactions.get(i).getSource().getAccountNumber();
             result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
@@ -96,6 +90,4 @@ public class StudentAccount extends Account{
     public String getType() {
         return "Student Account";
     }
-
 }
-
