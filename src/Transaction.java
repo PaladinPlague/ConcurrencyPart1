@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 //Stores a single transaction made for a bank account
 public class Transaction {
 
@@ -29,6 +31,15 @@ public class Transaction {
     @Override
     public String toString(){
         return "From: " + source.getAccountNumber()+ " To: "+ receiver.getAccountNumber()+" Amount: " + amount ;
+    }
+    public void processTransaction(String transType){
+
+        if(Objects.equals(transType, "Withdraw from account")){
+            System.out.println("we should put money into destination account");
+        }else if(Objects.equals(transType, "deposit to account")){
+            System.out.println("we should withdraw from account");
+        }
+
     }
 
 }
