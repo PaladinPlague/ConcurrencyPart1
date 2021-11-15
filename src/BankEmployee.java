@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class BankEmployee {
 
     /*
@@ -13,6 +15,7 @@ public class BankEmployee {
         - Change overdraft limit (Student Account) _/
      */
 
+    private ArrayList<AccountHolder> accounts;
     private String employeeNo;
     private String empName;
 
@@ -20,98 +23,95 @@ public class BankEmployee {
     public BankEmployee(String name, String employeeNumber) {
         this.employeeNo = employeeNumber;
         this.empName = name;
+        this.accounts = new ArrayList<>();
+    }
+
+    //Returns the account of the customer
+    public AccountHolder getCustAccount(AccountHolder acc) {
+        if (this.accounts.contains(acc)) {
+            int i = accounts.indexOf(acc);
+            return this.accounts.get(i);
+        } else {
+            return null;
+        }
+    }
+
+    //Returns the name of the employee
+    public String getEmpName(){
+        return this.empName;
+    }
+
+    //Returns the assigned employee number
+    public String getEmpNum(){
+        return this.employeeNo;
+    }
+
+    //Returns the size of the accounts array
+    public int getSize(){
+        return this.accounts.size();
     }
 
     //Given a customer's account, prints the basic details for all bank accounts attached to them
     public void printAllAccounts(AccountHolder acc) {
-        System.out.println(acc.getName() + "'s Accounts: ");
-        for (int i = 0; i < acc.getSize(); i++) {
-            System.out.println("Account Type: " + acc.getAccount(i).getType());
-            System.out.println("Account Number: " + acc.getAccount(i).getAccountNumber());
-            System.out.println();
-        }
-    }
-
-    //Searches a customer's account for the account number and returns the match if present
-    public Account getAccount(AccountHolder person, String acc) {
-        for (int i = 0; i < person.getSize(); i++) {
-            if (acc.equals(person.getAccount(i).getAccountNumber())) {
-                return person.getAccount(i);
+        if (this.accounts.contains(acc)) {
+            System.out.println(acc.getName() + "'s Accounts: ");
+            for (int i = 0; i < acc.getSize(); i++) {
+                System.out.println("Account Type: " + acc.getAccount(i).getType());
+                System.out.println("Account Number: " + acc.getAccount(i).getAccountNumber());
+                System.out.println();
             }
+        } else {
+            System.out.println("This account may not be overseen by this employee");
         }
-        //If there was no match, returns null
-        return null;
     }
 
     //Gets the Account attached to the account number and prints the relevant information
     public void printOneAccount(AccountHolder person, String acc) {
-        Account foundAcc = getAccount(person, acc);
-        if (foundAcc == null) {
-            System.out.println("This is not the number of an existing account");
+        if (this.accounts.contains(person)) {
+            Account foundAcc = person.getAccount(acc);
+            if (foundAcc == null) {
+                System.out.println("This is not the number of an existing account");
+            } else {
+                System.out.println("Account Type: " + foundAcc.getType());
+                foundAcc.printDetails();
+            }
         } else {
-            System.out.println("Account Type: " + foundAcc.getType());
-            foundAcc.printDetails();
-        }
-    }
-
-    //Given the ACCOUNT, the employee can put the amount into the specific account
-    public synchronized void deposit(Account acc, double amount) throws Exception {
-        //Unsure about the 'acc' parameter here - need to change this I think
-        acc.deposit(amount, acc);
-    }
-
-    //Given the account NUMBER, the employee can search for it and then put the amount into it
-    public synchronized void deposit(AccountHolder person, String acc, double amount) throws Exception {
-        Account foundAcc = getAccount(person, acc);
-        if (foundAcc == null) {
-            System.out.println("This is not the number of an existing account");
-        } else {
-            //Unsure about the 'acc' parameter here - need to change this I think
-            foundAcc.deposit(amount, foundAcc);
-        }
-    }
-
-    //Given the ACCOUNT, the employee can pull money out of the amount into the specific account
-    public synchronized void withdraw(Account acc, double amount) throws Exception {
-        //Unsure about the 'acc' parameter here - need to change this I think
-        acc.withdraw(amount, acc);
-    }
-
-    //Given the account NUMBER, the employee can search for it and then pull money out of the amount into it
-    public synchronized void withdraw(AccountHolder person, String acc, double amount) throws Exception {
-        Account foundAcc = getAccount(person, acc);
-        if (foundAcc == null) {
-            System.out.println("This is not the number of an existing account");
-        } else {
-            //Unsure about the 'acc' parameter here - need to change this I think
-            foundAcc.withdraw(amount, foundAcc);
+            System.out.println("This account may not be overseen by this employee");
         }
     }
 
     //Adds an already existing account to an AccountHolder
     public synchronized void addAccount(AccountHolder person, Account acc) {
-        //Check to ensure it isn't already under the account holder
-        Account foundAcc = getAccount(person, acc.getAccountNumber());
-        if (foundAcc == null) {
-            person.addAccount(acc);
+        if (this.accounts.contains(person)) {
+            //Check to ensure it isn't already under the account holder
+            Account foundAcc = person.getAccount(acc.getAccountNumber());
+            if (foundAcc == null) {
+                person.addAccount(acc);
+            } else {
+                System.out.println("This account is already owned by" + person.getName());
+            }
         } else {
-            System.out.println("This account is already owned by" + person.getName());
+            System.out.println("This account may not be overseen by this employee");
         }
     }
 
-    //Opens a new AccountHolder (i.e. for a new customer)
+    //Opens a new AccountHolder (i.e. for a new customer), adds it to the AccountHolder array and returns
     public synchronized AccountHolder createCustAccount(String name, int age) {
-        return new AccountHolder(name, age);
+        //The AccountHolder ONLY takes a string and a name - since these are not unique it wouldn't make
+        //Sense to check if the account already exists
+        AccountHolder acc = new AccountHolder(name, age);
+        this.accounts.add(acc);
+        return acc;
     }
 
     //Deletes an already existing bank account from an Account Holder
     public synchronized void deleteAccount(AccountHolder person, Account acc) {
         //Check to ensure it IS actually under the account holder
-        Account foundAcc = getAccount(person, acc.getAccountNumber());
+        Account foundAcc = person.getAccount(acc.getAccountNumber());
         if (foundAcc == null) {
             System.out.println("This account is NOT owned by" + person.getName());
         } else {
-            person.deleteAccount(acc);
+            this.getCustAccount(person).deleteAccount(acc);
         }
     }
 
@@ -120,6 +120,7 @@ public class BankEmployee {
     public synchronized boolean deleteCustAccount(AccountHolder acc) {
         //If the person has no accounts, their account can be closed
         if (acc.getSize() == 0) {
+            this.accounts.remove(acc);
             acc = null;
         }
         //Otherwise, every one of their bank accounts must ALSO be closed
@@ -129,6 +130,7 @@ public class BankEmployee {
             for (int i = 0; i <= size; i++) {
                 acc.deleteAccount(0);
             }
+            this.accounts.remove(acc);
             acc = null;
         }
         //If deleted, return true
