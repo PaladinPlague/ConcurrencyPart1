@@ -18,15 +18,17 @@ class StudentAccountTest {
 
     @Test
     void makeDeposit(){
-        account.deposit(50.00, secondAcc);
+        String action = "request";
+        account.deposit(50.00, secondAcc, action);
 
         assertEquals(200,account.getBalance());
+        assertEquals(650,secondAcc.getBalance());
     }
 
     @Test
     void failedToMakeWithdraw(){
-
-        Exception ex  = assertThrows(Exception.class, ()->account.withdraw(1700.00,secondAcc));
+        String action = "request";
+        Exception ex  = assertThrows(Exception.class, ()->account.withdraw(1700.00,secondAcc, action));
         String expectedErMsg = "Sorry, insufficient fund.";
         String erMsg = ex.getMessage();
         assertEquals(expectedErMsg, erMsg);
@@ -35,53 +37,57 @@ class StudentAccountTest {
 
     @Test
     void makeAnOverdraftWithdraw(){
-
+        String action = "request";
         try {
-            account.withdraw(1300.00, secondAcc);
+            account.withdraw(1300.00, secondAcc, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(-1150.00, account.getBalance());
+        assertEquals(2000.00,secondAcc.getBalance());
         assertTrue(account.isOverdrafted());
 
     }
 
     @Test
     void makeWithdraw()  {
-
+        String action = "request";
         try {
-            account.withdraw(30.00, secondAcc);
+            account.withdraw(30.00, secondAcc, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(120.00, account.getBalance());
+        assertEquals(730.00,secondAcc.getBalance());
     }
 
     @Test
     void makeDepositForOverdraft(){
-
+        String action = "request";
         try {
-            account.withdraw(1300.00, secondAcc);
+            account.withdraw(1300.00, secondAcc, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(-1150.00, account.getBalance());
+        assertEquals(2000.00,secondAcc.getBalance());
 
         assertTrue(account.isOverdrafted());
 
-        account.deposit(1300.00, secondAcc);
+        account.deposit(1300.00, secondAcc, action);
 
         assertEquals(150,account.getBalance());
     }
 
     @Test
     void printStatement(){
+        String action = "request";
         try {
-            account.withdraw(100.00, secondAcc);
-            account.withdraw(200.00, secondAcc);
+            account.withdraw(100.00, secondAcc, action);
+            account.withdraw(200.00, secondAcc, action);
         } catch (Exception e) {
             e.printStackTrace();
         }

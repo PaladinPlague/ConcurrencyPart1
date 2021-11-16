@@ -26,14 +26,15 @@ Account savingTest = new SavingAccount("1212345", 50);
     // This checks if add account works, we add 2 accounts and test various methods including deposit/withdraw
     @Test
     void addAccountTest() throws Exception {
+        String action = "request";
         test.addAccount(new CurrentAccount("12345",30.0));
         test.addAccount(new StudentAccount("235235",60.0));
         assertEquals(2,test.getSize());
         assertEquals("Current Account",test.getAccount(0).getType());
         assertEquals(30.0,test.getAccount(0).getBalance());
-        test.getAccount(0).deposit(20.0,savingTest);
-        //assertEquals(70.0,savingTest.getBalance());
-        //assertEquals(10,test.getAccount(0).getBalance());
+        test.getAccount(0).withdraw(20.0,savingTest, action);
+        assertEquals(70.0,savingTest.getBalance());
+        assertEquals(10,test.getAccount(0).getBalance());
 
     }
     // This checks if delete account works with both both int & account as type parameter

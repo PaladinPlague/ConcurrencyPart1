@@ -47,10 +47,10 @@ public abstract class Account {
     public abstract String getType();
 
     //Carry out depositing methods of this account
-    public abstract void deposit(Double amount, Account sender) throws Exception;
+    public abstract void deposit(Double amount, Account sender, String action) throws Exception;
 
     //Carry out the withdraw methods of this account
-    public abstract void withdraw(Double amount, Account receiver) throws Exception;
+    public abstract void withdraw(Double amount, Account receiver, String action) throws Exception;
 
     //Print the details of this account into a terminal
     //If an account needs to share more details, override

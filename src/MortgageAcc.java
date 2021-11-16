@@ -95,7 +95,7 @@ public class MortgageAcc extends Account {
     setBalance(balanceDiff);*/
 
     @Override
-    public synchronized void deposit(Double amount, Account sender) throws Exception {
+    public synchronized void deposit(Double amount, Account sender, String action) throws Exception {
 
         //Mortgage payments should not be accepted from a credit account
         if (Objects.equals(sender.getType(), "Credit Card Account")) {
@@ -151,6 +151,13 @@ public class MortgageAcc extends Account {
                 //If the monthly payment is already paid, the money goes straight to balance
                 if (currMonthPay == 0) {
                     System.out.println("This month's payment has already been fulfilled - this amount will affect your balance DIRECTLY");
+
+                    if(!Objects.equals(action, "response")){
+
+                        //process the transaction
+                        trans.processTransaction("deposit to account");
+
+                    }
                     double bal = getBalance();
                     double balanceDiff = bal - amount;
                     setBalance(balanceDiff);
@@ -167,6 +174,14 @@ public class MortgageAcc extends Account {
 
                     //If there is still somme money to be paid, the number is printed
                     if (this.currMonthPay > 0) {
+
+                        if(!Objects.equals(action, "response")){
+
+                            //process the transaction
+                            trans.processTransaction("deposit to account");
+
+                        }
+
                         this.depositHelper(amount);
                         //Add a new transaction
                         addToTransaction(trans);
@@ -175,16 +190,29 @@ public class MortgageAcc extends Account {
                     //If the number is exactly paid, this fact is printed
                     else if (this.currMonthPay == 0) {
                         System.out.println("The payment for this month has been fulfilled.");
+                        if(!Objects.equals(action, "response")){
+
+                            //process the transaction
+                            trans.processTransaction("deposit to account");
+
+                        }
                         this.depositHelper(amount);
                         addToTransaction(trans);
                     }
                     //Otherwise, if MORE than the monthly payment is paid, this extra goes straight to the balance
                     else {
+                        if(!Objects.equals(action, "response")){
+
+                            //process the transaction
+                            trans.processTransaction("deposit to account");
+
+                        }
                         //Store the extra money
                         double extra = Math.abs(currMonthPay);
                         //We need to take this extra off of amount since interest isn't applied to it
                         this.depositHelper(amount - extra);
                         addToTransaction(trans);
+
                         //This extra is then taken directly off of balance
                         double bal = getBalance();
                         double balanceDiff = bal - extra;
@@ -207,7 +235,7 @@ public class MortgageAcc extends Account {
     }
 
     @Override
-    public void withdraw(Double amount, Account receiver) throws Exception {
+    public void withdraw(Double amount, Account receiver,String action) throws Exception {
         //CANNOT WITHDRAW
     }
 

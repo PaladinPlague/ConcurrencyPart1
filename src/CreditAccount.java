@@ -97,9 +97,9 @@ public class CreditAccount extends Account  {
     the payment can be on the due day, before due day or after due day
      */
     @Override
-    public synchronized void deposit(Double amount, Account sender) throws Exception {
+    public synchronized void deposit(Double amount, Account sender, String action) throws Exception {
         monthlyPayment();
-
+        Transaction transaction = new Transaction(amount, sender, this);
         if(Objects.equals(sender.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use other credit card to pay this credit card bill!");
         }else if(Math.abs(sender.getBalance()) < amount){
@@ -108,7 +108,12 @@ public class CreditAccount extends Account  {
             throw new ArithmeticException("you can't pay more than you have spent!");
         }else{
 
-            Transaction transaction = new Transaction(amount, sender, this);
+            if(!Objects.equals(action, "response")){
+
+                //process the transaction
+                transaction.processTransaction("deposit to account");
+
+            }
             setBalance(getBalance()+amount);
             if((availableCredit+=amount)>getCreditLimit()){
                 availableCredit = creditLimit;
@@ -128,16 +133,19 @@ public class CreditAccount extends Account  {
     update availableCredit field, as more money spent it should get lower.
      */
     @Override
-    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
-
+    public synchronized void withdraw(Double amount, Account receiver, String action) throws Exception {
+        //make a new transaction goes from this credit account to any other account
+        Transaction transaction = new Transaction(amount,this,receiver);
         if(Objects.equals(receiver.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use this credit card to pay another credit card!");
             //check if we still have enough credit to pay for this transaction.
         }else if(availableCredit < amount){
             throw new ArithmeticException("Sorry, insufficient fund.");
         }else{
-            //make a new transaction goes from this credit account to any other account
-            Transaction transaction = new Transaction(amount,this,receiver);
+            if(!Objects.equals(action, "response")){
+                //process the transaction
+                transaction.processTransaction("Withdraw from account");
+            }
             availableCredit -= amount;
             setBalance(getBalance()-amount);
             addToTransaction(transaction);
