@@ -99,7 +99,11 @@ public class MortgageAcc extends Account {
 
         //Mortgage payments should not be accepted from a credit account
         if (Objects.equals(sender.getType(), "Credit Card Account")) {
-            System.out.println("A mortgage payment CANNOT be paid by a credit account.");
+            System.out.println("A mortgage payment CANNOT be made by a credit account.");
+            return;
+        }
+        else if (Objects.equals(sender.getType(), "Mortgage Account")) {
+            System.out.println("A mortgage payment CANNOT be made by a mortgage account.");
             return;
         }
 
@@ -141,9 +145,19 @@ public class MortgageAcc extends Account {
             //Otherwise, if the 'month' has not passed, we deal with the amount and pay it into the account
             if (diff < 2.0) {
 
+                //Set up a new transaction
+                Transaction trans = new Transaction(amount, sender, this);
+
                 //If the monthly payment is already paid, the money goes straight to balance
                 if (currMonthPay == 0) {
                     System.out.println("This month's payment has already been fulfilled - this amount will affect your balance DIRECTLY");
+
+                    if(!Objects.equals(action, "response")){
+
+                        //process the transaction
+                        trans.processTransaction("deposit to account");
+
+                    }
                     double bal = getBalance();
                     double balanceDiff = bal - amount;
                     setBalance(balanceDiff);
@@ -153,55 +167,57 @@ public class MortgageAcc extends Account {
                 else {
                     //When paid in, we need to update the current monthly pay balance to determine what to do
                     //With the amount
-                    Transaction trans = new Transaction(amount, sender, this);
+
                     this.currMonthPay = this.currMonthPay - amount;
                     this.currMonthPay = Math.round(this.currMonthPay * 100);
                     this.currMonthPay = this.currMonthPay / 100;
 
                     //If there is still somme money to be paid, the number is printed
                     if (this.currMonthPay > 0) {
+
                         if(!Objects.equals(action, "response")){
 
                             //process the transaction
                             trans.processTransaction("deposit to account");
 
                         }
+
                         this.depositHelper(amount);
+                        //Add a new transaction
+                        addToTransaction(trans);
                         System.out.println("Payment left for this month: £" + this.currMonthPay);
                     }
                     //If the number is exactly paid, this fact is printed
                     else if (this.currMonthPay == 0) {
+                        System.out.println("The payment for this month has been fulfilled.");
                         if(!Objects.equals(action, "response")){
 
                             //process the transaction
                             trans.processTransaction("deposit to account");
 
                         }
-
-                        System.out.println("The payment for this month has been fulfilled.");
                         this.depositHelper(amount);
+                        addToTransaction(trans);
                     }
                     //Otherwise, if MORE than the monthly payment is paid, this extra goes straight to the balance
                     else {
-                        //Store the extra money
-                        double extra = Math.abs(currMonthPay);
-                        //We need to take this extra off of amount since interest isn't applied to it
                         if(!Objects.equals(action, "response")){
 
                             //process the transaction
                             trans.processTransaction("deposit to account");
 
                         }
-
+                        //Store the extra money
+                        double extra = Math.abs(currMonthPay);
+                        //We need to take this extra off of amount since interest isn't applied to it
                         this.depositHelper(amount - extra);
-
+                        addToTransaction(trans);
 
                         //This extra is then taken directly off of balance
                         double bal = getBalance();
                         double balanceDiff = bal - extra;
                         setBalance(balanceDiff);
                     }
-                    addToTransaction(trans);
                 }
             }
         }
@@ -219,7 +235,7 @@ public class MortgageAcc extends Account {
     }
 
     @Override
-    public void withdraw(Double amount, Account receiver, String action) throws Exception {
+    public void withdraw(Double amount, Account receiver,String action) throws Exception {
         //CANNOT WITHDRAW
     }
 
@@ -256,6 +272,5 @@ public class MortgageAcc extends Account {
         System.out.println("Current outstanding balance: £" + this.getBalance());
         System.out.println("Current annual interest rate: " + getAnnInterest() / 0.01 + "%");
         System.out.println("Recent monthly payment: £" + this.monthlyPayment);
-        System.out.println();
     }
 }
