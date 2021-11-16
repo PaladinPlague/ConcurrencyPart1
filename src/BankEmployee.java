@@ -80,6 +80,61 @@ public class BankEmployee {
         }
     }
 
+    //Given the ACCOUNT, the employee can put the amount into the specific account
+    public synchronized void deposit(Account acc, double amount) throws Exception {
+        //Unsure about the 'acc' parameter here - need to change this I think
+        if (this.accounts.contains(acc)) {
+            acc.deposit(amount, acc);
+        }
+        else {
+            System.out.println("This account may not be overseen by this employee");
+        }
+    }
+
+    //Given the account NUMBER, the employee can search for it and then put the amount into it
+    public synchronized void deposit(AccountHolder person, String acc, double amount) throws Exception {
+        if (this.accounts.contains(person)) {
+            Account foundAcc = this.getCustAccount(person).getAccount(acc);
+            if (foundAcc == null) {
+                System.out.println("This is not the number of an existing account");
+            } else {
+                System.out.println("yes");
+                //Unsure about the 'acc' parameter here - need to change this I think
+                foundAcc.deposit(amount, foundAcc);
+            }
+        }
+        else {
+            System.out.println("This account may not be overseen by this employee");
+        }
+    }
+
+    //Given the ACCOUNT, the employee can pull money out of the amount into the specific account
+    public synchronized void withdraw(Account acc, double amount) throws Exception {
+        //Unsure about the 'acc' parameter here - need to change this I think
+        if (this.accounts.contains(acc)) {
+            acc.withdraw(amount, acc);
+        }
+        else {
+            System.out.println("This account may not be overseen by this employee");
+        }
+    }
+
+    //Given the account NUMBER, the employee can search for it and then pull money out of the amount into it
+    public synchronized void withdraw(AccountHolder person, String acc, double amount) throws Exception {
+        if (this.accounts.contains(person)) {
+            Account foundAcc = this.getCustAccount(person).getAccount(acc);
+            if (foundAcc == null) {
+                System.out.println("This is not the number of an existing account");
+            } else {
+                //Unsure about the 'acc' parameter here - need to change this I think
+                foundAcc.withdraw(amount, foundAcc);
+            }
+        }
+        else {
+        System.out.println("This account may not be overseen by this employee");
+    }
+}
+
     //Adds an already existing account to an AccountHolder
     public synchronized void addAccount(AccountHolder person, Account acc) {
         if (this.accounts.contains(person)) {

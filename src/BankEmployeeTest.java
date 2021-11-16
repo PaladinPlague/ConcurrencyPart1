@@ -201,4 +201,36 @@ public class BankEmployeeTest {
         acc.addAccount(curr);
         bankEmp.changeOverdraftLimit(curr, 2000);
     }
+
+    //Ensures the deposit with an Account Number works
+    @Test
+    public void depositString() throws Exception {
+        BankEmployee bankEmp = new BankEmployee("Tim", "98765");
+        AccountHolder persAcc = bankEmp.createCustAccount("Jim", 52);
+        CurrentAccount curr = new CurrentAccount("1234", 1000.00);
+        bankEmp.getCustAccount(persAcc).addAccount(curr);
+        assertEquals(1000, curr.getBalance());
+        bankEmp.printOneAccount(persAcc, "1234");
+        bankEmp.deposit(persAcc, "1234", 100);
+        assertEquals(1100, curr.getBalance());
+        System.out.println();
+        bankEmp.printOneAccount(persAcc, "1234");
+    }
+
+    //Ensures the withdrawal with an Account Number works
+    @Test
+    public void withdrawString() throws Exception {
+        BankEmployee bankEmp = new BankEmployee("Tim", "98765");
+        AccountHolder persAcc = bankEmp.createCustAccount("Jim", 52);
+        CurrentAccount curr = new CurrentAccount("1234", 1000.00);
+        bankEmp.getCustAccount(persAcc).addAccount(curr);
+        assertEquals(1000, curr.getBalance());
+        bankEmp.printOneAccount(persAcc, "1234");
+        bankEmp.withdraw(persAcc, "1234", 100);
+        assertEquals(900, curr.getBalance());
+        System.out.println();
+        bankEmp.printOneAccount(persAcc, "1234");
+    }
+
 }
+
