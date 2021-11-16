@@ -23,8 +23,9 @@ class CreditAccountTest {
 
     @Test
     void makePurchase(){
+        String action = "request";
         try {
-            account.withdraw(159.00, dummy);
+            account.withdraw(159.00, dummy, action);
         } catch (Exception e) {
             System.out.println("Error occurred ");
         }
@@ -32,14 +33,15 @@ class CreditAccountTest {
         assertEquals(3000, account.getCreditLimit());
         assertEquals(2841.00, account.getAvailableCreditCredit());
         assertEquals(-159.00, account.getBalance());
-        //assertEquals(659.00, dummy.getBalance());
+        assertEquals(659.00, dummy.getBalance());
     }
 
 
 
     @Test
     void makePurchaseToAnotherCreditAccount(){
-        Exception ex = assertThrows(Exception.class,()->account.withdraw(159.00, CCAccount));
+        String action = "request";
+        Exception ex = assertThrows(Exception.class,()->account.withdraw(159.00, CCAccount, action));
         String expectedExMsg = "Sorry， You can't use this credit card to pay another credit card!";
         String exMsg = ex.getMessage();
         assertEquals(expectedExMsg, exMsg);
@@ -48,7 +50,8 @@ class CreditAccountTest {
 
     @Test
     void makePurchaseWithoutEnoughMoney(){
-        Exception ex = assertThrows(Exception.class,()->account.withdraw(15900.00, dummy));
+        String action = "request";
+        Exception ex = assertThrows(Exception.class,()->account.withdraw(15900.00, dummy, action));
         String expectedExMsg = "Sorry, insufficient fund.";
         String exMsg = ex.getMessage();
         assertEquals(expectedExMsg, exMsg);
@@ -58,9 +61,10 @@ class CreditAccountTest {
 
     @Test
     void printStatement(){
+        String action = "request";
         try {
-            account.withdraw(100.00, dummy);
-            account.withdraw(200.00, dummy);
+            account.withdraw(100.00, dummy, action);
+            account.withdraw(200.00, dummy, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,9 +73,10 @@ class CreditAccountTest {
     }
 
     private void purchaseOfTheMonth() {
+        String action = "request";
         try {
-            account.withdraw(100.00, dummy);
-            account.withdraw(200.00, dummy);
+            account.withdraw(100.00, dummy, action);
+            account.withdraw(200.00, dummy, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,40 +85,43 @@ class CreditAccountTest {
 
     @Test
     void depositSuccessWithoutOverdueAndPaidFully(){
+        String action = "request";
 
         purchaseOfTheMonth();
         account.setPaymentDate(LocalDate.of(2021,11,8));
         try {
-            account.deposit(300.00, dummy);
+            account.deposit(300.00, dummy, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(0.00, account.getBalance());
+        assertEquals(500.00,dummy.getBalance());
 
     }
 
 
     @Test
     void depositSuccessWithoutOverdueAndPaidPartially(){
-
+        String action = "request";
         purchaseOfTheMonth();
 
         account.setPaymentDate(LocalDate.of(2021,11,8));
         try {
-            account.deposit(200.00, dummy);
+            account.deposit(200.00, dummy, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(-100.00, account.getBalance());
+        assertEquals(600.00, dummy.getBalance());
 
     }
 
 
     @Test
     void depositSuccessWithOverdueAndPaidFully(){
-
+        String action = "request";
         purchaseOfTheMonth();
 
         account.setPaymentDate(LocalDate.of(2021,11,18));
@@ -121,18 +129,19 @@ class CreditAccountTest {
 
         System.out.println(Math.abs(expectedAmount));
         try {
-            account.deposit(Math.abs(expectedAmount), dummy);
+            account.deposit(Math.abs(expectedAmount), dummy, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(0.00, account.getBalance());
+        assertEquals(494.00,dummy.getBalance());
 
     }
 
     @Test
     void depositSuccessWithOverdueAndPaidPartially(){
-
+        String action = "request";
         purchaseOfTheMonth();
 
         account.setPaymentDate(LocalDate.of(2021,11,18));
@@ -140,12 +149,13 @@ class CreditAccountTest {
 
         System.out.println(Math.abs(expectedAmount + 100));
         try {
-            account.deposit(Math.abs(expectedAmount + 100), dummy);
+            account.deposit(Math.abs(expectedAmount + 100), dummy, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(-100.00, account.getBalance());
+        assertEquals(594.00, dummy.getBalance());
 
     }
 
@@ -153,22 +163,22 @@ class CreditAccountTest {
 
     @Test
     void depositFailed(){
-
+        String action = "request";
         purchaseOfTheMonth();
 
         account.setPaymentDate(LocalDate.of(2021,11,18));
-        Exception ex = assertThrows(Exception.class,()->account.deposit(account.getBalance(), CCAccount));
+        Exception ex = assertThrows(Exception.class,()->account.deposit(account.getBalance(), CCAccount, action));
         String expectedExMsg = "Sorry， You can't use other credit card to pay this credit card bill!";
         String exMsg = ex.getMessage();
         assertEquals(expectedExMsg, exMsg);
 
-        ex = assertThrows(Exception.class,()->account.deposit(900.00, dummy));
+        ex = assertThrows(Exception.class,()->account.deposit(900.00, dummy, action));
         expectedExMsg = "Sorry, insufficient fund.";
         exMsg = ex.getMessage();
         assertEquals(expectedExMsg, exMsg);
 
 
-        ex = assertThrows(Exception.class,()->account.deposit(400.00, dummy));
+        ex = assertThrows(Exception.class,()->account.deposit(400.00, dummy, action));
         expectedExMsg = "you can't pay more than you have spent!";
         exMsg = ex.getMessage();
         assertEquals(expectedExMsg, exMsg);

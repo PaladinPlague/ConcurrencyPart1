@@ -1,7 +1,6 @@
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Objects;
 
 public class SavingAccount extends Account {
 
@@ -105,13 +104,19 @@ public class SavingAccount extends Account {
 
     // Adds the balance with the account and then adds the interest if eligible.
     @Override
-    public synchronized void deposit(Double amount, Account sender) throws Exception {
+    public synchronized void deposit(Double amount, Account sender, String action) throws Exception {
+        Transaction transaction = new Transaction(amount, sender, this);
+        if(!Objects.equals(action, "response")){
+            //process the transaction
+            transaction.processTransaction("deposit to account");
+
+        }
         addInterest(getBalance());
         currentBalance += amount;
         currentBalance = Math.round(currentBalance * 100.0) / 100.0;
         if(checkBalance(currentBalance)){
             System.out.println("Total balance: " + currentBalance);
-            addToTransaction(new Transaction(amount, sender, this));
+            addToTransaction(transaction);
         }
         else{
             System.out.println("This account is not valid as we require an £1 minimum deposit");
@@ -121,8 +126,8 @@ public class SavingAccount extends Account {
     }
     // Withdraws the balance with the amount if possible, then adds the interest if eligible.
     //@Override
-    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
-
+    public synchronized void withdraw(Double amount, Account receiver, String action) throws Exception {
+        Transaction transaction = new Transaction(amount, this, receiver);
         if(checkBalance(currentBalance)){
 
             addInterest(currentBalance);
@@ -138,10 +143,15 @@ public class SavingAccount extends Account {
                     setBalance(0.0);
                 }
                 else {
+                    if(!Objects.equals(action, "response")){
+                        //process the transaction
+                        transaction.processTransaction("Withdraw from account");
+
+                    }
                     currentBalance = withdraw;
                     setBalance(currentBalance);
                 }
-                addToTransaction(new Transaction(amount, this, receiver));
+                addToTransaction(transaction);
             }
         }
 

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.time.LocalDate;
 
 public class StudentAccount extends Account{
     /* Based on Saving's Account | Updated by Mark
@@ -38,21 +37,26 @@ public class StudentAccount extends Account{
 
     //Deposit a set amount from another account into this account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void deposit(Double amount, Account sender) {
+    public synchronized void deposit(Double amount, Account sender, String action) {
+        Transaction transaction = new Transaction(amount, sender, this);
+
+        transaction.processTransaction("deposit to account");
         setBalance(getBalance() + amount);
-        addToTransaction(new Transaction(amount, sender, this));
+        addToTransaction(transaction);
     }
 
     //Withdraw a set amount from this account into another account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
+    public synchronized void withdraw(Double amount, Account receiver, String action) throws Exception {
 
         if((this.getBalance()+overdraft)<amount){
             throw new Exception("Sorry, insufficient fund.");
         }else{
+            Transaction transaction = new Transaction(amount, this, receiver);
+            transaction.processTransaction("Withdraw from account");
             setBalance(getBalance() - amount);
             if(Double.compare(getBalance(), 0.0) < 0) overdrafted = true;
-            addToTransaction(new Transaction(amount, this, receiver));
+            addToTransaction(transaction);
         }
 
     }

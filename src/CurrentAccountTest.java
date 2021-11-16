@@ -16,15 +16,17 @@ class CurrentAccountTest {
 
     @Test
     void makeDeposit(){
-        account.deposit(50.00, secondAcc);
+        String action = "request";
+        account.deposit(50.00, secondAcc, action);
 
         assertEquals(550,account.getBalance());
+        assertEquals(650,secondAcc.getBalance());
     }
 
     @Test
     void failedToMakeWithdraw(){
-
-        Exception ex  = assertThrows(Exception.class, ()->account.withdraw(600.00,secondAcc));
+        String action = "request";
+        Exception ex  = assertThrows(Exception.class, ()->account.withdraw(600.00,secondAcc, action));
         String expectedErMsg = "Sorry, insufficient fund.";
         String erMsg = ex.getMessage();
         assertEquals(expectedErMsg, erMsg);
@@ -34,20 +36,23 @@ class CurrentAccountTest {
     @Test
     void makeWithdraw()  {
 
+        String action = "request";
         try {
-            account.withdraw(300.00, secondAcc);
+            account.withdraw(300.00, secondAcc, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(200.00, account.getBalance());
+        assertEquals(1000.00,secondAcc.getBalance());
     }
 
     @Test
     void printStatement(){
+        String action = "request";
         try {
-            account.withdraw(100.00, secondAcc);
-            account.withdraw(200.00, secondAcc);
+            account.withdraw(100.00, secondAcc, action);
+            account.withdraw(200.00, secondAcc, action);
         } catch (Exception e) {
             e.printStackTrace();
         }

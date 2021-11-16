@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 
 //Account type that's used for everyday life services
 public class CurrentAccount extends Account{
@@ -12,20 +13,46 @@ public class CurrentAccount extends Account{
 
     //Deposit a set amount from another account into this account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void deposit(Double amount, Account sender) {
-        setBalance(getBalance() + amount);
-        addToTransaction(new Transaction(amount, sender, this));
+    public synchronized void deposit(Double amount, Account sender, String action) {
+
+        //set up a new transaction
+        Transaction transaction = new Transaction(amount, sender, this);
+
+        if(!Objects.equals(action, "response")){
+
+            //process the transaction
+            transaction.processTransaction("deposit to account");
+
+        }
+            //add this transaction into the list of transaction for the account
+            addToTransaction(transaction);
+            //update the balance
+            setBalance(getBalance() + amount);
+            System.out.println("updated balance: " + getBalance()+" for account: "+getAccountNumber());
+
+
+
+
     }
 
     //Withdraw a set amount from this account into another account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
-
+    public synchronized void withdraw(Double amount, Account receiver, String action) throws Exception {
+        Transaction transaction = new Transaction(amount, this, receiver);
         if(this.getBalance()<amount){
             throw new Exception("Sorry, insufficient fund.");
         }else{
-            setBalance(getBalance() - amount);
-            addToTransaction(new Transaction(amount, this, receiver));
+
+            if(!Objects.equals(action, "response")){
+                //process the transaction
+                transaction.processTransaction("Withdraw from account");
+
+            }
+                addToTransaction(transaction);
+                setBalance(getBalance() - amount);
+                transaction.setSuccess(true);
+                System.out.println("updated balance: " + getBalance()+" for account: "+getAccountNumber());
+
         }
 
     }

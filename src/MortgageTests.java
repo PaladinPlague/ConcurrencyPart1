@@ -34,6 +34,7 @@ public class MortgageTests {
 
     @Test
     void singlePaymentTest() throws Exception {
+        String action = "request";
         //One single payment which *should* affect the balance
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
 
@@ -44,7 +45,7 @@ public class MortgageTests {
         balance = 100,000 - 875.31 = 99124.69
         */
 
-        acc.deposit(876.04, acc);
+        acc.deposit(876.04, acc, action);
         assertEquals(99124.69, acc.getBalance());
         //System.out.println("Test 3 details: ");
         acc.printDetails();
@@ -52,10 +53,11 @@ public class MortgageTests {
 
     @Test
     void latePaymentTest() throws Exception {
+        String action = "request";
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         //Should print a warning about late payments and then accept it
         Thread.sleep(3000);
-        acc.deposit(876.04, acc);
+        acc.deposit(876.04, acc, action);
 
         /*
         Self calculation for asserts:
@@ -71,19 +73,21 @@ public class MortgageTests {
 
     @Test
     void lumpSum() throws Exception {
+        String action = "request";
         //Should close the account
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
-        acc.deposit(102000.0, acc);
+        acc.deposit(102000.0, acc, action);
         assertTrue(acc.getBalance() < 0);
     }
 
     @Test
     void fullMonthPayment() throws Exception {
+        String action = "request";
         //Should print a "full payment" message
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
-        acc.deposit(600.0, acc);
-        acc.deposit(170.0, acc);
-        acc.deposit(106.04, acc);
+        acc.deposit(600.0, acc, action);
+        acc.deposit(170.0, acc, action);
+        acc.deposit(106.04, acc, action);
 
         /*
         Self calculation for asserts:
@@ -99,10 +103,11 @@ public class MortgageTests {
 
     @Test
     void twoConsecMonths() throws Exception {
+        String action = "request";
         //Should print two fulfilled messages and show the correct change in balance
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         //Month 1
-        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc);
+        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc, action);
 
         /*
         Self calculation for Month 1:
@@ -114,7 +119,7 @@ public class MortgageTests {
         assertEquals(99124.69, acc.getBalance());
         Thread.sleep(3000);
         //Month 2
-        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc);
+        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc, action);
 
         /*
         Self calculation for Month 2:
@@ -132,9 +137,10 @@ public class MortgageTests {
     @Test
         //Should print three "full payment messages"
     void fullThreeMonths() throws Exception {
+        String action = "request";
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         //Month 1
-        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc);
+        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc, action);
 
         /*
         Self calculation for Month 1:
@@ -146,7 +152,7 @@ public class MortgageTests {
         assertEquals(99124.69, acc.getBalance());
         Thread.sleep(3000);
         //Month 2
-        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc);
+        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc, action);
 
         /*
         Self calculation for Month 2:
@@ -159,7 +165,7 @@ public class MortgageTests {
         assertEquals(98257.04, acc.getBalance());
         Thread.sleep(3000);
         //Month 3
-        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc);
+        acc.deposit(acc.calcMonthly(acc.getBalance(), acc.getMonthInterest()), acc, action);
 
         /*
         Self calculation for Month 5:
@@ -177,9 +183,10 @@ public class MortgageTests {
     @Test
         //Using singlePayment, we can look to check for a balance difference
     void normalOverpayment () throws Exception {
+        String action = "request";
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
-        acc.deposit(876.04, acc);
-        acc.deposit(200.0, acc);
+        acc.deposit(876.04, acc, action);
+        acc.deposit(200.0, acc, action);
 
         /*
         Self calculation for asserts:
@@ -197,11 +204,12 @@ public class MortgageTests {
     @Test
         //Checks to ensure the transactions are stored correctly
     void transactionPrint() throws Exception {
+        String action = "request";
         MortgageAcc acc = new MortgageAcc("123456", 100000.00, 1, 10);
         //Since there's no other working classes I'll be using the same account as receiver and sender
-        acc.deposit(600.0, acc);
-        acc.deposit(170.0, acc);
-        acc.deposit(106.04, acc);
+        acc.deposit(600.0, acc, action);
+        acc.deposit(170.0, acc, action);
+        acc.deposit(106.04, acc, action);
         ArrayList<Transaction> test = new ArrayList<>();
         test = acc.getTransactions();
         assertEquals(3, test.size());
