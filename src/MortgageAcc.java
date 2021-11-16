@@ -99,7 +99,11 @@ public class MortgageAcc extends Account {
 
         //Mortgage payments should not be accepted from a credit account
         if (Objects.equals(sender.getType(), "Credit Card Account")) {
-            System.out.println("A mortgage payment CANNOT be paid by a credit account.");
+            System.out.println("A mortgage payment CANNOT be made by a credit account.");
+            return;
+        }
+        else if (Objects.equals(sender.getType(), "Mortgage Account")) {
+            System.out.println("A mortgage payment CANNOT be made by a mortgage account.");
             return;
         }
 
@@ -141,6 +145,9 @@ public class MortgageAcc extends Account {
             //Otherwise, if the 'month' has not passed, we deal with the amount and pay it into the account
             if (diff < 2.0) {
 
+                //Set up a new transaction
+                Transaction trans = new Transaction(amount, sender, this);
+
                 //If the monthly payment is already paid, the money goes straight to balance
                 if (currMonthPay == 0) {
                     System.out.println("This month's payment has already been fulfilled - this amount will affect your balance DIRECTLY");
@@ -162,7 +169,6 @@ public class MortgageAcc extends Account {
                     if (this.currMonthPay > 0) {
                         this.depositHelper(amount);
                         //Add a new transaction
-                        Transaction trans = new Transaction(amount, sender, this);
                         addToTransaction(trans);
                         System.out.println("Payment left for this month: £" + this.currMonthPay);
                     }
@@ -170,7 +176,6 @@ public class MortgageAcc extends Account {
                     else if (this.currMonthPay == 0) {
                         System.out.println("The payment for this month has been fulfilled.");
                         this.depositHelper(amount);
-                        Transaction trans = new Transaction(amount, sender, this);
                         addToTransaction(trans);
                     }
                     //Otherwise, if MORE than the monthly payment is paid, this extra goes straight to the balance
@@ -179,7 +184,6 @@ public class MortgageAcc extends Account {
                         double extra = Math.abs(currMonthPay);
                         //We need to take this extra off of amount since interest isn't applied to it
                         this.depositHelper(amount - extra);
-                        Transaction trans = new Transaction(amount, sender, this);
                         addToTransaction(trans);
                         //This extra is then taken directly off of balance
                         double bal = getBalance();
@@ -240,6 +244,5 @@ public class MortgageAcc extends Account {
         System.out.println("Current outstanding balance: £" + this.getBalance());
         System.out.println("Current annual interest rate: " + getAnnInterest() / 0.01 + "%");
         System.out.println("Recent monthly payment: £" + this.monthlyPayment);
-        System.out.println();
     }
 }
