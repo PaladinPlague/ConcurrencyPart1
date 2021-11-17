@@ -35,40 +35,25 @@ public class BankEmployeeTest {
     //Again, creates a saving account BUT should not print any details
     @Test
     public void searchFail() {
-        AccountHolder persAcc = new AccountHolder("John", 30);
+        BankEmployee bankEmp = new BankEmployee("Tim", "98765");
+        AccountHolder persAcc = bankEmp.createCustAccount("John", 30);
         SavingAccount savAcc = new SavingAccount("3", 7000.00);
         persAcc.addAccount(savAcc);
-        BankEmployee bankEmp = new BankEmployee("Tim", "98765");
         //The account does not exist and should print as such
-        assertEquals(null, bankEmp.getAccount(persAcc, "7"));
+        assertEquals(null, bankEmp.getCustAccount(persAcc).getAccount("7"));
         bankEmp.printOneAccount(persAcc, "7");
     }
 
     //Ensures the deposit with an AccountHolder works
     @Test
     public void depositAccount() throws Exception {
-        AccountHolder persAcc = new AccountHolder("John", 30);
-        CurrentAccount curr = new CurrentAccount("1234", 1000.00);
         BankEmployee bankEmp = new BankEmployee("Tim", "98765");
-        bankEmp.printOneAccount(persAcc, "1234");
-        persAcc.addAccount(curr);
-        assertEquals(1000, curr.getBalance());
-        bankEmp.deposit(curr, 100.00);
-        assertEquals(1100, curr.getBalance());
-        System.out.println();
-        bankEmp.printOneAccount(persAcc, "1234");
-    }
-
-    //Ensures the deposit with an Account Number works
-    @Test
-    public void depositString() throws Exception {
-        AccountHolder persAcc = new AccountHolder("John", 30);
+        AccountHolder persAcc = bankEmp.createCustAccount("John", 30);
         CurrentAccount curr = new CurrentAccount("1234", 1000.00);
-        BankEmployee bankEmp = new BankEmployee("Tim", "98765");
         persAcc.addAccount(curr);
-        assertEquals(1000, curr.getBalance());
         bankEmp.printOneAccount(persAcc, "1234");
-        bankEmp.deposit(persAcc, "1234", 100);
+        assertEquals(1000, curr.getBalance());
+        bankEmp.getCustAccount(persAcc).getAccount("1234").deposit(100.0, curr);
         assertEquals(1100, curr.getBalance());
         System.out.println();
         bankEmp.printOneAccount(persAcc, "1234");
@@ -77,28 +62,13 @@ public class BankEmployeeTest {
     //Ensures the withdrawal with an AccountHolder works
     @Test
     public void withdrawAccount() throws Exception {
-        AccountHolder persAcc = new AccountHolder("John", 30);
-        CurrentAccount curr = new CurrentAccount("1234", 1000.00);
         BankEmployee bankEmp = new BankEmployee("Tim", "98765");
-        bankEmp.printOneAccount(persAcc, "1234");
-        persAcc.addAccount(curr);
-        assertEquals(1000, curr.getBalance());
-        bankEmp.withdraw(curr, 100.00);
-        assertEquals(900, curr.getBalance());
-        System.out.println();
-        bankEmp.printOneAccount(persAcc, "1234");
-    }
-
-    //Ensures the withdrawal with an Account Number works
-    @Test
-    public void withdrawString() throws Exception {
-        AccountHolder persAcc = new AccountHolder("John", 30);
+        AccountHolder persAcc = bankEmp.createCustAccount("John", 30);
         CurrentAccount curr = new CurrentAccount("1234", 1000.00);
-        BankEmployee bankEmp = new BankEmployee("Tim", "98765");
         persAcc.addAccount(curr);
-        assertEquals(1000, curr.getBalance());
         bankEmp.printOneAccount(persAcc, "1234");
-        bankEmp.withdraw(persAcc, "1234", 100);
+        assertEquals(1000, curr.getBalance());
+        bankEmp.getCustAccount(persAcc).getAccount("1234").withdraw(100.0, curr);
         assertEquals(900, curr.getBalance());
         System.out.println();
         bankEmp.printOneAccount(persAcc, "1234");
@@ -109,8 +79,8 @@ public class BankEmployeeTest {
     //Adds multiple account to an Account Holder
     @Test
     public void addingAccounts() {
-        AccountHolder persAcc = new AccountHolder("John", 30);
         BankEmployee bankEmp = new BankEmployee("Tim", "98765");
+        AccountHolder persAcc = bankEmp.createCustAccount("John", 30);
         assertEquals(0,persAcc.getSize());
         CurrentAccount curr = new CurrentAccount("1234", 1000.00);
         bankEmp.addAccount(persAcc, curr);
@@ -150,11 +120,12 @@ public class BankEmployeeTest {
     @Test
     public void removeBankAccounts() {
         BankEmployee bankEmp = new BankEmployee("Tim", "98765");
-        AccountHolder acc = bankEmp.createCustAccount("Jim", 52);
+        AccountHolder acc = bankEmp.createCustAccount("John", 30);
         CurrentAccount curr = new CurrentAccount("1234", 1000.00);
         SavingAccount sav = new SavingAccount("2345", 1000.00);
         bankEmp.addAccount(acc, curr);
         bankEmp.addAccount(acc, sav);
+        assertEquals(2, acc.getSize());
         bankEmp.deleteAccount(acc, curr);
         assertEquals(1, acc.getSize());
         bankEmp.deleteAccount(acc, sav);
@@ -230,4 +201,35 @@ public class BankEmployeeTest {
         acc.addAccount(curr);
         bankEmp.changeOverdraftLimit(curr, 2000);
     }
+
+    //Ensures the deposit with an Account Number works
+    @Test
+    public void depositString() throws Exception {
+        BankEmployee bankEmp = new BankEmployee("Tim", "98765");
+        AccountHolder persAcc = bankEmp.createCustAccount("Jim", 52);
+        CurrentAccount curr = new CurrentAccount("1234", 1000.00);
+        bankEmp.getCustAccount(persAcc).addAccount(curr);
+        assertEquals(1000, curr.getBalance());
+        bankEmp.printOneAccount(persAcc, "1234");
+        bankEmp.deposit(persAcc, "1234", 100);
+        assertEquals(1100, curr.getBalance());
+        System.out.println();
+        bankEmp.printOneAccount(persAcc, "1234");
+    }
+
+    //Ensures the withdrawal with an Account Number works
+    @Test
+    public void withdrawString() throws Exception {
+        BankEmployee bankEmp = new BankEmployee("Tim", "98765");
+        AccountHolder persAcc = bankEmp.createCustAccount("Jim", 52);
+        CurrentAccount curr = new CurrentAccount("1234", 1000.00);
+        bankEmp.getCustAccount(persAcc).addAccount(curr);
+        assertEquals(1000, curr.getBalance());
+        bankEmp.printOneAccount(persAcc, "1234");
+        bankEmp.withdraw(persAcc, "1234", 100);
+        assertEquals(900, curr.getBalance());
+        System.out.println();
+        bankEmp.printOneAccount(persAcc, "1234");
+    }
+
 }

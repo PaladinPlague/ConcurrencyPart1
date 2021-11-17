@@ -79,4 +79,18 @@ public class AccountHolder {
     public synchronized int  getSize(){
         return accounts.size();
     }
+
+    //ADDED BY SCOTT -- ALLOWS AN ACCOUNT TO BE FOUND BY ITS NUMBER.
+    //If not applicable, this will also have to be changed in the Bank Employees
+
+    //Searches a customer's account for the account number and returns the match if present
+    public Account getAccount(String acc) {
+        for (int i = 0; i < this.getSize(); i++) {
+            if (acc.equals(this.getAccount(i).getAccountNumber())) {
+                return this.getAccount(i);
+            }
+        }
+        //If there was no match, returns null
+        return null;
+    }
 }
