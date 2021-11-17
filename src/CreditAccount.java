@@ -54,7 +54,7 @@ public class CreditAccount extends Account  {
     }
 
     //get credit return the current available credit
-    public synchronized double getAvailableCreditCredit(){
+    public synchronized double getAvailableCredit(){
         return availableCredit;
     }
 
@@ -180,7 +180,7 @@ public class CreditAccount extends Account  {
     public void printDetails(){
         System.out.println("CC Account Number: " +this.getAccountNumber());
         System.out.println("Total Credit Limit: " +getCreditLimit());
-        System.out.println("Available Credit of This Month: " + getAvailableCreditCredit());
+        System.out.println("Available Credit of This Month: " + getAvailableCredit());
         System.out.println("New Balance: "+this.getBalance());
         System.out.println("List of Transactions: " + this.getTransactions());
     }
@@ -189,7 +189,7 @@ public class CreditAccount extends Account  {
     public String getDetails(){
         ArrayList<Transaction> transactions = this.getTransactions();
         String result = "CC Account Number: " +this.getAccountNumber()+", credit: " +getCreditLimit()+", " +
-                "available Credit: " + getAvailableCreditCredit()+", balance: "+this.getBalance()+ ", " +
+                "available Credit: " + getAvailableCredit()+", balance: "+this.getBalance()+ ", " +
                 "Transactions：" + "[";
         for (int i = 0; i < transactions.size(); i++) {
             result += "From: " + transactions.get(i).getSource().getAccountNumber();

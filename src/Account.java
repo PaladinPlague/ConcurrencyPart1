@@ -11,13 +11,6 @@ public abstract class Account {
     //Holds the number of transactions stored in the account;
     private ArrayList<Transaction> transactions;
 
-    /* NOTE FROM JACKSON: As of now, general account details are very basic.
-    This works for our project, but if we wanted to add more details to make
-    the bank account work closer to a more realistic bank account, additional
-    details we could add may include sort code, email address and card details,
-    then add more corresponding methods similar to those performed on the account
-    number. */
-
     //Constructor of class, which takes in account's number and opening balance
     public Account(String accountNo, Double openingBalance) {
         //Declare account number from string parameter

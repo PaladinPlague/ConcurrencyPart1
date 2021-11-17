@@ -17,7 +17,7 @@ class CreditAccountTest {
         assertEquals("344880224040782",account.getAccountNumber());
         assertEquals("Credit Card Account",account.getType());
         assertEquals(3000,account.getCreditLimit());
-        assertEquals(3000,account.getAvailableCreditCredit());
+        assertEquals(3000,account.getAvailableCredit());
         assertEquals(0.00,account.getBalance());
     }
 
@@ -30,7 +30,7 @@ class CreditAccountTest {
         }
 
         assertEquals(3000, account.getCreditLimit());
-        assertEquals(2841.00, account.getAvailableCreditCredit());
+        assertEquals(2841.00, account.getAvailableCredit());
         assertEquals(-159.00, account.getBalance());
         //assertEquals(659.00, dummy.getBalance());
     }
