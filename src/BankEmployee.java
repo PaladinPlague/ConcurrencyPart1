@@ -82,11 +82,14 @@ public class BankEmployee {
 
     //Given the ACCOUNT, the employee can put the amount into the specific account
     public synchronized void deposit(Account acc, double amount) throws Exception {
-        //Unsure about the 'acc' parameter here - need to change this I think
-        if (this.accounts.contains(acc)) {
-            acc.deposit(amount, acc);
+        boolean found = false;
+        for (int i = 0; i < accounts.size() && !found; i++) {
+            if (this.accounts.get(i).getAccount(acc.getAccountNumber()) != null) {
+                acc.deposit(amount, acc);
+                found = true;
+            }
         }
-        else {
+        if (!found) {
             System.out.println("This account may not be overseen by this employee");
         }
     }
@@ -110,11 +113,18 @@ public class BankEmployee {
 
     //Given the ACCOUNT, the employee can pull money out of the amount into the specific account
     public synchronized void withdraw(Account acc, double amount) throws Exception {
+        boolean found = false;
+        System.out.println("Number of holders for " + empName + " is: " + this.accounts.size());
         //Unsure about the 'acc' parameter here - need to change this I think
-        if (this.accounts.contains(acc)) {
-            acc.withdraw(amount, acc);
+        for (int i = 0; i < accounts.size() && !found; i++) {
+            System.out.println("Number of holders for " + empName + " is: " + this.accounts.size());
+            System.out.println(this.accounts.get(i).getSize());
+            if (this.accounts.get(i).getAccount(acc.getAccountNumber()) != null) {
+                acc.withdraw(amount, acc);
+                found = true;
+            }
         }
-        else {
+        if (!found) {
             System.out.println("This account may not be overseen by this employee");
         }
     }

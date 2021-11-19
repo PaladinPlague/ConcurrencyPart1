@@ -118,7 +118,7 @@ public class BankSystem {
             lock.lock();
             try {
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", employee " + bankEmployees.get(employeeIndex).getEmpName() + " depositing amount " + amount + " into account " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex).getAccountNumber() + " held by account holder " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getName());
-                bankEmployees.get(employeeIndex).deposit(bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)), bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex).getAccountNumber(), amount);
+                bankEmployees.get(employeeIndex).deposit(bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex), amount);
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
                 condition.signalAll();
             } finally {
@@ -150,7 +150,7 @@ public class BankSystem {
                     stillWaiting = condition.await(1, TimeUnit.SECONDS);
                 }
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", employee " + bankEmployees.get(employeeIndex).getEmpName() + " withdrawing amount " + amount + " from account " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex).getAccountNumber() + " held by account holder " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getName());
-                bankEmployees.get(employeeIndex).withdraw(bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)), bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex).getAccountNumber(), amount);
+                bankEmployees.get(employeeIndex).withdraw(bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex), amount);
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
             } finally {
                 lock.unlock();
