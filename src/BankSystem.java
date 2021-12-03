@@ -21,13 +21,23 @@ public class BankSystem {
     }
 
     //Add a new account holder to the system
-    public synchronized void addAccountHolder(AccountHolder holder) {
-        accHolders.add(holder);
+    public void addAccountHolder(AccountHolder holder) {
+        lock.lock();
+        try {
+            accHolders.add(holder);
+        } finally {
+            lock.unlock();
+        }
     }
 
     //Add a new bank employee to the system
-    public synchronized void addBankEmployee(BankEmployee employee) {
-        bankEmployees.add(employee);
+    public void addBankEmployee(BankEmployee employee) {
+        lock.lock();
+        try {
+            bankEmployees.add(employee);
+        } finally {
+            lock.unlock();
+        }
     }
 
     //Return the list of account holders in the bank
@@ -65,12 +75,12 @@ public class BankSystem {
         } else {
             lock.lock();
             try {
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " depositing amount " + amount + " into account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
                 accHolders.get(holderIndex).getAccount(accountIndex).deposit(amount, new CurrentAccount("00000000", amount));
+            } finally {
+                System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " depositing amount " + amount + " into account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
+                lock.unlock();
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
                 condition.signalAll();
-            } finally {
-                lock.unlock();
             }
         }
     }
@@ -115,14 +125,14 @@ public class BankSystem {
         } else if (bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)) == null) {
             System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: holder index " + holderIndex + " for bank employee " + bankEmployees.get(employeeIndex).getEmpName() + " is invalid");
         } else {
+            System.out.println("Thread with id " + Thread.currentThread().getId() + ", employee " + bankEmployees.get(employeeIndex).getEmpName() + " depositing amount " + amount + " into account " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex).getAccountNumber() + " held by account holder " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getName());
             lock.lock();
             try {
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", employee " + bankEmployees.get(employeeIndex).getEmpName() + " depositing amount " + amount + " into account " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex).getAccountNumber() + " held by account holder " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getName());
+            } finally {
                 bankEmployees.get(employeeIndex).deposit(bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex), amount);
+                lock.unlock();
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
                 condition.signalAll();
-            } finally {
-                lock.unlock();
             }
         }
     }
