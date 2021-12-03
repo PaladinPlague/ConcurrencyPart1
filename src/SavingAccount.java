@@ -53,8 +53,8 @@ public class SavingAccount extends Account {
         everyYear = LocalDate.now();
     }
 
-    //Helper function that checks whether this account is valid
-    private boolean checkBalance(double balance) {
+    //Function that checks whether this account is valid
+    public boolean checkBalance(double balance) {
 
         if(balance < 1){
             invalid = true;
