@@ -54,8 +54,13 @@ public class BankSystem {
         } else if (accountIndex < 0 || accountIndex >= accHolders.get(holderIndex).getSize()) {
             System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: account index " + accountIndex + " out of bounds for holder " + accHolders.get(accountIndex).getName());
         } else {
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " checking balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
+            lock.lock();
+            try {
+                System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " checking balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
+                System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
+            } finally {
+                lock.unlock();
+            }
         }
     }
 
