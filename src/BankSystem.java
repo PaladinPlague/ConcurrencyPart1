@@ -54,13 +54,8 @@ public class BankSystem {
         } else if (accountIndex < 0 || accountIndex >= accHolders.get(holderIndex).getSize()) {
             System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: account index " + accountIndex + " out of bounds for holder " + accHolders.get(accountIndex).getName());
         } else {
-            lock.lock();
-            try {
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " checking balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
-            } finally {
-                lock.unlock();
-            }
+            System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " checking balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
+            System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
         }
     }
 
@@ -75,12 +70,12 @@ public class BankSystem {
         } else {
             lock.lock();
             try {
-                accHolders.get(holderIndex).getAccount(accountIndex).deposit(amount, new CurrentAccount("00000000", amount));
-            } finally {
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " depositing amount " + amount + " into account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
-                lock.unlock();
+                accHolders.get(holderIndex).getAccount(accountIndex).deposit(amount, new CurrentAccount("00000000", amount));
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
                 condition.signalAll();
+            } finally {
+                lock.unlock();
             }
         }
     }
@@ -125,14 +120,14 @@ public class BankSystem {
         } else if (bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)) == null) {
             System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: holder index " + holderIndex + " for bank employee " + bankEmployees.get(employeeIndex).getEmpName() + " is invalid");
         } else {
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", employee " + bankEmployees.get(employeeIndex).getEmpName() + " depositing amount " + amount + " into account " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex).getAccountNumber() + " held by account holder " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getName());
             lock.lock();
             try {
-            } finally {
+                System.out.println("Thread with id " + Thread.currentThread().getId() + ", employee " + bankEmployees.get(employeeIndex).getEmpName() + " depositing amount " + amount + " into account " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex).getAccountNumber() + " held by account holder " + bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getName());
                 bankEmployees.get(employeeIndex).deposit(bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex), amount);
-                lock.unlock();
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
                 condition.signalAll();
+            } finally {
+                lock.unlock();
             }
         }
     }
