@@ -37,12 +37,9 @@ public class Driver {
         Thread h1C = new Thread(check1);
         Thread h2C = new Thread(check2);
 
-        //Use synchronized block so that the order of these threads are isolated from threads in other methods
-        synchronized (bank) {
-            //Start the process of the threads
-            h1C.start();
-            h2C.start();
-        }
+        //Start the process of the threads
+        h1C.start();
+        h2C.start();
 
     }
 
@@ -67,12 +64,9 @@ public class Driver {
         Thread h1C = new Thread(check1);
         Thread h2D = new Thread(deposit2);
 
-        //Use synchronized block so that the order of these threads are isolated from threads in other methods
-        synchronized (bank) {
-            //Start the process of the threads
-            h1C.start();
-            h2D.start();
-        }
+        //Start the process of the threads
+        h1C.start();
+        h2D.start();
 
     }
 
@@ -105,14 +99,11 @@ public class Driver {
         Thread h1D = new Thread(deposit1);
         Thread h2W = new Thread(withdraw2);
 
-        //Use synchronized block so that the order of these threads are isolated from threads in other methods
-        synchronized (bank) {
-            //Start the process of the threads
-            h1C.start();
-            h2C.start();
-            h1D.start();
-            h2W.start();
-        }
+        //Start the process of the threads
+        h1C.start();
+        h2C.start();
+        h1D.start();
+        h2W.start();
 
     }
 
@@ -152,15 +143,12 @@ public class Driver {
         Thread h2W = new Thread(withdraw2);
         Thread e1D = new Thread(empDepo1);
 
-        //Use synchronized block so that the order of these threads are isolated from threads in other methods
-        synchronized (bank) {
-            //Start the process of the threads
-            h1C.start();
-            h2C.start();
-            h1D.start();
-            h2W.start();
-            e1D.start();
-        }
+        //Start the process of the threads
+        h1C.start();
+        h2C.start();
+        h1D.start();
+        h2W.start();
+        e1D.start();
 
     }
 
@@ -186,13 +174,9 @@ public class Driver {
         Thread h1W = new Thread(withdraw1);
         Thread h2D = new Thread(deposit2);
 
-        //Use synchronized block so that the order of these threads are isolated from threads in other methods
-        synchronized (bank) {
-            //Start the process of the threads
-
-            h2D.start();
-            h1W.start();
-        }
+        //Start the process of the threads
+        h2D.start();
+        h1W.start();
 
     }
 
@@ -222,14 +206,9 @@ public class Driver {
         Thread e1M = new Thread(modify1);
         Thread e2M = new Thread(modify2);
 
-        //Use synchronized block so that the order of these threads are isolated from threads in other methods
-        synchronized (bank) {
-            //Start the process of the threads
-            e1M.start();
-            e2M.start();
-        }
-
-
+        //Start the process of the threads
+        e1M.start();
+        e2M.start();
 
     }
 }
