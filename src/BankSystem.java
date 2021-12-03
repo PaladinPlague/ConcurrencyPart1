@@ -205,8 +205,7 @@ public class BankSystem {
         if (accHolders.get(holderIndex).getAccount(accountIndex) instanceof MortgageAcc)
             return false;
         if (accHolders.get(holderIndex).getAccount(accountIndex) instanceof SavingAccount)
-            //Savings account uses "current balance" that does not have a getter method and we cannot determine value of "checkBalance" here to make sure that withdraw can be carried out, should be improved
-            return accHolders.get(holderIndex).getAccount(accountIndex).getBalance() < amount;
+            return accHolders.get(holderIndex).getAccount(accountIndex).getBalance() < amount && ((SavingAccount) accHolders.get(holderIndex).getAccount(accountIndex)).checkBalance(accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
         if (accHolders.get(holderIndex).getAccount(accountIndex) instanceof StudentAccount)
             return accHolders.get(holderIndex).getAccount(accountIndex).getBalance() + ((StudentAccount) accHolders.get(holderIndex).getAccount(accountIndex)).getOverdraft() < amount;
         return accHolders.get(holderIndex).getAccount(accountIndex).getBalance() < amount;
