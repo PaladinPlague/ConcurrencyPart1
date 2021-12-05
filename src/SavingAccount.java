@@ -99,7 +99,7 @@ public class SavingAccount extends Account {
 
     // Adds the balance with the account and then adds the interest if eligible.
     @Override
-    public synchronized void deposit(Double amount, Account sender) throws Exception {
+    public void deposit(Double amount, Account sender) throws Exception {
         addInterest(getBalance());
         currentBalance += amount;
         currentBalance = Math.round(currentBalance * 100.0) / 100.0;
@@ -115,7 +115,7 @@ public class SavingAccount extends Account {
     }
     // Withdraws the balance with the amount if possible, then adds the interest if eligible.
     //@Override
-    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
+    public void withdraw(Double amount, Account receiver) throws Exception {
 
         if(checkBalance(currentBalance)){
 
@@ -177,7 +177,7 @@ public class SavingAccount extends Account {
 
     //ADDED BY SCOTT -- UPDATES INTEREST.
     //If not applicable, this will also have to be changed in the Bank Employees
-    public synchronized void changeInterest(double interest) {
+    public void changeInterest(double interest) {
         this.interestRate = interest;
     }
 
