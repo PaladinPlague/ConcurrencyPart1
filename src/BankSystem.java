@@ -73,15 +73,15 @@ public class BankSystem {
         } else if (amount <= 0) {
             System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: deposit amount " + amount + " is invalid, it must be greater than 0");
         } else {
+            System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " depositing amount " + amount + " into account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
             lock.lock();
             try {
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " depositing amount " + amount + " into account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
                 accHolders.get(holderIndex).getAccount(accountIndex).deposit(amount, new CurrentAccount("00000000", amount));
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
-                condition.signalAll();
             } finally {
                 lock.unlock();
             }
+            System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
+            condition.signalAll();
         }
     }
 
@@ -167,6 +167,7 @@ public class BankSystem {
         }
     }
 
+    //An employee tries to change the interest of a bank account from one of their managed account holders
     public void changeInterest(int employeeIndex, int holderIndex, int accountIndex, double interest) {
         if (employeeIndex < 0 || employeeIndex >= bankEmployees.size()) {
             System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: employee index " + employeeIndex + " out of bounds for bank system's bank employees");
@@ -198,6 +199,7 @@ public class BankSystem {
         }
     }
 
+    //Helper function which checks if a bank account from a holder can be withdrawn from based on that account's withdraw conditions
     public boolean withdrawCondition(int holderIndex, int accountIndex, double amount) {
         if (accHolders.get(holderIndex).getAccount(accountIndex) instanceof CreditAccount)
             return ((CreditAccount) accHolders.get(holderIndex).getAccount(accountIndex)).getAvailableCredit() < amount;

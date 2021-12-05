@@ -31,16 +31,16 @@ public class CreditAccount extends Account  {
      */
 
     //set Credit, rarely used in real life
-    public  synchronized void setCreditLimit(double newCredit){
+    public void setCreditLimit(double newCredit){
         creditLimit = newCredit;
     }
 
     //set up new APR, rarely used in real life
-    public synchronized void setAPR(double newAPR){
+    public void setAPR(double newAPR){
         APR = newAPR;
     }
 
-    public synchronized void setPaymentDate(LocalDate paymentDate){
+    public void setPaymentDate(LocalDate paymentDate){
 
         /*
         setPaymentDate( new LocalDate ())
@@ -49,12 +49,12 @@ public class CreditAccount extends Account  {
     }
 
     //get credit return the credit
-    public synchronized double getCreditLimit(){
+    public double getCreditLimit(){
         return creditLimit;
     }
 
     //get credit return the current available credit
-    public synchronized double getAvailableCredit(){
+    public double getAvailableCredit(){
         return availableCredit;
     }
 
@@ -63,11 +63,11 @@ public class CreditAccount extends Account  {
      */
 
     //get APR, return the current APR
-    public synchronized double getAPR(){
+    public double getAPR(){
         return APR;
     }
 
-    public synchronized double monthlyInterest (){
+    public double monthlyInterest (){
         return APR/12;
     }
 
@@ -79,7 +79,7 @@ public class CreditAccount extends Account  {
     if it is made after the paymentDueDate then we charge an overdue interest on the balance.
     the interest is calculated monthly.
      */
-    public synchronized void monthlyPayment(){
+    public void monthlyPayment(){
 
         if(paymentDate.getDayOfMonth() <= paymentDueDate){
             System.out.println("You should pay: " + Math.abs(this.getBalance()));
@@ -97,7 +97,7 @@ public class CreditAccount extends Account  {
     the payment can be on the due day, before due day or after due day
      */
     @Override
-    public synchronized void deposit(Double amount, Account sender) throws Exception {
+    public void deposit(Double amount, Account sender) throws Exception {
         monthlyPayment();
 
         if(Objects.equals(sender.getType(), "Credit Card Account")){
@@ -128,7 +128,7 @@ public class CreditAccount extends Account  {
     update availableCredit field, as more money spent it should get lower.
      */
     @Override
-    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
+    public void withdraw(Double amount, Account receiver) throws Exception {
 
         if(Objects.equals(receiver.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use this credit card to pay another credit card!");
@@ -151,7 +151,7 @@ public class CreditAccount extends Account  {
     the payment can be in full or partially.
     the payment can be on the due day, before due day or after due day
     */
-    public synchronized void transfer (double amount, Account supplyAccount) throws Exception {
+    public void transfer (double amount, Account supplyAccount) throws Exception {
 
         monthlyPayment();
 

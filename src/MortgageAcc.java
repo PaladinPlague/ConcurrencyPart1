@@ -64,7 +64,7 @@ public class MortgageAcc extends Account {
     }
 
     //Updates the interest rate
-    public synchronized void updateInterest(double newInt) {
+    public void updateInterest(double newInt) {
         this.intAnnual = newInt * 0.01;
         //Since the interest was updated, we also need to update the monthly payment
         this.monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
@@ -76,7 +76,7 @@ public class MortgageAcc extends Account {
         return "Mortgage Account";
     }
 
-    public synchronized void nextMonth() {
+    public void nextMonth() {
         //Recalculates the monthlyPayment to check for any changes
         monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
         currMonthPay = monthlyPayment;
@@ -95,7 +95,7 @@ public class MortgageAcc extends Account {
     setBalance(balanceDiff);*/
 
     @Override
-    public synchronized void deposit(Double amount, Account sender) throws Exception {
+    public void deposit(Double amount, Account sender) throws Exception {
 
         //Mortgage payments should not be accepted from a credit account
         if (Objects.equals(sender.getType(), "Credit Card Account")) {
@@ -222,7 +222,7 @@ public class MortgageAcc extends Account {
     }
 
     //Helper function to split the monthly payment between the interest and the balance
-    public synchronized void depositHelper(double deposit) {
+    public void depositHelper(double deposit) {
         //intPaid should store the amount of the payment dedicated to the interest
         double intPaid = deposit * getMonthInterest();
         //This interest needs to be rounded for monetary use
