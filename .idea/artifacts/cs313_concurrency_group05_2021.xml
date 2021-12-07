@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="cs313-concurrency-group05-2021">
+    <output-path>$PROJECT_DIR$/out/artifacts/cs313_concurrency_group05_2021</output-path>
+    <root id="root">
+      <element id="archive" name="cs313_concurrency_group05_2021.jar">
+        <element id="module-output" name="cs313-concurrency-group05-2021" />
+      </element>
+    </root>
+  </artifact>
+</component>

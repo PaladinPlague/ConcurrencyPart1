@@ -1,5 +1,9 @@
 //This program performs the tasks involving thread listed in the specifications
 public class Driver {
+    //run driver class before RSK
+    //Do RSK
+    //rerun diver class after RSK
+    //analysis
 
     public static void main(String[] args) {
 
@@ -56,7 +60,7 @@ public class Driver {
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
-        //Set up the Runnable case for the first account holder on checking its balance while the 2nd account holder deposits £10 into the acccount
+        //Set up the Runnable case for the first account holder on checking its balance while the 2nd account holder deposits £10 into the account
         CheckBalanceRunnable check1 = new CheckBalanceRunnable(bank, 2, 0);
         DepositWithdrawRunnable deposit2 = new DepositWithdrawRunnable(bank, 3, 0, 10.00, false);
 
@@ -152,7 +156,7 @@ public class Driver {
 
     }
 
-    //There are insufficient funds to complete a withdraw.
+    //There are insufficient funds to complete a withdrawal.
     public static void insufficientFunds(BankSystem bank) {
 
         //Declare the account holders before adding them to the bank
@@ -166,7 +170,7 @@ public class Driver {
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
-        //Set up the Runnable case for the first account holder withdrawing more than the opening balance while the second account holder deposits enough for the withdraw to take place
+        //Set up the Runnable case for the first account holder withdrawing more than the opening balance while the second account holder deposits enough for the withdrawal to take place
         DepositWithdrawRunnable withdraw1 = new DepositWithdrawRunnable(bank, 8, 0, 3.00, true);
         DepositWithdrawRunnable deposit2 = new DepositWithdrawRunnable(bank, 9, 0, 5.00, false);
 
