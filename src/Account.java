@@ -8,8 +8,6 @@ public abstract class Account {
     private String accountNumber;
     //Money stored within account
     private double balance;
-    //Holds the number of transactions stored in the account;
-    private ArrayList<Transaction> transactions;
 
     //Constructor of class, which takes in account's number and opening balance
     public Account(String accountNo, Double openingBalance) {
@@ -17,8 +15,6 @@ public abstract class Account {
         this.accountNumber = accountNo;
         //Declare opening balance of account from double parameter
         this.balance = openingBalance;
-        //Declare Transactions initially as empty list
-        this.transactions = new ArrayList<>();
     }
 
     //Return the account number of the account
@@ -29,11 +25,6 @@ public abstract class Account {
     //Return the current balance of the account
     public double getBalance() {
         return this.balance;
-    }
-
-    //Return the list of transactions
-    public ArrayList<Transaction> getTransactions() {
-        return this.transactions;
     }
 
     //Return the current account type e.g. if savings account, return "Savings Account"
@@ -72,8 +63,4 @@ public abstract class Account {
         this.balance = ((double) (Math.round(newBalance * 100))) / 100;
     }
 
-    //Add a new transaction to the account's current transactions
-    public synchronized void addToTransaction(Transaction transact) {
-        transactions.add(transact);
-    }
 }

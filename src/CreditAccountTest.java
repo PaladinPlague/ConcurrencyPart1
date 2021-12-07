@@ -60,7 +60,7 @@ class CreditAccountTest {
             e.printStackTrace();
         }
 
-        assertEquals("CC Account Number: 344880224040782, credit: 3000.0, available Credit: 2700.0, balance: -300.0, Transactions：[From: 344880224040782 To: 12345674 Amount: 100.0, From: 344880224040782 To: 12345674 Amount: 200.0].",account.getDetails());
+        assertEquals("CC Account Number: 344880224040782, credit: 3000.0, available Credit: 2700.0, balance: -300.0.",account.getDetails());
     }
 
     private void purchaseOfTheMonth() {

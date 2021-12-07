@@ -14,7 +14,6 @@ public class CurrentAccount extends Account{
     //Due to editing information, declare the class as being synchronized
     public synchronized void deposit(Double amount, Account sender) {
         setBalance(getBalance() + amount);
-        addToTransaction(new Transaction(amount, sender, this));
     }
 
     //Withdraw a set amount from this account into another account and save it to list of transactions
@@ -25,7 +24,6 @@ public class CurrentAccount extends Account{
             throw new Exception("Sorry, insufficient fund.");
         }else{
             setBalance(getBalance() - amount);
-            addToTransaction(new Transaction(amount, this, receiver));
         }
 
     }
@@ -34,26 +32,12 @@ public class CurrentAccount extends Account{
     public void printDetails(){
         System.out.println("CC Account Number: " +this.getAccountNumber());
         System.out.println("New Balance: "+this.getBalance());
-        System.out.println("List of Transactions: " + this.getTransactions());
     }
 
     @Override
     public String getDetails(){
-        ArrayList<Transaction> transactions = this.getTransactions();
         String result = "";
-        result = "Current Account Number: " +this.getAccountNumber()+ ", balance: "+this.getBalance()+
-                "Transactions：" + "[";
-        for (int i = 0; i < transactions.size(); i++) {
-            result += "From: " + transactions.get(i).getSource().getAccountNumber();
-            result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
-            result += " Amount: " + transactions.get(i).getAmount();
-            if (i < transactions.size() - 1) {
-                result += ", ";
-            } else {
-                result += "]";
-            }
-        }
-        result += ".";
+        result = "Current Account Number: " +this.getAccountNumber()+ ", balance: "+this.getBalance()+".";
         return result;
     }
 

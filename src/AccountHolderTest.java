@@ -32,11 +32,9 @@ Made by Suleman Akhter
         assertEquals("Current Account",test.getAccount(0).getType());
         assertEquals(30.0,test.getAccount(0).getBalance());
         test.getAccount(0).deposit(20.0,savingTest);
-        //assertEquals(70.0,savingTest.getBalance());
-        //assertEquals(10,test.getAccount(0).getBalance());
-
     }
-    // This checks if delete account works with both both int & account as type parameter
+
+    // This checks if delete account works with both int & account as type parameter
     @Test
     void deleteAccountTest() throws Exception {
         //Testing for int parameter

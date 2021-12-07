@@ -84,17 +84,6 @@ public class SavingAccount extends Account {
         }
     }
 
-    //Returns the transactions only if the account is valid
-    @Override
-    public ArrayList<Transaction> getTransactions() {
-        if(!invalid) {
-            return super.getTransactions();
-        }
-        else{
-            return new ArrayList<>();
-        }
-    }
-
     // Adds the balance with the account and then adds the interest if eligible.
     @Override
     public synchronized void deposit(Double amount, Account sender) throws Exception {
@@ -103,7 +92,6 @@ public class SavingAccount extends Account {
         currentBalance = Math.round(currentBalance * 100.0) / 100.0;
         if(checkBalance(currentBalance)){
             System.out.println("Total balance: " + currentBalance);
-            addToTransaction(new Transaction(amount, sender, this));
         }
         else{
             System.out.println("This account is not valid as we require an £1 minimum deposit");
@@ -133,7 +121,6 @@ public class SavingAccount extends Account {
                     currentBalance = withdraw;
                     setBalance(currentBalance);
                 }
-                addToTransaction(new Transaction(amount, this, receiver));
             }
         }
 

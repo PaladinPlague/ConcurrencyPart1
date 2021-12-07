@@ -161,17 +161,12 @@ public class MortgageAcc extends Account {
                     //If there is still somme money to be paid, the number is printed
                     if (this.currMonthPay > 0) {
                         this.depositHelper(amount);
-                        //Add a new transaction
-                        Transaction trans = new Transaction(amount, sender, this);
-                        addToTransaction(trans);
                         System.out.println("Payment left for this month: £" + this.currMonthPay);
                     }
                     //If the number is exactly paid, this fact is printed
                     else if (this.currMonthPay == 0) {
                         System.out.println("The payment for this month has been fulfilled.");
                         this.depositHelper(amount);
-                        Transaction trans = new Transaction(amount, sender, this);
-                        addToTransaction(trans);
                     }
                     //Otherwise, if MORE than the monthly payment is paid, this extra goes straight to the balance
                     else {
@@ -179,8 +174,6 @@ public class MortgageAcc extends Account {
                         double extra = Math.abs(currMonthPay);
                         //We need to take this extra off of amount since interest isn't applied to it
                         this.depositHelper(amount - extra);
-                        Transaction trans = new Transaction(amount, sender, this);
-                        addToTransaction(trans);
                         //This extra is then taken directly off of balance
                         double bal = getBalance();
                         double balanceDiff = bal - extra;

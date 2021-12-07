@@ -66,9 +66,6 @@ public class BankSystem {
 
     //A customer tries to deposit an amount of money into their account
     public void deposit(int holderIndex, int accountIndex, double amount) throws Exception{
-
-
-
         if (holderIndex < 0 || holderIndex >= accHolders.size()) {
             System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: holder index " + holderIndex + " out of bounds for bank system's account holders");
         } else if (accountIndex < 0 || accountIndex >= accHolders.get(holderIndex).getSize()) {

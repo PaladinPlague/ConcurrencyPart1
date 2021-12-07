@@ -40,7 +40,6 @@ public class StudentAccount extends Account{
     //Due to editing information, declare the class as being synchronized
     public synchronized void deposit(Double amount, Account sender) {
         setBalance(getBalance() + amount);
-        addToTransaction(new Transaction(amount, sender, this));
     }
 
     //Withdraw a set amount from this account into another account and save it to list of transactions
@@ -52,7 +51,6 @@ public class StudentAccount extends Account{
         }else{
             setBalance(getBalance() - amount);
             if(Double.compare(getBalance(), 0.0) < 0) overdrafted = true;
-            addToTransaction(new Transaction(amount, this, receiver));
         }
     }
 
@@ -61,28 +59,12 @@ public class StudentAccount extends Account{
         System.out.println("Student Account Number: " +this.getAccountNumber());
         System.out.println("New Balance: "+this.getBalance());
         System.out.println("The Arranged Overdraft amount is "+ this.getOverdraft());
-        System.out.println("List of Transactions: " + this.getTransactions());
     }
 
     @Override
     public String getDetails(){
-        ArrayList<Transaction> transactions = this.getTransactions();
         String result = "Student Account Number: " +this.getAccountNumber()+ ", " +
-                "The Arranged Overdraft amount is "+ this.getOverdraft()+", Overdraft: "+isOverdrafted()+" balance: "+this.getBalance()+
-                ", Transactions：" + "[";
-        for (int i = 0; i < transactions.size(); i++) {
-            result += "From: " + transactions.get(i).getSource().getAccountNumber();
-            result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
-            result += " Amount: " + transactions.get(i).getAmount();
-            if (i < transactions.size() - 1) {
-                result += ", ";
-            } else {
-                result += "]";
-            }
-        }
-
-        result += ".";
-
+                "The Arranged Overdraft amount is "+ this.getOverdraft()+", Overdraft: "+isOverdrafted()+" balance: "+this.getBalance()+".";
         return result;
     }
 

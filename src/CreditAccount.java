@@ -106,7 +106,6 @@ public class CreditAccount extends Account  {
             throw new Exception("you can't pay more than you have spent!");
         }else {
 
-            Transaction transaction = new Transaction(amount, sender, this);
             setBalance(getBalance()+amount);
             double AC = getAvailableCredit();
             if((AC + amount) >getCreditLimit()){
@@ -114,9 +113,6 @@ public class CreditAccount extends Account  {
             }else{
                 availableCredit += amount;
             }
-
-
-            this.addToTransaction(transaction);
 
         }
 
@@ -138,10 +134,8 @@ public class CreditAccount extends Account  {
             throw new Exception("Sorry, insufficient fund.");
         }else{
             //make a new transaction goes from this credit account to any other account
-            Transaction transaction = new Transaction(amount,this,receiver);
             availableCredit -= amount;
             setBalance(getBalance()-amount);
-            addToTransaction(transaction);
         }
 
     }
@@ -165,15 +159,12 @@ public class CreditAccount extends Account  {
         }else if(Objects.equals(getType(), "")){
             throw new Exception("you may wish to use deposit if you paying for someone else");
         }else{
-
-            Transaction transaction = new Transaction(amount, supplyAccount, this);
             setBalance(getBalance()+amount);
             if((availableCredit+=amount)>getCreditLimit()){
                 availableCredit = creditLimit;
             }else{
                 availableCredit += amount;
             }
-            addToTransaction(transaction);
         }
     }
 
@@ -183,28 +174,12 @@ public class CreditAccount extends Account  {
         System.out.println("Total Credit Limit: " +getCreditLimit());
         System.out.println("Available Credit of This Month: " + getAvailableCredit());
         System.out.println("New Balance: "+this.getBalance());
-        System.out.println("List of Transactions: " + this.getTransactions());
     }
 
     @Override
     public String getDetails(){
-        ArrayList<Transaction> transactions = this.getTransactions();
         String result = "CC Account Number: " +this.getAccountNumber()+", credit: " +getCreditLimit()+", " +
-                "available Credit: " + getAvailableCredit()+", balance: "+this.getBalance()+ ", " +
-                "Transactions：" + "[";
-        for (int i = 0; i < transactions.size(); i++) {
-            result += "From: " + transactions.get(i).getSource().getAccountNumber();
-            result += " To: " + transactions.get(i).getReceiver().getAccountNumber();
-            result += " Amount: " + transactions.get(i).getAmount();
-            if (i < transactions.size() - 1) {
-                result += ", ";
-            } else {
-                result += "]";
-            }
-        }
-
-        result += ".";
-
+                "available Credit: " + getAvailableCredit()+", balance: "+this.getBalance()+ ".";
         return result;
     }
 

@@ -52,6 +52,6 @@ class CurrentAccountTest {
             e.printStackTrace();
         }
 
-        assertEquals("Current Account Number: 56357771, balance: 200.0Transactions：[From: 56357771 To: 30569309 Amount: 100.0, From: 56357771 To: 30569309 Amount: 200.0].",account.getDetails());
+        assertEquals("Current Account Number: 56357771, balance: 200.0.",account.getDetails());
     }
 }

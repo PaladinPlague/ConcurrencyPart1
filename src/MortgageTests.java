@@ -200,14 +200,5 @@ public class MortgageTests {
         acc.deposit(600.0, acc);
         acc.deposit(170.0, acc);
         acc.deposit(106.04, acc);
-        ArrayList<Transaction> test = new ArrayList<>();
-        test = acc.getTransactions();
-        assertEquals(3, test.size());
-        for (int i = 0; i < test.size(); i++) {
-            System.out.println("Transaction source: " + test.get(i).getSource().getAccountNumber());
-            System.out.println("Transaction receiver: " + test.get(i).getReceiver().getAccountNumber());
-            System.out.println("Transaction amount: " + test.get(i).getAmount());
-            System.out.println();
-        }
     }
 }

@@ -86,7 +86,7 @@ class StudentAccountTest {
             e.printStackTrace();
         }
 
-        assertEquals("Student Account Number: 93391634, The Arranged Overdraft amount is 1500.0, Overdraft: true balance: -150.0, Transactions：[From: 93391634 To: 30569309 Amount: 100.0, From: 93391634 To: 30569309 Amount: 200.0].",account.getDetails());
+        assertEquals("Student Account Number: 93391634, The Arranged Overdraft amount is 1500.0, Overdraft: true balance: -150.0.",account.getDetails());
     }
 
     @Test
