@@ -28,7 +28,7 @@ public class AccountHolder {
     }
 
     //Create an account to add to the person's list
-    public boolean addAccount(Account acc) {
+    public synchronized boolean addAccount(Account acc) {
         //If this account is already managed by person, do not add it and return false
         if (accounts.contains(acc)) {
             return false;
@@ -43,7 +43,7 @@ public class AccountHolder {
     }
 
     //Remove an account based on index
-    public boolean deleteAccount(int index) {
+    public synchronized boolean deleteAccount(int index) {
         //Validate account's existence through helper method
         Account acc = getAccount(index);
         //If index is out of list range, do not remove an account and return false
@@ -56,7 +56,7 @@ public class AccountHolder {
     }
 
     //Remove an account via the account itself as a parameter
-    public boolean deleteAccount(Account acc) {
+    public synchronized boolean deleteAccount(Account acc) {
         //If this account does not exist in list, do not remove an account and return false
         if (!accounts.contains(acc)) {
             return false;
@@ -67,16 +67,16 @@ public class AccountHolder {
     }
 
     //Returns the name of the person
-    public String getName(){
+    public synchronized String getName(){
         return name;
     }
     //Returns the age of the person
-    public int getAge(){
+    public synchronized int  getAge(){
         return age;
     }
 
     //Returns the size of the account array
-    public int getSize(){
+    public synchronized int  getSize(){
         return accounts.size();
     }
 

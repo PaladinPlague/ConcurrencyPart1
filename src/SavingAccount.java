@@ -1,7 +1,5 @@
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SavingAccount extends Account {
 
@@ -99,7 +97,7 @@ public class SavingAccount extends Account {
 
     // Adds the balance with the account and then adds the interest if eligible.
     @Override
-    public void deposit(Double amount, Account sender) throws Exception {
+    public synchronized void deposit(Double amount, Account sender) throws Exception {
         addInterest(getBalance());
         currentBalance += amount;
         currentBalance = Math.round(currentBalance * 100.0) / 100.0;
@@ -115,7 +113,7 @@ public class SavingAccount extends Account {
     }
     // Withdraws the balance with the amount if possible, then adds the interest if eligible.
     //@Override
-    public void withdraw(Double amount, Account receiver) throws Exception {
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
         if(checkBalance(currentBalance)){
 
@@ -177,7 +175,7 @@ public class SavingAccount extends Account {
 
     //ADDED BY SCOTT -- UPDATES INTEREST.
     //If not applicable, this will also have to be changed in the Bank Employees
-    public void changeInterest(double interest) {
+    public synchronized void changeInterest(double interest) {
         this.interestRate = interest;
     }
 

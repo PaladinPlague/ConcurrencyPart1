@@ -92,6 +92,4 @@ class SavingAccountTest {
         saving.withdraw(10.0,test);
         assertEquals(10.08,saving.getBalance());
     }
-
-
 }

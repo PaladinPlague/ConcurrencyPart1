@@ -67,13 +67,13 @@ public abstract class Account {
     //Change the current balance to a new value, ensuring it is at 2 decimal places
     //Due to editing information, declare the class as being synchronized
     //Methods can't be abstract and synchronized, so you classes must override this method
-    public void setBalance(Double newBalance) {
+    public synchronized void setBalance(Double newBalance) {
         //Math.round function used to ensure value is at 2 decimal places
         this.balance = ((double) (Math.round(newBalance * 100))) / 100;
     }
 
     //Add a new transaction to the account's current transactions
-    public void addToTransaction(Transaction transact) {
+    public synchronized void addToTransaction(Transaction transact) {
         transactions.add(transact);
     }
 }

@@ -25,9 +25,10 @@ public class DepositWithdrawRunnable implements Runnable {
                 bank.deposit(holderIndex, accIndex, amount);
             }
             Thread.sleep(DELAY);
+        } catch (InterruptedException exception) {
+            System.out.println("Could not change interest of account due to thread interrupted exception");
+        } catch (Exception exception) {
+            System.out.println("Could not change interest of account due to exception");
         }
-        catch (InterruptedException exception) {
-
-        } catch (Exception e) {}
     }
 }

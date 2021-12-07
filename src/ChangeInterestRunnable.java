@@ -21,7 +21,10 @@ public class ChangeInterestRunnable implements Runnable {
         {
             bank.changeInterest(employeeIndex, holderIndex, accountIndex, interest);
             Thread.sleep(DELAY);
+        } catch (InterruptedException exception) {
+            System.out.println("Could not change interest of account due to thread interrupted exception");
+        } catch (Exception exception) {
+            System.out.println("Could not change interest of account due to exception");
         }
-        catch (InterruptedException exception) {}
     }
 }

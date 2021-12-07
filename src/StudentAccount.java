@@ -38,14 +38,14 @@ public class StudentAccount extends Account{
 
     //Deposit a set amount from another account into this account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public void deposit(Double amount, Account sender) {
+    public synchronized void deposit(Double amount, Account sender) {
         setBalance(getBalance() + amount);
         addToTransaction(new Transaction(amount, sender, this));
     }
 
     //Withdraw a set amount from this account into another account and save it to list of transactions
     //Due to editing information, declare the class as being synchronized
-    public void withdraw(Double amount, Account receiver) throws Exception {
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
         if((this.getBalance()+overdraft)<amount){
             throw new Exception("Sorry, insufficient fund.");

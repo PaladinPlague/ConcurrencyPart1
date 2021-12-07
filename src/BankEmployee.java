@@ -81,11 +81,11 @@ public class BankEmployee {
     }
 
     //Given the ACCOUNT, the employee can put the amount into the specific account
-    public void deposit(Account acc, double amount) throws Exception {
+    public synchronized void deposit(Account acc, double amount) throws Exception {
         boolean found = false;
         for (int i = 0; i < accounts.size() && !found; i++) {
             if (this.accounts.get(i).getAccount(acc.getAccountNumber()) != null) {
-                acc.deposit(amount, acc);
+                acc.deposit(amount, new CurrentAccount("Employee Account", 1000000000000.00));
                 found = true;
             }
         }
@@ -95,7 +95,7 @@ public class BankEmployee {
     }
 
     //Given the account NUMBER, the employee can search for it and then put the amount into it
-    public void deposit(AccountHolder person, String acc, double amount) throws Exception {
+    public synchronized void deposit(AccountHolder person, String acc, double amount) throws Exception {
         if (this.accounts.contains(person)) {
             Account foundAcc = this.getCustAccount(person).getAccount(acc);
             if (foundAcc == null) {
@@ -103,7 +103,7 @@ public class BankEmployee {
             } else {
                 System.out.println("yes");
                 //Unsure about the 'acc' parameter here - need to change this I think
-                foundAcc.deposit(amount, foundAcc);
+                foundAcc.deposit(amount, new CurrentAccount("Employee Account", 1000000000000.00));
             }
         }
         else {
@@ -112,7 +112,7 @@ public class BankEmployee {
     }
 
     //Given the ACCOUNT, the employee can pull money out of the amount into the specific account
-    public void withdraw(Account acc, double amount) throws Exception {
+    public synchronized void withdraw(Account acc, double amount) throws Exception {
         boolean found = false;
         System.out.println("Number of holders for " + empName + " is: " + this.accounts.size());
         //Unsure about the 'acc' parameter here - need to change this I think
@@ -120,7 +120,7 @@ public class BankEmployee {
             System.out.println("Number of holders for " + empName + " is: " + this.accounts.size());
             System.out.println(this.accounts.get(i).getSize());
             if (this.accounts.get(i).getAccount(acc.getAccountNumber()) != null) {
-                acc.withdraw(amount, acc);
+                acc.withdraw(amount, new CurrentAccount("Employee Account", 1000000000000.00));
                 found = true;
             }
         }
@@ -130,14 +130,14 @@ public class BankEmployee {
     }
 
     //Given the account NUMBER, the employee can search for it and then pull money out of the amount into it
-    public void withdraw(AccountHolder person, String acc, double amount) throws Exception {
+    public synchronized void withdraw(AccountHolder person, String acc, double amount) throws Exception {
         if (this.accounts.contains(person)) {
             Account foundAcc = this.getCustAccount(person).getAccount(acc);
             if (foundAcc == null) {
                 System.out.println("This is not the number of an existing account");
             } else {
                 //Unsure about the 'acc' parameter here - need to change this I think
-                foundAcc.withdraw(amount, foundAcc);
+                foundAcc.withdraw(amount, new CurrentAccount("Employee Account", 1000000000000.00));
             }
         }
         else {
@@ -146,7 +146,7 @@ public class BankEmployee {
     }
 
     //Adds an already existing AccountHolder
-    public void addAccountHolder(AccountHolder person) {
+    public synchronized void addAccountHolder(AccountHolder person) {
         if (this.accounts.contains(person)) {
             System.out.println("This account is already overseen by this employee");
         } else {
@@ -155,7 +155,7 @@ public class BankEmployee {
     }
 
     //Adds an already existing account to an AccountHolder
-    public void addAccount(AccountHolder person, Account acc) {
+    public synchronized void addAccount(AccountHolder person, Account acc) {
         if (this.accounts.contains(person)) {
             //Check to ensure it isn't already under the account holder
             Account foundAcc = person.getAccount(acc.getAccountNumber());
@@ -172,7 +172,7 @@ public class BankEmployee {
     }
 
     //Opens a new AccountHolder (i.e. for a new customer), adds it to the AccountHolder array and returns
-    public AccountHolder createCustAccount(String name, int age) {
+    public synchronized AccountHolder createCustAccount(String name, int age) {
         //The AccountHolder ONLY takes a string and a name - since these are not unique it wouldn't make
         //Sense to check if the account already exists
         AccountHolder acc = new AccountHolder(name, age);
@@ -181,7 +181,7 @@ public class BankEmployee {
     }
 
     //Deletes an already existing bank account from an Account Holder
-    public void deleteAccount(AccountHolder person, Account acc) {
+    public synchronized void deleteAccount(AccountHolder person, Account acc) {
         //Check to ensure it IS actually under the account holder
         Account foundAcc = person.getAccount(acc.getAccountNumber());
         if (foundAcc == null) {
@@ -193,7 +193,7 @@ public class BankEmployee {
 
     //Deletes the entire account for a customer
     //Should also delete EVERY account the user has
-    public boolean deleteCustAccount(AccountHolder acc) {
+    public synchronized boolean deleteCustAccount(AccountHolder acc) {
         //If the person has no accounts, their account can be closed
         if (acc.getSize() == 0) {
             this.accounts.remove(acc);
@@ -217,7 +217,7 @@ public class BankEmployee {
     }
 
     //Updates the interest rate of specific accounts
-    public void changeInterest(Account acc, double interest) {
+    public synchronized void changeInterest(Account acc, double interest) {
         if (acc instanceof MortgageAcc) {
             ((MortgageAcc) acc).updateInterest(interest);
         } else if (acc instanceof CreditAccount) {
@@ -232,7 +232,7 @@ public class BankEmployee {
     }
 
     //Updates the overdraft of a student account
-    public void changeOverdraftLimit(Account acc, double limit) throws Exception {
+    public synchronized void changeOverdraftLimit(Account acc, double limit) throws Exception {
         //Should only accept student accounts
         if (acc instanceof StudentAccount) {
             ((StudentAccount) acc).setOverdraft(limit);

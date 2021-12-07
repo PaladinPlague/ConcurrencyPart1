@@ -1,5 +1,9 @@
 //This program performs the tasks involving thread listed in the specifications
 public class Driver {
+    //run driver class before RSK
+    //Do RSK
+    //rerun diver class after RSK
+    //analysis
 
     public static void main(String[] args) {
 
@@ -56,7 +60,7 @@ public class Driver {
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
-        //Set up the Runnable case for the first account holder on checking its balance while the 2nd account holder deposits £10 into the acccount
+        //Set up the Runnable case for the first account holder on checking its balance while the 2nd account holder deposits £10 into the account
         CheckBalanceRunnable check1 = new CheckBalanceRunnable(bank, 2, 0);
         DepositWithdrawRunnable deposit2 = new DepositWithdrawRunnable(bank, 3, 0, 10.00, false);
 
@@ -80,7 +84,8 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders
-        CurrentAccount acc = new CurrentAccount("33333333", 25.00);
+        //CurrentAccount acc = new CurrentAccount("33333333", 25.00);
+        CreditAccount acc = new CreditAccount("33333333",3000.00,12 );
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -88,22 +93,27 @@ public class Driver {
         CheckBalanceRunnable check1 = new CheckBalanceRunnable(bank, 4, 0);
         CheckBalanceRunnable check2 = new CheckBalanceRunnable(bank, 5, 0);
         //Set up the Runnable case for the 1st account depositing an amount of money while the 2nd account holder withdraws a different amount of money
-        DepositWithdrawRunnable deposit1 = new DepositWithdrawRunnable(bank, 4, 0, 5.00, false);
+
         DepositWithdrawRunnable withdraw2 = new DepositWithdrawRunnable(bank, 5, 0, 7.00, true);
+        DepositWithdrawRunnable deposit1 = new DepositWithdrawRunnable(bank, 4, 0, 5.00, false);
+
         //Set up the Runnable case for the
 
 
         //Declare threads for the runnable cases
         Thread h1C = new Thread(check1);
         Thread h2C = new Thread(check2);
+
         Thread h1D = new Thread(deposit1);
         Thread h2W = new Thread(withdraw2);
 
         //Start the process of the threads
         h1C.start();
         h2C.start();
-        h1D.start();
+
         h2W.start();
+        h1D.start();
+
 
     }
 
@@ -117,7 +127,7 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders
-        CurrentAccount acc = new CurrentAccount("44444444", 25.00);
+        CreditAccount acc = new CreditAccount("4444444444",3000.00,12 );
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -134,7 +144,7 @@ public class Driver {
         DepositWithdrawRunnable deposit1 = new DepositWithdrawRunnable(bank, 6, 0, 3.50, false);
         DepositWithdrawRunnable withdraw2 = new DepositWithdrawRunnable(bank, 7, 0, 8.15, true);
         //Set up the Runnable case for the employee completing a money transfer into the account
-        EmployeeTransferRunnable empDepo1 = new EmployeeTransferRunnable(bank, 0, 6, 0, 14.70, false);
+        EmployeeTransferRunnable empDepo1 = new EmployeeTransferRunnable(bank, 0, 6, 0, 4.70, false);
 
         //Declare threads for the runnable cases
         Thread h1C = new Thread(check1);
@@ -152,7 +162,7 @@ public class Driver {
 
     }
 
-    //There are insufficient funds to complete a withdraw.
+    //There are insufficient funds to complete a withdrawal.
     public static void insufficientFunds(BankSystem bank) {
 
         //Declare the account holders before adding them to the bank
@@ -162,11 +172,11 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders, which has a very low opening balance
-        CurrentAccount acc = new CurrentAccount("55555555", 2.00);
+        StudentAccount acc = new StudentAccount("55555555", 2.00);
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
-        //Set up the Runnable case for the first account holder withdrawing more than the opening balance while the second account holder deposits enough for the withdraw to take place
+        //Set up the Runnable case for the first account holder withdrawing more than the opening balance while the second account holder deposits enough for the withdrawal to take place
         DepositWithdrawRunnable withdraw1 = new DepositWithdrawRunnable(bank, 8, 0, 3.00, true);
         DepositWithdrawRunnable deposit2 = new DepositWithdrawRunnable(bank, 9, 0, 5.00, false);
 
@@ -201,7 +211,7 @@ public class Driver {
         //Set up the Runnable cases for the employees changing the details of the account
         ChangeInterestRunnable modify1 = new ChangeInterestRunnable(bank, 1, 10, 0, 12);
         ChangeInterestRunnable modify2 = new ChangeInterestRunnable(bank, 2, 10, 0, 48);
-        
+
         //Declare threads for the runnable cases
         Thread e1M = new Thread(modify1);
         Thread e2M = new Thread(modify2);

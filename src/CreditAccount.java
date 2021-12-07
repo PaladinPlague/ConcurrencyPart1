@@ -14,15 +14,16 @@ public class CreditAccount extends Account  {
     private double APR;
     private final int paymentDueDate;
     LocalDate paymentDate;
-    //private Person cardHolder;
 
-    public CreditAccount(String accountNo, Double openingBalance, double openingCredit, double APR) {
-        super(accountNo, openingBalance);
+
+    public CreditAccount(String accountNo,  double openingCredit, double APR) {
+        super(accountNo, 0.00);
 
         this.creditLimit = openingCredit;
         this.availableCredit = openingCredit;
         this.APR = APR;
         paymentDueDate = 15;
+        paymentDate = LocalDate.now();
     }
 
 
@@ -31,16 +32,16 @@ public class CreditAccount extends Account  {
      */
 
     //set Credit, rarely used in real life
-    public void setCreditLimit(double newCredit){
+    public  synchronized void setCreditLimit(double newCredit){
         creditLimit = newCredit;
     }
 
     //set up new APR, rarely used in real life
-    public void setAPR(double newAPR){
+    public synchronized void setAPR(double newAPR){
         APR = newAPR;
     }
 
-    public void setPaymentDate(LocalDate paymentDate){
+    public synchronized void setPaymentDate(LocalDate paymentDate){
 
         /*
         setPaymentDate( new LocalDate ())
@@ -49,12 +50,12 @@ public class CreditAccount extends Account  {
     }
 
     //get credit return the credit
-    public double getCreditLimit(){
+    public synchronized double getCreditLimit(){
         return creditLimit;
     }
 
     //get credit return the current available credit
-    public double getAvailableCredit(){
+    public synchronized double getAvailableCredit(){
         return availableCredit;
     }
 
@@ -63,11 +64,11 @@ public class CreditAccount extends Account  {
      */
 
     //get APR, return the current APR
-    public double getAPR(){
+    public synchronized double getAPR(){
         return APR;
     }
 
-    public double monthlyInterest (){
+    public synchronized double monthlyInterest (){
         return APR/12;
     }
 
@@ -79,14 +80,11 @@ public class CreditAccount extends Account  {
     if it is made after the paymentDueDate then we charge an overdue interest on the balance.
     the interest is calculated monthly.
      */
-    public void monthlyPayment(){
+    public synchronized void monthlyPayment(){
 
-        if(paymentDate.getDayOfMonth() <= paymentDueDate){
-            System.out.println("You should pay: " + Math.abs(this.getBalance()));
-        }else{
+        if(paymentDate.getDayOfMonth() > paymentDueDate){
             double payableAmount = this.getBalance()+(this.getBalance()*monthlyInterest()) ;
             this.setBalance(payableAmount);
-            System.out.println("Your monthly Interest is "+monthlyInterest()+" you should pay: " + Math.abs(this.getBalance()));
         }
     }
 
@@ -97,24 +95,27 @@ public class CreditAccount extends Account  {
     the payment can be on the due day, before due day or after due day
      */
     @Override
-    public void deposit(Double amount, Account sender) throws Exception {
+    public synchronized void deposit(Double amount, Account sender) throws Exception {
         monthlyPayment();
 
         if(Objects.equals(sender.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use other credit card to pay this credit card bill!");
         }else if(Math.abs(sender.getBalance()) < amount){
-            throw new ArithmeticException("Sorry, insufficient fund.");
+            throw new Exception("Sorry, insufficient fund.");
         }else if(amount > Math.abs(this.getBalance())){
-            throw new ArithmeticException("you can't pay more than you have spent!");
-        }else{
+            throw new Exception("you can't pay more than you have spent!");
+        }else {
 
             Transaction transaction = new Transaction(amount, sender, this);
             setBalance(getBalance()+amount);
-            if((availableCredit+=amount)>getCreditLimit()){
+            double AC = getAvailableCredit();
+            if((AC + amount) >getCreditLimit()){
                 availableCredit = creditLimit;
             }else{
                 availableCredit += amount;
             }
+
+
             this.addToTransaction(transaction);
 
         }
@@ -128,13 +129,13 @@ public class CreditAccount extends Account  {
     update availableCredit field, as more money spent it should get lower.
      */
     @Override
-    public void withdraw(Double amount, Account receiver) throws Exception {
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
         if(Objects.equals(receiver.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use this credit card to pay another credit card!");
             //check if we still have enough credit to pay for this transaction.
         }else if(availableCredit < amount){
-            throw new ArithmeticException("Sorry, insufficient fund.");
+            throw new Exception("Sorry, insufficient fund.");
         }else{
             //make a new transaction goes from this credit account to any other account
             Transaction transaction = new Transaction(amount,this,receiver);
@@ -151,7 +152,7 @@ public class CreditAccount extends Account  {
     the payment can be in full or partially.
     the payment can be on the due day, before due day or after due day
     */
-    public void transfer (double amount, Account supplyAccount) throws Exception {
+    public synchronized void transfer (double amount, Account supplyAccount) throws Exception {
 
         monthlyPayment();
 
