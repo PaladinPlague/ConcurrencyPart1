@@ -172,7 +172,7 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders, which has a very low opening balance
-        CurrentAccount acc = new CurrentAccount("55555555", 2.00);
+        StudentAccount acc = new StudentAccount("55555555", 2.00);
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
