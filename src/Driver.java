@@ -84,7 +84,8 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders
-        CurrentAccount acc = new CurrentAccount("33333333", 25.00);
+        //CurrentAccount acc = new CurrentAccount("33333333", 25.00);
+        CreditAccount acc = new CreditAccount("33333333",3000.00,12 );
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -92,22 +93,27 @@ public class Driver {
         CheckBalanceRunnable check1 = new CheckBalanceRunnable(bank, 4, 0);
         CheckBalanceRunnable check2 = new CheckBalanceRunnable(bank, 5, 0);
         //Set up the Runnable case for the 1st account depositing an amount of money while the 2nd account holder withdraws a different amount of money
-        DepositWithdrawRunnable deposit1 = new DepositWithdrawRunnable(bank, 4, 0, 5.00, false);
+
         DepositWithdrawRunnable withdraw2 = new DepositWithdrawRunnable(bank, 5, 0, 7.00, true);
+        DepositWithdrawRunnable deposit1 = new DepositWithdrawRunnable(bank, 4, 0, 5.00, false);
+
         //Set up the Runnable case for the
 
 
         //Declare threads for the runnable cases
         Thread h1C = new Thread(check1);
         Thread h2C = new Thread(check2);
+
         Thread h1D = new Thread(deposit1);
         Thread h2W = new Thread(withdraw2);
 
         //Start the process of the threads
         h1C.start();
         h2C.start();
-        h1D.start();
+
         h2W.start();
+        h1D.start();
+
 
     }
 
@@ -121,7 +127,7 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders
-        CurrentAccount acc = new CurrentAccount("44444444", 25.00);
+        CreditAccount acc = new CreditAccount("4444444444",3000.00,12 );
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -138,7 +144,7 @@ public class Driver {
         DepositWithdrawRunnable deposit1 = new DepositWithdrawRunnable(bank, 6, 0, 3.50, false);
         DepositWithdrawRunnable withdraw2 = new DepositWithdrawRunnable(bank, 7, 0, 8.15, true);
         //Set up the Runnable case for the employee completing a money transfer into the account
-        EmployeeTransferRunnable empDepo1 = new EmployeeTransferRunnable(bank, 0, 6, 0, 14.70, false);
+        EmployeeTransferRunnable empDepo1 = new EmployeeTransferRunnable(bank, 0, 6, 0, 4.70, false);
 
         //Declare threads for the runnable cases
         Thread h1C = new Thread(check1);

@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CreditAccountTest {
 
-    CreditAccount account = new CreditAccount("344880224040782", 0.00,3000.00, .24);
-    CreditAccount CCAccount = new CreditAccount("349974796399430", 0.00,3000.00, .24);
+    CreditAccount account = new CreditAccount("344880224040782", 3000.00, .24);
+    CreditAccount CCAccount = new CreditAccount("349974796399430", 3000.00, .24);
     CurrentAccount dummy =  new CurrentAccount("12345674", 500.00);
 
     @Test

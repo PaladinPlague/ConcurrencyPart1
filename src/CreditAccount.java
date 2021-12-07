@@ -14,15 +14,16 @@ public class CreditAccount extends Account  {
     private double APR;
     private final int paymentDueDate;
     LocalDate paymentDate;
-    //private Person cardHolder;
 
-    public CreditAccount(String accountNo, Double openingBalance, double openingCredit, double APR) {
-        super(accountNo, openingBalance);
+
+    public CreditAccount(String accountNo,  double openingCredit, double APR) {
+        super(accountNo, 0.00);
 
         this.creditLimit = openingCredit;
         this.availableCredit = openingCredit;
         this.APR = APR;
         paymentDueDate = 15;
+        paymentDate = LocalDate.now();
     }
 
 
@@ -81,12 +82,9 @@ public class CreditAccount extends Account  {
      */
     public synchronized void monthlyPayment(){
 
-        if(paymentDate.getDayOfMonth() <= paymentDueDate){
-            System.out.println("You should pay: " + Math.abs(this.getBalance()));
-        }else{
+        if(paymentDate.getDayOfMonth() > paymentDueDate){
             double payableAmount = this.getBalance()+(this.getBalance()*monthlyInterest()) ;
             this.setBalance(payableAmount);
-            System.out.println("Your monthly Interest is "+monthlyInterest()+" you should pay: " + Math.abs(this.getBalance()));
         }
     }
 
@@ -103,18 +101,21 @@ public class CreditAccount extends Account  {
         if(Objects.equals(sender.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use other credit card to pay this credit card bill!");
         }else if(Math.abs(sender.getBalance()) < amount){
-            throw new ArithmeticException("Sorry, insufficient fund.");
+            throw new Exception("Sorry, insufficient fund.");
         }else if(amount > Math.abs(this.getBalance())){
-            throw new ArithmeticException("you can't pay more than you have spent!");
-        }else{
+            throw new Exception("you can't pay more than you have spent!");
+        }else {
 
             Transaction transaction = new Transaction(amount, sender, this);
             setBalance(getBalance()+amount);
-            if((availableCredit+=amount)>getCreditLimit()){
+            double AC = getAvailableCredit();
+            if((AC + amount) >getCreditLimit()){
                 availableCredit = creditLimit;
             }else{
                 availableCredit += amount;
             }
+
+
             this.addToTransaction(transaction);
 
         }
@@ -134,7 +135,7 @@ public class CreditAccount extends Account  {
             throw new Exception("Sorry， You can't use this credit card to pay another credit card!");
             //check if we still have enough credit to pay for this transaction.
         }else if(availableCredit < amount){
-            throw new ArithmeticException("Sorry, insufficient fund.");
+            throw new Exception("Sorry, insufficient fund.");
         }else{
             //make a new transaction goes from this credit account to any other account
             Transaction transaction = new Transaction(amount,this,receiver);

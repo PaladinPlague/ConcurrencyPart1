@@ -85,7 +85,7 @@ public class BankEmployee {
         boolean found = false;
         for (int i = 0; i < accounts.size() && !found; i++) {
             if (this.accounts.get(i).getAccount(acc.getAccountNumber()) != null) {
-                acc.deposit(amount, acc);
+                acc.deposit(amount, new CurrentAccount("Employee Account", 1000000000000.00));
                 found = true;
             }
         }
@@ -103,7 +103,7 @@ public class BankEmployee {
             } else {
                 System.out.println("yes");
                 //Unsure about the 'acc' parameter here - need to change this I think
-                foundAcc.deposit(amount, foundAcc);
+                foundAcc.deposit(amount, new CurrentAccount("Employee Account", 1000000000000.00));
             }
         }
         else {
@@ -120,7 +120,7 @@ public class BankEmployee {
             System.out.println("Number of holders for " + empName + " is: " + this.accounts.size());
             System.out.println(this.accounts.get(i).getSize());
             if (this.accounts.get(i).getAccount(acc.getAccountNumber()) != null) {
-                acc.withdraw(amount, acc);
+                acc.withdraw(amount, new CurrentAccount("Employee Account", 1000000000000.00));
                 found = true;
             }
         }
@@ -137,7 +137,7 @@ public class BankEmployee {
                 System.out.println("This is not the number of an existing account");
             } else {
                 //Unsure about the 'acc' parameter here - need to change this I think
-                foundAcc.withdraw(amount, foundAcc);
+                foundAcc.withdraw(amount, new CurrentAccount("Employee Account", 1000000000000.00));
             }
         }
         else {

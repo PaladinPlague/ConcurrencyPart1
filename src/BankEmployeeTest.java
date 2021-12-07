@@ -13,7 +13,7 @@ public class BankEmployeeTest {
         persAcc.addAccount(morAcc);
         SavingAccount savAcc = new SavingAccount("3", 7000.00);
         persAcc.addAccount(savAcc);
-        CreditAccount credAcc = new CreditAccount("4", 100.00, 10.00, 1.0);
+        CreditAccount credAcc = new CreditAccount("4",  10.00, 1.0);
         persAcc.addAccount(credAcc);
         StudentAccount studAcc = new StudentAccount("5", 1000.00);
         persAcc.addAccount(studAcc);
@@ -149,7 +149,7 @@ public class BankEmployeeTest {
         acc.addAccount(sav);
         CurrentAccount curr = new CurrentAccount("1234", 1000.00);
         acc.addAccount(curr);
-        CreditAccount cred = new CreditAccount("4", 100.00, 10.00, 1.0);
+        CreditAccount cred = new CreditAccount("4", 10.00, 1.0);
         acc.addAccount(cred);
         assertEquals(3, acc.getSize());
         assertTrue(bankEmp.deleteCustAccount(acc));
@@ -167,7 +167,7 @@ public class BankEmployeeTest {
         bankEmp.changeInterest(sav, 1.0);
         assertEquals(1, sav.getInterestRate());
         //Change saving account interest rate
-        CreditAccount cred = new CreditAccount("4", 100.00, 10.00, 1.0);
+        CreditAccount cred = new CreditAccount("4", 10.00, 1.0);
         bankEmp.addAccount(acc, cred);
         assertEquals(1.0, cred.getAPR());
         bankEmp.changeInterest(cred, 1.5);

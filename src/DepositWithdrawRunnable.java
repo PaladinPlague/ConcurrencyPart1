@@ -25,9 +25,8 @@ public class DepositWithdrawRunnable implements Runnable {
                 bank.deposit(holderIndex, accIndex, amount);
             }
             Thread.sleep(DELAY);
-        }
-        catch (InterruptedException exception) {
+        } catch (Exception exception) {
 
-        } catch (Exception e) {}
+        }
     }
 }
