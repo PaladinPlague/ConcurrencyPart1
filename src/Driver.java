@@ -11,12 +11,12 @@ public class Driver {
         BankSystem bank = new BankSystem();
 
         //Call each of the 6 tests listed
-        simultaneousBalanceCheck(bank);
-        checkAndChangeBalance(bank);
-        simultaneousChangeAndCheck(bank);
+        //simultaneousBalanceCheck(bank);
+        //checkAndChangeBalance(bank);
+        //simultaneousChangeAndCheck(bank);
         changeCheckAndTransfer(bank);
-        insufficientFunds(bank);
-        simultaneousModification(bank);
+        //insufficientFunds(bank);
+        //simultaneousModification(bank);
     }
 
     //Two account holders are trying to check the balance simultaneously
@@ -137,21 +137,39 @@ public class Driver {
         employee1.addAccount(holder1, holder1.getAccount(0));
         employee1.addAccount(holder2, holder2.getAccount(0));
 
+        /*
         //Set up the Runnable cases for the account holders checking the balance of their accounts
         CheckBalanceRunnable check1 = new CheckBalanceRunnable(bank, 6, 0);
         CheckBalanceRunnable check2 = new CheckBalanceRunnable(bank, 7, 0);
+
         //Set up the Runnable case for the 1st account depositing an amount of money while the 2nd account holder withdraws a different amount of money
         DepositWithdrawRunnable deposit1 = new DepositWithdrawRunnable(bank, 6, 0, 3.50, false);
         DepositWithdrawRunnable withdraw2 = new DepositWithdrawRunnable(bank, 7, 0, 8.15, true);
+
         //Set up the Runnable case for the employee completing a money transfer into the account
         EmployeeTransferRunnable empDepo1 = new EmployeeTransferRunnable(bank, 0, 6, 0, 4.70, false);
+        */
 
+        ThreadGroup Greg   = new ThreadGroup("Greg");
+        ThreadGroup Harry = new ThreadGroup("Harry");
+        ThreadGroup Zander =  new ThreadGroup("Zander");
+
+        for(int i = 0; i<= 100; i++){
+            //(new Thread(Greg, new CheckBalanceRunnable(bank, 6, 0 ))).start();
+            (new Thread(Greg, new DepositWithdrawRunnable(bank, 0, 0, 3.50, false))).start();
+
+            //(new Thread(Harry, new CheckBalanceRunnable(bank, 7, 0))).start();
+            (new Thread(Harry,new DepositWithdrawRunnable(bank, 1, 0, 8.15, true))).start();
+
+            (new Thread(Zander,new EmployeeTransferRunnable(bank, 0, 0, 0, 4.70, false))).start();
+        }
+        /*
         //Declare threads for the runnable cases
-        Thread h1C = new Thread(check1);
-        Thread h2C = new Thread(check2);
-        Thread h1D = new Thread(deposit1);
-        Thread h2W = new Thread(withdraw2);
-        Thread e1D = new Thread(empDepo1);
+        Thread h1C = new Thread(test,check1);
+        Thread h2C = new Thread(test,check2);
+        Thread h1D = new Thread(test,deposit1);
+        Thread h2W = new Thread(test,withdraw2);
+        Thread e1D = new Thread(test,empDepo1);
 
         //Start the process of the threads
         h1C.start();
@@ -159,7 +177,7 @@ public class Driver {
         h1D.start();
         h2W.start();
         e1D.start();
-
+        */
     }
 
     //There are insufficient funds to complete a withdrawal.

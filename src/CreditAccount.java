@@ -80,7 +80,7 @@ public class CreditAccount extends Account  {
     if it is made after the paymentDueDate then we charge an overdue interest on the balance.
     the interest is calculated monthly.
      */
-    public synchronized void monthlyPayment(){
+    public void monthlyPayment(){
 
         if(paymentDate.getDayOfMonth() > paymentDueDate){
             double payableAmount = this.getBalance()+(this.getBalance()*monthlyInterest()) ;
@@ -95,7 +95,7 @@ public class CreditAccount extends Account  {
     the payment can be on the due day, before due day or after due day
      */
     @Override
-    public synchronized void deposit(Double amount, Account sender) throws Exception {
+    public  void deposit(Double amount, Account sender) throws Exception {
         monthlyPayment();
 
         if(Objects.equals(sender.getType(), "Credit Card Account")){
