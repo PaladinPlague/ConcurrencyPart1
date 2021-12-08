@@ -71,7 +71,7 @@ public class AccountHolder {
         return name;
     }
     //Returns the age of the person
-    public synchronized int  getAge(){
+    public synchronized int getAge(){
         return age;
     }
 
