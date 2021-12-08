@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.ArrayList;
+
 /*
 Author: Nuoxu Li
 CreditAccount class is to simulate real life credit card.
