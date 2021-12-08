@@ -75,7 +75,7 @@ public class Driver {
     }
 
     //The two account holders are trying simultaneously to deposit/withdraw money & check the balance.
-    public static void simultaneousChangeAndCheck(BankSystem bank) {
+    public synchronized static void simultaneousChangeAndCheck(BankSystem bank) {
 
         //Declare the account holders before adding them to the bank
         AccountHolder holder1 = new AccountHolder("Eric", 20);
