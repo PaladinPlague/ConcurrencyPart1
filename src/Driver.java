@@ -29,7 +29,7 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders
-        CurrentAccount acc = new CurrentAccount("11111111", 25.00);
+        MortgageAcc acc = new MortgageAcc("11111111", 25.00, 1, 10);
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -56,7 +56,7 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders
-        CurrentAccount acc = new CurrentAccount("22222222", 25.00);
+        StudentAccount acc = new StudentAccount("22222222", 25.00);
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -85,7 +85,7 @@ public class Driver {
 
         //Declare an account that is held by both account holders
         //CurrentAccount acc = new CurrentAccount("33333333", 25.00);
-        CreditAccount acc = new CreditAccount("33333333",3000.00,12 );
+        SavingAccount acc = new SavingAccount("33333333",25.00);
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -127,7 +127,7 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders
-        CreditAccount acc = new CreditAccount("4444444444",3000.00,12 );
+        CreditAccount acc = new CreditAccount("44444444",25.00, .24);
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -172,7 +172,7 @@ public class Driver {
         bank.addAccountHolder(holder2);
 
         //Declare an account that is held by both account holders, which has a very low opening balance
-        StudentAccount acc = new StudentAccount("55555555", 2.00);
+        CurrentAccount acc = new CurrentAccount("55555555",25.00);
         holder1.addAccount(acc);
         holder2.addAccount(acc);
 
@@ -197,7 +197,7 @@ public class Driver {
         bank.addAccountHolder(holder1);
 
         //Declare an account held by the account holder as a mortgage account, which uses changeInterest method from bank employee
-        Account acc1 = new MortgageAcc("66666666", 50.00, 50.00, 1);
+        MortgageAcc acc1 = new MortgageAcc("66666666",25.00, 1, 10);
         holder1.addAccount(acc1);
 
         //Declare the bank employees before adding them to the bank, then add the account holder to the bank employees

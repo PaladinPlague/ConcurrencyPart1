@@ -79,7 +79,7 @@ public class BankSystem {
                 try {
                     accHolders.get(holderIndex).getAccount(accountIndex).deposit(amount, new CurrentAccount("00000000", 10000000000.00));
                 } catch (Exception e) {
-                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: deposit method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed.");
+                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: deposit method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed. ERROR CODE: " + e.getMessage());
                 }
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
                 condition.signalAll();
@@ -111,7 +111,7 @@ public class BankSystem {
                 try{
                     accHolders.get(holderIndex).getAccount(accountIndex).withdraw(amount, new CurrentAccount("00000000", 0.0));
                 }catch(Exception e){
-                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: withdraw method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed.");
+                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: withdraw method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed. ERROR CODE: " + e.getMessage());
                 }
 
 
@@ -143,7 +143,7 @@ public class BankSystem {
                     bankEmployees.get(employeeIndex).deposit(bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex), amount);
 
                 }catch(Exception e){
-                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: deposit method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed.");
+                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: deposit method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed. ERROR CODE: " + e.getMessage());
                 }
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
                 condition.signalAll();
@@ -179,7 +179,7 @@ public class BankSystem {
                     bankEmployees.get(employeeIndex).withdraw(bankEmployees.get(employeeIndex).getCustAccount(accHolders.get(holderIndex)).getAccount(accountIndex), amount);
 
                 } catch (Exception e) {
-                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: withdraw method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed.");
+                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: withdraw method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed. ERROR CODE: " + e.getMessage());
                 }
                 System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
             } finally {
