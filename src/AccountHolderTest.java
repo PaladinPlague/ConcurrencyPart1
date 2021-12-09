@@ -3,10 +3,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/*
-ACCOUNT HOLDER TESTING CLASS
-Made by Suleman Akhter
-*/
+//Account holder testing class
+//Made by Suleman Akhter
 class AccountHolderTest {
 
     //Variable used for testing all AccountHolder's methods

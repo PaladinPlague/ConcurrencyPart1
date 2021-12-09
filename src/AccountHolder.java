@@ -1,3 +1,4 @@
+//ArrayList is used as the datatype for list objects in system, such as list of holder's accounts, due to flexible size and useful methods for working with items at specific indexes of list
 import java.util.ArrayList;
 
 //A class for the people working with accounts

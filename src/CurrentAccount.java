@@ -1,39 +1,36 @@
-import java.util.ArrayList;
-
-//Account type that's used for everyday life services
+//Bank account type which is used for everyday services
 public class CurrentAccount extends Account{
 
-    //private Person cardHolder;
-
-    //Initiate current account with all fields filled in
+    //Declare a new current account with parameters to set account number and opening balance via superclass method
     public CurrentAccount(String accountNo, Double openingBalance) {
         super(accountNo, openingBalance);
     }
 
-    //Deposit a set amount from another account into this account and save it to list of transactions
-    //Due to editing information, declare the class as being synchronized
+    //Deposit a set amount from another account into this account
     public synchronized void deposit(Double amount, Account sender) {
         setBalance(getBalance() + amount);
     }
 
-    //Withdraw a set amount from this account into another account and save it to list of transactions
-    //Due to editing information, declare the class as being synchronized
+    //Withdraw a set amount from this account into another account
     public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
+        //If the amount is more than what is stored in the bank, throw an exception with relevant message
         if(this.getBalance()<amount){
-            throw new Exception("Sorry, insufficient fund.");
+            throw new Exception("ERROR: insufficient funds.");
+        //Otherwise, decrease the specified amount from this account's balance
         }else{
             setBalance(getBalance() - amount);
         }
-
     }
 
+    //Print the details of this account into a terminal
     @Override
     public void printDetails(){
         System.out.println("CC Account Number: " +this.getAccountNumber());
         System.out.println("New Balance: "+this.getBalance());
     }
 
+    //Print the details of this account to a string
     @Override
     public String getDetails(){
         String result = "";
@@ -41,7 +38,7 @@ public class CurrentAccount extends Account{
         return result;
     }
 
-    //Show that the type of the account is a current account
+    //Return the account type
     public String getType() {
         return "Current Account";
     }

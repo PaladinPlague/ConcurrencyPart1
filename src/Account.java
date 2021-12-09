@@ -25,7 +25,7 @@ public abstract class Account {
         return this.balance;
     }
 
-    //Return the current account type e.g. if savings account, return "Saving Account"
+    //Return the account type e.g. if savings account, return "Saving Account"
     public abstract String getType();
 
     //Carry out depositing methods of this account

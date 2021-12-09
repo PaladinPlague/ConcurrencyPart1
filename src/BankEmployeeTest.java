@@ -3,10 +3,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/*
-BANK EMPLOYEE TESTING CLASS
-Made by
-*/
+//Bank employee testing class
+//Made by
 public class BankEmployeeTest {
 
     //Creates one of each type of account and prints its details
