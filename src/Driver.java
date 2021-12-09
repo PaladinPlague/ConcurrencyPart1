@@ -17,6 +17,7 @@ public class Driver {
         changeCheckAndTransfer(bank);
         insufficientFunds(bank);
         simultaneousModification(bank);
+        depositMultipleTimes(bank);
     }
 
     //Two account holders are trying to check the balance simultaneously
@@ -221,4 +222,56 @@ public class Driver {
         e2M.start();
 
     }
+
+    //The two account holders are trying simultaneously to deposit/withdraw money & check the balance.
+    public static void depositMultipleTimes (BankSystem bank) {
+
+        //Declare the account holders before adding them to the bank
+        AccountHolder holder1 = new AccountHolder("Sonic", 20);
+        AccountHolder holder2 = new AccountHolder("Knuckles", 20);
+        AccountHolder holder3 = new AccountHolder("Tails", 20);
+        bank.addAccountHolder(holder1);
+        bank.addAccountHolder(holder2);
+        bank.addAccountHolder(holder3);
+
+        //Declare an account that is held by both account holders
+        //CurrentAccount acc = new CurrentAccount("123456789", 100.0);
+        CurrentAccount acc = new CurrentAccount("123456789",100.0);
+        holder1.addAccount(acc);
+        holder2.addAccount(acc);
+        holder3.addAccount(acc);
+
+        //Set up the Runnable cases for the account holders checking the balance of their accounts
+        CheckBalanceRunnable check1 = new CheckBalanceRunnable(bank, 11, 0);
+        CheckBalanceRunnable check2 = new CheckBalanceRunnable(bank, 12, 0);
+        CheckBalanceRunnable check3 = new CheckBalanceRunnable(bank, 13, 0);
+        //Set up the Runnable case for these accounts, for deposit
+        DepositWithdrawRunnable deposit1 = new DepositWithdrawRunnable(bank, 11, 0, 20, false);
+        DepositWithdrawRunnable deposit2 = new DepositWithdrawRunnable(bank, 12, 0, 30, false);
+        DepositWithdrawRunnable deposit3 = new DepositWithdrawRunnable(bank, 13, 0, 40, false);
+
+
+
+
+        //Declare threads for the runnable cases
+        Thread h1C = new Thread(check1);
+        Thread h2C = new Thread(check2);
+        Thread h3C = new Thread(check3);
+
+        Thread h1D = new Thread(deposit1);
+        Thread h2D = new Thread(deposit2);
+        Thread h3D = new Thread(deposit3);
+
+        //Start the process of the threads
+        h1C.start();
+        h2C.start();
+        h3C.start();
+
+        h1D.start();
+        h2D.start();
+        h3D.start();
+
+
+    }
+
 }

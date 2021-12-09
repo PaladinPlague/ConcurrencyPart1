@@ -67,21 +67,37 @@ public class BankSystem {
     //A customer tries to deposit an amount of money into their account
     public void deposit(int holderIndex, int accountIndex, double amount) throws Exception{
         if (holderIndex < 0 || holderIndex >= accHolders.size()) {
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: holder index " + holderIndex + " out of bounds for bank system's account holders");
+            System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: holder index " +
+                    holderIndex + " out of bounds for bank system's account holders");
         } else if (accountIndex < 0 || accountIndex >= accHolders.get(holderIndex).getSize()) {
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: account index " + accountIndex + " out of bounds for holder " + accHolders.get(accountIndex).getName());
+            System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: account index " +
+                    accountIndex + " out of bounds for holder " + accHolders.get(accountIndex).getName());
         } else if (amount <= 0) {
-            System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: deposit amount " + amount + " is invalid, it must be greater than 0");
+            System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: deposit amount " +
+                    amount + " is invalid, it must be greater than 0");
         } else {
             lock.lock();
             try {
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " + accHolders.get(holderIndex).getName() + " depositing amount " + amount + " into account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
+                System.out.println("Thread with id " + Thread.currentThread().getId() + ", holder " +
+                        accHolders.get(holderIndex).getName() + " depositing amount " + amount + " into account " +
+                        accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber());
                 try {
                     accHolders.get(holderIndex).getAccount(accountIndex).deposit(amount, new CurrentAccount("00000000", 10000000000.00));
                 } catch (Exception e) {
-                    System.out.println("Thread with id " + Thread.currentThread().getId() + ", ERROR: deposit method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " failed. ERROR CODE: " + e.getMessage());
+                    System.out.println("Thread with id " + Thread.currentThread().getId() +
+                            ", ERROR: deposit method on account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() +
+                            " failed. ERROR CODE: " + e.getMessage());
                 }
-                System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " + accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " + accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
+
+            }
+            finally {
+                lock.unlock();
+            }
+            lock.lock();
+                    try{
+                System.out.println("Thread with id " + Thread.currentThread().getId() + ", current balance of account " +
+                        accHolders.get(holderIndex).getAccount(accountIndex).getAccountNumber() + " is: " +
+                        accHolders.get(holderIndex).getAccount(accountIndex).getBalance());
                 condition.signalAll();
             } finally {
                 lock.unlock();
