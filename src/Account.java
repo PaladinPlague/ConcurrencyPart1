@@ -16,16 +16,16 @@ public abstract class Account {
     }
 
     //Return the account number of the account
-    public String getAccountNumber() {
+    public synchronized String getAccountNumber() {
         return this.accountNumber;
     }
 
     //Return the current balance of the account
-    public double getBalance() {
+    public synchronized double getBalance() {
         return this.balance;
     }
 
-    //Return the current account type e.g. if savings account, return "Savings Account"
+    //Return the current account type e.g. if savings account, return "Saving Account"
     public abstract String getType();
 
     //Carry out depositing methods of this account
@@ -36,7 +36,7 @@ public abstract class Account {
 
     //Print the details of this account into a terminal
     //If a specific account needs to share more details, override method in subclass
-    public void printDetails() {
+    public synchronized void printDetails() {
         System.out.println("Account number: " + this.getAccountNumber());
         //Format balance so that it has 2 decimal places
         //Reference used for formatting decimal number in output: https://stackoverflow.com/questions/2538787/how-to-print-a-float-with-2-decimal-places-in-java
@@ -44,9 +44,9 @@ public abstract class Account {
         System.out.println("Account Type: " + this.getType());
     }
 
-    //Print the details of this account to a string (for possible GUI implementation)
+    //Print the details of this account to a string
     //If a specific account needs to share more details, override method in subclass
-    public String getDetails() {
+    public synchronized String getDetails() {
         String result = "";
         result += "Account number: " + this.getAccountNumber() + "\n";
         //Format balance so it has 2 decimal places
@@ -56,7 +56,6 @@ public abstract class Account {
     }
 
     //Change the current balance to a new value, ensuring it is at 2 decimal places
-    //This class is synchronised because it changes a value
     public synchronized void setBalance(Double newBalance) {
         //Math.round function used to ensure value is at 2 decimal places
         this.balance = ((double) (Math.round(newBalance * 100))) / 100;

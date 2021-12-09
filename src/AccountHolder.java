@@ -1,16 +1,16 @@
-import java.util.*;
+import java.util.ArrayList;
 
-//An abstract class for the people working with accounts
+//A class for the people working with accounts
 public class AccountHolder {
-    /*
-     accounts -> hold lists of accounts
-     name -> the name of the person
-     */
+
+    //Holds list of accounts
     private ArrayList<Account> accounts;
+    //The name of the person
     private String name;
+    //The age of the person
     private int age;
 
-    //Declare person as new object with initially empty list of accounts and also gets the person's name
+    //Declare person as new account holder with initially empty list of accounts, and get person's name and age
     public AccountHolder(String personName, int age) {
         accounts = new ArrayList<>();
         name = personName;
@@ -18,13 +18,24 @@ public class AccountHolder {
     }
 
     //Get the details of an account based on index
-    public Account getAccount(int index) {
+    public synchronized Account getAccount(int index) {
         //If index is out of list range, return nothing
         if (index < 0 || index >= accounts.size()) {
             return null;
         }
         //Otherwise, return the account at this index
         return accounts.get(index);
+    }
+
+    //Searches a customer's accounts for the account number and returns the match if present
+    public synchronized Account getAccount(String acc) {
+        for (int i = 0; i < this.getSize(); i++) {
+            if (acc.equals(this.getAccount(i).getAccountNumber())) {
+                return this.getAccount(i);
+            }
+        }
+        //If there was no match, returns null
+        return null;
     }
 
     //Create an account to add to the person's list
@@ -67,30 +78,13 @@ public class AccountHolder {
     }
 
     //Returns the name of the person
-    public synchronized String getName(){
-        return name;
-    }
+    public synchronized String getName(){ return name; }
+
     //Returns the age of the person
-    public synchronized int  getAge(){
-        return age;
-    }
+    public synchronized int getAge(){ return age; }
 
     //Returns the size of the account array
-    public synchronized int  getSize(){
+    public synchronized int getSize(){
         return accounts.size();
-    }
-
-    //ADDED BY SCOTT -- ALLOWS AN ACCOUNT TO BE FOUND BY ITS NUMBER.
-    //If not applicable, this will also have to be changed in the Bank Employees
-
-    //Searches a customer's account for the account number and returns the match if present
-    public Account getAccount(String acc) {
-        for (int i = 0; i < this.getSize(); i++) {
-            if (acc.equals(this.getAccount(i).getAccountNumber())) {
-                return this.getAccount(i);
-            }
-        }
-        //If there was no match, returns null
-        return null;
     }
 }
