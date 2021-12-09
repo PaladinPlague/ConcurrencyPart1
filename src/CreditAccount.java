@@ -1,11 +1,7 @@
 import java.time.LocalDate;
 import java.util.Objects;
-/*
-Author: Nuoxu Li
-CreditAccount class is to simulate real life credit card.
-This class keep
- */
 
+//Author: Nuoxu Li
 //Bank account type which is used for customers to store credit
 public class CreditAccount extends Account  {
 
@@ -76,7 +72,7 @@ public class CreditAccount extends Account  {
         }
     }
 
-    //Pay in money from another Current Account
+    //Pay in money from another Account
     //The sender must NOT be another CreditAccount, since it is illegal to use credit to pay credit
     //The payment can be in full or partially.
     //The payment can be on the due day, before due day or after due day

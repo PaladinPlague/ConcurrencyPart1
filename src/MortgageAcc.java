@@ -2,6 +2,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+//Bank account type which is used for customers with mortgage
 public class MortgageAcc extends Account {
 
     /*
@@ -11,10 +12,8 @@ public class MortgageAcc extends Account {
         - Annual interest is divvied up between the 12 months
         - Monthly payments are calculated using a complicated formula
         - Total amount paid is calculated with the TOTAL monthly payments
-        - When the balance reaches 0 the account is closed
-        - the INTEREST of a monthly payment is the monthly % times the BALANCE
-        - Best way to deal with monthly payments is probably add the funds throughout the entire month and
-            then deal with the total at the end of the month
+        - When the balance reaches 0 the account is closed, the INTEREST of a monthly payment is the monthly % times the BALANCE
+        - Best way to deal with monthly payments is probably add the funds throughout the entire month and then deal with the total at the end of the month
 
         - Add transactions to the deposit method using something like a helper
      */
@@ -25,16 +24,16 @@ public class MortgageAcc extends Account {
     private double monthlyPayment;
     //Years the account should be open for
     private final int years;
-    //Constantly changed variable to store the amount STILL TO BE PAID this month
+    //Constantly changed variable to store the amount still to be paid for the current month
     private double currMonthPay;
-    //Time an account was opened since 'monthly' payments aren't testable and to be used as
-    //An anchor for checking times
+    //Time an account was opened since 'monthly' payments aren't testable and to be used as an anchor for checking times
     private LocalTime start;
 
     //Constructor specific to a mortgage account - these accounts are opened
     //With an already high balance and an additional interest rate. This balance
     //Is then paid down over the lifetime of the account.
     public MortgageAcc(String acc, Double bal, double interest, int year) {
+        //Set account number and opening balance via superclass constructor.
         super(acc, bal);
         //Stores the interest as its decimal number
         this.intAnnual = interest * 0.01;
@@ -49,33 +48,35 @@ public class MortgageAcc extends Account {
     }
 
     //Returns the annual interest rate
-    public double getAnnInterest() {
+    public synchronized double getAnnInterest() {
         return this.intAnnual;
     }
 
     //Returns the opening time of the account
-    public LocalTime getTime() {
+    public synchronized LocalTime getTime() {
         return this.start;
     }
 
-    //Returns the interest rate for monthly payments
-    public double getMonthInterest() {
+    //Returns the interest rate for monthly payments (which is one twelfth of interest rate for annual payments)
+    public synchronized double getMonthInterest() {
         return (this.intAnnual / 12);
     }
 
     //Updates the interest rate
     public synchronized void updateInterest(double newInt) {
+        //We convert parameter input from percentage number to whole number, e.g. if newInt = 2, as in 2%, set interest rate to 0.02
         this.intAnnual = newInt * 0.01;
         //Since the interest was updated, we also need to update the monthly payment
         this.monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
     }
 
-    @Override
     //Returns the appropriate account type
-    public String getType() {
+    @Override
+    public synchronized String getType() {
         return "Mortgage Account";
     }
 
+    //Simulate the effects of monthly payment conditions resetting
     public synchronized void nextMonth() {
         //Recalculates the monthlyPayment to check for any changes
         monthlyPayment = calcMonthly(this.getBalance(), this.intAnnual);
@@ -84,16 +85,9 @@ public class MortgageAcc extends Account {
         this.start = LocalTime.now();
     }
 
-    /*
-    //Stores the additional amount paid by the account holder
-    double extra = Math.abs(currMonthPay);
-    //Calls the helper to split the monthly payment as usual
-        this.depositHelper();
-    //Once the helper is called, the additional money has to directly lower the balance
-    double bal = getBalance();
-    double balanceDiff = bal - extra;
-    setBalance(balanceDiff);*/
-
+    //Pay in money from another account
+    //Sender must not be credit account, as it is illegal to use credit to pay mortgage
+    //Payments to this account must be at least £100
     @Override
     public synchronized void deposit(Double amount, Account sender) throws Exception {
 
@@ -103,19 +97,17 @@ public class MortgageAcc extends Account {
             return;
         }
 
-        //Only allows a payment of at least £1
+        //Only allows a payment of at least £100
         if (amount > 99) {
 
-            //Since working in months isn't good for testing, it's easier to working in seconds with a month being
-            //Represented by something like 30/60s
-            //SIMPLY FOR TESTING PURPOSES//
+            //Since working in months isn't good for testing, it's easier to working in seconds with a month being in roughly 30-60 range
             LocalTime curr = LocalTime.now();
             //Once the duration difference is found, we need to store the seconds as an int
             double diff = (double) start.until(curr, ChronoUnit.SECONDS);
 
             //Check the diff to see if the current monthly payment period had passed.
             //If so, print messages accordingly whether it was under/over/fully paid.
-            if (diff > 2.0 /*this being for a test but would represent a 'month' passing*/ && currMonthPay > 0) {
+            if (diff > 2.0 && currMonthPay > 0) {
                 System.out.println("The payment for the passing month was NOT fulfilled.");
                 System.out.println("Please ensure you are keeping up with mortgage payments.");
                 nextMonth();
@@ -135,8 +127,7 @@ public class MortgageAcc extends Account {
                 diff = 0;
             }
 
-            //After the new month is set up, the amount the user WANTED to deposit should now be used in the
-            //Current month. We can do this by manipulating diff and setting it to 0.
+            //After the new month is set up, the amount the user WANTED to deposit should now be used in the current month. We can do this by manipulating diff and setting it to 0.
 
             //Otherwise, if the 'month' has not passed, we deal with the amount and pay it into the account
             if (diff < 2.0) {
@@ -151,14 +142,13 @@ public class MortgageAcc extends Account {
                 }
                 //Otherwise, it goes through the process as normal
                 else {
-                    //When paid in, we need to update the current monthly pay balance to determine what to do
-                    //With the amount
 
+                    //When paid in, we need to update the current monthly pay balance to determine what to do with the amount
                     this.currMonthPay = this.currMonthPay - amount;
                     this.currMonthPay = Math.round(this.currMonthPay * 100);
                     this.currMonthPay = this.currMonthPay / 100;
 
-                    //If there is still somme money to be paid, the number is printed
+                    //If there is still money to be paid, the number is printed
                     if (this.currMonthPay > 0) {
                         this.depositHelper(amount);
                         System.out.println("Payment left for this month: £" + this.currMonthPay);
@@ -195,16 +185,17 @@ public class MortgageAcc extends Account {
         }
     }
 
+    //While all accounts require withdraw method, we cannot withdraw from a Mortgage account, so show this in output
     @Override
-    public void withdraw(Double amount, Account receiver) throws Exception {
-        //CANNOT WITHDRAW
+    public synchronized void withdraw(Double amount, Account receiver) throws Exception {
+        System.out.println("Cannot withdraw from mortgage account");
     }
 
     //Method used to calculate the monthly payments to be made into the account
-    public double calcMonthly(double bal, double interest) {
+    public synchronized double calcMonthly(double bal, double interest) {
+        //Use monthly interest to calculate monthly payments
         double monthlyInt = getMonthInterest();
-        //Super messy formula for calculating monthly payments
-        //P [ i(1 + i)^n ] / [ (1 + i)^n – 1]
+        //Formula for calculating monthly payments: P [ i(1 + i)^n ] / [ (1 + i)^n – 1]
         //Had to split the formula into part to get it to seem somewhat readable
         double part1 = (monthlyInt * Math.pow((1 + monthlyInt),(this.years * 12)));
         double part2 = Math.pow((1 + monthlyInt),(this.years * 12)) - 1;

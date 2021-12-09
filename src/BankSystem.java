@@ -3,6 +3,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
 
 //A class that represents the processes of the bank used to test concurrency
+//Made by Jackson Blair
 public class BankSystem {
 
     //List of account holders for the bank

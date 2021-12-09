@@ -7,7 +7,7 @@ class CurrentAccountTest {
 
     //Variable used for testing various methods of current account class
     CurrentAccount account = new CurrentAccount("56357771", 500.00);
-    //Second credit account used to test interactions between current account and other account
+    //Second credit account used to test interactions between current account and other accounts
     CurrentAccount secondAcc = new CurrentAccount("30569309", 700.00);
 
     //Test field declaration of current account and the detail-returning methods of current account

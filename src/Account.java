@@ -1,5 +1,3 @@
-import java.util.*;
-
 //An abstract class used to represent all accounts in bank
 public abstract class Account {
 
