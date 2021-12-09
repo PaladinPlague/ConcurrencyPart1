@@ -5,7 +5,6 @@ public class SavingAccount extends Account {
 
     /*
     SAVING ACCOUNT
-    Created by Suleman Akhter
     - A saving account is an account that allows you top deposit money and let that money grow in value, this growth is called interest
     - Our saving account will have a minimum £1 deposit, otherwise you are unable to open an account
     - Our saving account will be instant access, meaning you can add and take out money any time
@@ -165,12 +164,12 @@ public class SavingAccount extends Account {
         everyYear = change;
     }
 
-    //ADDED BY SCOTT -- UPDATES INTEREST.
-    //If not applicable, this will also have to be changed in the Bank Employees
+    //Update interest rate of account
     public synchronized void changeInterest(double interest) {
         this.interestRate = interest;
     }
 
+    //Get interest rate of account
     public synchronized double getInterestRate() {
         return this.interestRate;
     }

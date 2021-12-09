@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 //Credit account testing class
-//Made by
 class CreditAccountTest {
 
     //Variable used for testing various methods of credit account class

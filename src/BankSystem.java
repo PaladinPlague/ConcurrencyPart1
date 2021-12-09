@@ -3,7 +3,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
 
 //A class that represents the processes of the bank used to test concurrency
-//Made by Jackson Blair
 public class BankSystem {
 
     //List of account holders for the bank
@@ -47,7 +46,6 @@ public class BankSystem {
 
     //Return the list of bank employees in the bank
     public synchronized ArrayList<BankEmployee> getBankEmployees() {return this.bankEmployees;}
-
 
     //A customer tries to check the balance of their account
     public void checkBalance(int holderIndex, int accountIndex) {
@@ -104,7 +102,6 @@ public class BankSystem {
         }
     }
 
-
     //A customer tries to withdraw an amount of money from one of their accounts
     public void withdraw(int holderIndex, int accountIndex, double amount) throws Exception {
         //If the holder index is out of bounds for the list of account holders in the system, show this in a message
@@ -144,8 +141,6 @@ public class BankSystem {
             }
         }
     }
-
-
 
     //An employee tries to deposit an amount of money into one of their customers' account
     public void deposit(int employeeIndex, int holderIndex, int accountIndex, double amount) throws Exception {

@@ -25,8 +25,7 @@ public class EmployeeTransferRunnable implements Runnable {
 
     //Runnable thread process of chosen method
     public void run() {
-        try
-        {
+        try {
             //If isWithdraw field is equal to false, deposit into account. Otherwise, withdraw from the account
             if (isWithdraw) {
                 bank.withdraw(employeeIndex, holderIndex, accIndex, amount);

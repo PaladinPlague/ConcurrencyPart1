@@ -7,11 +7,13 @@ public class CurrentAccount extends Account{
     }
 
     //Deposit a set amount from another account into this account
+    @Override
     public synchronized void deposit(Double amount, Account sender) {
         setBalance(getBalance() + amount);
     }
 
     //Withdraw a set amount from this account into another account
+    @Override
     public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
         //If the amount is more than what is stored in the bank, throw an exception with relevant message
@@ -25,21 +27,22 @@ public class CurrentAccount extends Account{
 
     //Print the details of this account into a terminal
     @Override
-    public void printDetails(){
+    public synchronized void printDetails(){
         System.out.println("CC Account Number: " +this.getAccountNumber());
         System.out.println("New Balance: "+this.getBalance());
     }
 
     //Print the details of this account to a string
     @Override
-    public String getDetails(){
+    public synchronized String getDetails(){
         String result = "";
         result = "Current Account Number: " +this.getAccountNumber()+ ", balance: "+this.getBalance()+".";
         return result;
     }
 
     //Return the account type
-    public String getType() {
+    @Override
+    public synchronized String getType() {
         return "Current Account";
     }
 }

@@ -1,7 +1,6 @@
 import java.time.LocalDate;
 import java.util.Objects;
 
-//Author: Nuoxu Li
 //Bank account type which is used for customers to store credit
 public class CreditAccount extends Account  {
 
@@ -21,7 +20,7 @@ public class CreditAccount extends Account  {
         //Set account number and opening balance via superclass constructor. As the account is more dependent on credit than balance, the account opens with no balance
         super(accountNo, 0.00);
 
-        //The credit the account starts with, which is also the maximum credit, is equal to the second parameter
+        //The credit the account starts with, which is also the maximum credit holdable by the account, is equal to the second parameter
         this.creditLimit = openingCredit;
         this.availableCredit = openingCredit;
         //Set the initial APR to the third parameter
@@ -31,7 +30,6 @@ public class CreditAccount extends Account  {
         //Set the payment date equal to when the account was created
         paymentDate = LocalDate.now();
     }
-
 
     //Set Credit limit, rarely used in real life
     public synchronized void setCreditLimit(double newCredit){
@@ -70,6 +68,7 @@ public class CreditAccount extends Account  {
             double payableAmount = this.getBalance()+(this.getBalance()*monthlyInterest()) ;
             this.setBalance(payableAmount);
         }
+
     }
 
     //Pay in money from another Account
@@ -84,13 +83,13 @@ public class CreditAccount extends Account  {
         //Check the sender object is not a credit card account
         if(Objects.equals(sender.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use other credit card to pay this credit card bill!");
-        //Check that the sender has enough balance to deposit to this account
+        //Check that the sender has enough funds to deposit to this account
         }else if(Math.abs(sender.getBalance()) < amount){
             throw new Exception("Sorry, insufficient fund.");
         //Check that the account has enough for the payment
         }else if(amount > Math.abs(this.getBalance())){
             throw new Exception("you can't pay more than you have spent!");
-        }else {
+        } else {
 
             //Set the balance equal to the deposited amount
             setBalance(getBalance()+amount);
@@ -102,9 +101,7 @@ public class CreditAccount extends Account  {
             }else{
                 availableCredit += amount;
             }
-
         }
-
     }
 
     //Pay credit money to another account
@@ -114,7 +111,7 @@ public class CreditAccount extends Account  {
     @Override
     public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
-        //Check that the receiver object is not a credit account
+        //Check that the receiver object is not a credit card account
         if(Objects.equals(receiver.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use this credit card to pay another credit card!");
         //Check if we still have enough credit to pay for this transaction.
@@ -127,27 +124,31 @@ public class CreditAccount extends Account  {
         }
     }
 
-    /*
-    Pay in money from another Current Account
-    the sender must BE SAME PERSON'S CURRENT ACCOUNT.
-    the payment can be in full or partially.
-    the payment can be on the due day, before due day or after due day
-    */
+    //Pay in money from another Current Account
+    //The sender must be the same person's current account
+    //The payment can be in full or partially.
+    //The payment can be on the due day, before due day or after due day
     public synchronized void transfer (double amount, Account supplyAccount) throws Exception {
-
+        //Check the account has made its monthly payment first
         monthlyPayment();
 
+        //Check that the other account is not a credit card account
         if(Objects.equals(supplyAccount.getType(), "Credit Card Account")){
             throw new Exception("Sorry， You can't use other credit card to pay this credit card bill!");
+        //Check that the other account has enough funds to deposit to this account
         }else if(Math.abs(supplyAccount.getBalance())< amount){
             throw new ArithmeticException("Sorry, insufficient fund.");
+        //Check that the account has enough for the payment
         }else if(amount > Math.abs(this.getBalance())){
             throw new ArithmeticException("you can't pay more than you have spent!");
+        //For debugging, check that we can pay from this account to
         }else if(Objects.equals(getType(), "")){
             throw new Exception("you may wish to use deposit if you paying for someone else");
         }else{
+            //Increase the balance by the amount passed in by the parameter
             setBalance(getBalance()+amount);
-            if((availableCredit+=amount)>getCreditLimit()){
+            //Increase the credit of the account, and if the resultant amount of credits is greater than the limit, set it to the limit
+            if((availableCredit + amount)>getCreditLimit()){
                 availableCredit = creditLimit;
             }else{
                 availableCredit += amount;
@@ -157,7 +158,7 @@ public class CreditAccount extends Account  {
 
     //Print the details of this account into a terminal
     @Override
-    public void printDetails(){
+    public synchronized void printDetails(){
         System.out.println("CC Account Number: " +this.getAccountNumber());
         System.out.println("Total Credit Limit: " +getCreditLimit());
         System.out.println("Available Credit of This Month: " + getAvailableCredit());
@@ -166,7 +167,7 @@ public class CreditAccount extends Account  {
 
     //Print the details of this account to a string
     @Override
-    public String getDetails(){
+    public synchronized String getDetails(){
         String result = "CC Account Number: " +this.getAccountNumber()+", credit: " +getCreditLimit()+", " +
                 "available Credit: " + getAvailableCredit()+", balance: "+this.getBalance()+ ".";
         return result;
@@ -174,7 +175,7 @@ public class CreditAccount extends Account  {
 
     //Return the account type
     @Override
-    public String getType() {
+    public synchronized String getType() {
         return "Credit Card Account";
     }
 }

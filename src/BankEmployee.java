@@ -78,11 +78,11 @@ public class BankEmployee {
             //If holder does not have an account with the account number, show this in a message
             if (foundAcc == null) {
                 System.out.println("Account holder " + person.getName() + " does not hold account " + acc);
-                //Otherwise, print the details of the account
+            //Otherwise, print the details of the account
             } else {
                 foundAcc.printDetails();
             }
-            //If the account holder is not managed by the employee, show this in a message
+        //If the account holder is not managed by the employee, show this in a message
         } else {
             System.out.println("Account holder " + person.getName() + " is not overseen by employee " + empName);
         }
@@ -110,11 +110,11 @@ public class BankEmployee {
             //If the holder does not have the account, show this in a message
             if (foundAcc == null) {
                 System.out.println("Account number " + acc + " does not exist for customer " + person.getName());
-                //Otherwise, carry out deposit
+            //Otherwise, carry out deposit
             } else {
                 foundAcc.deposit(amount, new CurrentAccount("Employee Account", 1000000000000.00));
             }
-            //If the account is not contained by one of the employee's managed holders, show this in a message
+        //If the account is not contained by one of the employee's managed holders, show this in a message
         } else {
             System.out.println("Account holder " + person.getName() + " is not overseen by employee " + empName);
         }
@@ -145,11 +145,11 @@ public class BankEmployee {
             //If the account holder does not hold an account with this number, show this in a message
             if (foundAcc == null) {
                 System.out.println("Account number " + acc + " does not exist for customer " + person.getName());
-                //Otherwise, carry out withdraw
+            //Otherwise, carry out withdraw
             } else {
                 foundAcc.withdraw(amount,  new CurrentAccount("Employee Account", 1000000000000.00));
             }
-            //If the account is not contained by one of the employee's managed holders, show this in a message
+        //If the account is not contained by one of the employee's managed holders, show this in a message
         } else {
             System.out.println("This account may not be overseen by this employee");
         }
@@ -160,14 +160,13 @@ public class BankEmployee {
         //If holder is already overseen by employee, show this in output
         if (this.holders.contains(person)) {
             System.out.println("Holder " + person.getName() + " is already overseen by employee " + empName);
-            //Otherwise, add this person to employee's list of account holders
+        //Otherwise, add this person to employee's list of account holders
         } else {
             holders.add(person);
         }
     }
 
     //Adds an already existing account to an AccountHolder
-    //NOTE: it may be possible to reorganise this code so the operations are the same but the layout is neater
     public synchronized void addAccount(AccountHolder person, Account acc) {
         if (this.holders.contains(person)) {
             //Check to ensure it isn't already under the account holder, and if it is, show this in a message
@@ -178,7 +177,7 @@ public class BankEmployee {
             } else {
                 System.out.println("This account is already owned by" + person.getName());
             }
-            //If account holder is not already overseen by employer, add it to list then add account to this holder
+        //If account holder is not already overseen by employer, add it to list then add account to this holder
         } else {
             holders.add(person);
             person.addAccount(acc);

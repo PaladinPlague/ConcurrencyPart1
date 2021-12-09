@@ -49,7 +49,7 @@ public class AccountHolder {
         if(age < 18){
             return false;
         }
-        //Otherwise, add this account to list of accounts and return true
+        //If age is greater than or equal to 18, add this account to list of accounts and return true
         this.accounts.add(acc);
         return true;
     }

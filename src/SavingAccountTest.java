@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 //Savings account testing class
-//Made by Suleman Akhter
 class SavingAccountTest {
 
     //Variable used for testing various methods of savings account class

@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 //Current account testing class
-//Made by
 class StudentAccountTest {
 
     //Variable used for testing various methods of student account class

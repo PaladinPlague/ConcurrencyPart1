@@ -1,5 +1,4 @@
 //The driver class which is called to execute test cases involving concurrent objects of the bank
-//Made by Jackson Blair
 public class Driver {
 
     //The method that must be called initially to run the code and test the bank
@@ -9,7 +8,7 @@ public class Driver {
         BankSystem bank = new BankSystem();
 
         //Tests are defined via their own methods using the bank system as a reference
-        //With the exception of the "insufficientFunds" test, all bank accounts constructed have a starting balance of 25.00
+        //With the exception of the "insufficientFunds" and "depositMultipleTimes" tests, all bank accounts constructed have a starting balance of 25.00
         simultaneousBalanceCheck(bank);
         checkAndChangeBalance(bank);
         simultaneousChangeAndCheck(bank);
@@ -190,7 +189,7 @@ public class Driver {
     }
 
     //Three account holders are simultaneously trying to check the balance of an account and deposit money into it
-    //This testing method is not related to a testing scenario given in the document, but was included for testing mutation operators
+    //This testing method is not related to a testing scenario given in the document, but was included for testing mutation operators in Part B
     public static void depositMultipleTimes (BankSystem bank) {
 
         //Declare the account holders and add them to the bank

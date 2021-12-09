@@ -22,8 +22,7 @@ public class ChangeInterestRunnable implements Runnable {
 
     //Runnable thread process of this method
     public void run() {
-        try
-        {
+        try {
             //Execute the change interest method for the bank involving an employee, account holder and account
             bank.changeInterest(employeeIndex, holderIndex, accountIndex, interest);
             //The thread sleeps for a specified amount of time in milliseconds

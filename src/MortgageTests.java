@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 //Mortgage account testing class
-//Made by
 public class MortgageTests {
 
     //Test creation of new mortgage account and check all getter methods work as expected

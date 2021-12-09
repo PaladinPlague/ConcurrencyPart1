@@ -220,7 +220,7 @@ public class MortgageAcc extends Account {
 
     //Prints the necessary details of the account i.e. the current balance and the interest rate
     @Override
-    public void printDetails() {
+    public synchronized void printDetails() {
         System.out.println("Current outstanding balance: £" + this.getBalance());
         System.out.println("Current annual interest rate: " + getAnnInterest() / 0.01 + "%");
         System.out.println("Recent monthly payment: £" + this.monthlyPayment);

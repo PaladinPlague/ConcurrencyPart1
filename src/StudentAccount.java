@@ -1,4 +1,3 @@
-//Author: Mark McCafferty
 //Bank account type which is held by university students
 //A Student's Account works similar to a current account
 public class StudentAccount extends Account{
@@ -37,11 +36,13 @@ public class StudentAccount extends Account{
     public synchronized boolean isOverdrafted(){ return overdrafted; }
 
     //Deposit a set amount from another account into this account
+    @Override
     public synchronized void deposit(Double amount, Account sender) {
         setBalance(getBalance() + amount);
     }
 
     //Withdraw a set amount from this account into another account
+    @Override
     public synchronized void withdraw(Double amount, Account receiver) throws Exception {
 
         //If the amount combined with the overdraft value is more than what is stored in the bank, throw an exception with relevant message
@@ -57,7 +58,7 @@ public class StudentAccount extends Account{
 
     //Print the details of this account into a terminal
     @Override
-    public void printDetails(){
+    public synchronized void printDetails(){
         System.out.println("Student Account Number: " +this.getAccountNumber());
         System.out.println("New Balance: "+this.getBalance());
         System.out.println("The Arranged Overdraft amount is "+ this.getOverdraft());
@@ -65,14 +66,15 @@ public class StudentAccount extends Account{
 
     //Print the details of this account to a string
     @Override
-    public String getDetails(){
+    public synchronized String getDetails(){
         String result = "Student Account Number: " +this.getAccountNumber()+ ", " +
                 "The Arranged Overdraft amount is "+ this.getOverdraft()+", Overdraft: "+isOverdrafted()+" balance: "+this.getBalance()+".";
         return result;
     }
 
     //Return the account type
-    public String getType() {
+    @Override
+    public synchronized String getType() {
         return "Student Account";
     }
 }

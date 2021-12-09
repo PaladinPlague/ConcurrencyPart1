@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 //Bank employee testing class
-//Made by
 public class BankEmployeeTest {
 
     //Creates one of each type of account and prints its details
@@ -108,8 +107,6 @@ public class BankEmployeeTest {
         assertEquals(900, curr.getBalance());
         bankEmp.printOneAccount(persAcc, "1234");
     }
-
-    //NOTE: THE ABOVE TESTS WERE WRITTEN AND USED BEFORE BANK EMPLOYEE COULD ADD ACCOUNTS
 
     //Adds multiple account to an Account Holder
     @Test
@@ -320,5 +317,4 @@ public class BankEmployeeTest {
         assertEquals(900, curr.getBalance());
         bankEmp.printOneAccount(persAcc, "1234");
     }
-
 }

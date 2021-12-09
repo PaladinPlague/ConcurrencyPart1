@@ -16,8 +16,7 @@ public class CheckBalanceRunnable implements Runnable {
 
     //Runnable thread process of this method
     public void run() {
-        try
-        {
+        try {
             //Execute the check balance method for the bank involving an account holder and one of their accounts
             bank.checkBalance(holderIndex, accIndex);
             //The thread sleeps for a specified amount of time in milliseconds
